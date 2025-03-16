@@ -1,0 +1,163 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model campaign {
+  id         String   @id @default(uuid())
+  title      String   @db.VarChar
+  team_id    String   @db.VarChar
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+}
+
+model category {
+  id         String   @id @default(uuid())
+  title      String   @db.VarChar
+  team_id    String   @db.VarChar
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+}
+
+model e_detailing {
+  id                 Int      @id
+  campaign_id        String   @db.VarChar
+  title              String   @db.VarChar
+  description        String?  @db.VarChar
+  deadline           DateTime @db.Timestamp(6)
+  score_starting     Decimal  @db.Decimal
+  score_content      Decimal  @db.Decimal
+  score_presentation Decimal  @db.Decimal
+  score_closing      Decimal  @db.Decimal
+  created_at         DateTime @db.Timestamp(6)
+  updated_at         DateTime @db.Timestamp(6)
+}
+
+model e_detailing_score {
+  id                 Int      @id
+  video_id           String   @db.VarChar
+  score_starting     Decimal  @db.Decimal
+  score_content      Decimal  @db.Decimal
+  score_presentation Decimal  @db.Decimal
+  score_closing      Decimal  @db.Decimal
+  comment            String?
+  scored_by          String   @db.VarChar
+  created_at         DateTime @db.Timestamp(6)
+  updated_at         DateTime @db.Timestamp(6)
+}
+
+model e_detailing_video {
+  id             Int      @id
+  e_detailing_id String   @db.VarChar
+  team_member_id String   @db.VarChar
+  title          String   @db.VarChar
+  description    String?  @db.VarChar
+  created_at     DateTime @db.Timestamp(6)
+  updated_at     DateTime @db.Timestamp(6)
+}
+
+model file {
+  id         String   @id @default(uuid())
+  title      String   @db.VarChar
+  filename   String   @db.VarChar
+  file_type  String   @db.VarChar
+  file_path  String   @db.VarChar
+  folder_id  String   @db.VarChar
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+}
+
+model folder {
+  id          Int      @id
+  title       String   @db.VarChar
+  category_id String   @db.VarChar
+  created_at  DateTime @db.Timestamp(6)
+  updated_at  DateTime @db.Timestamp(6)
+}
+
+model otp {
+  id         String   @id @default(uuid())
+  user_id    String   @db.VarChar
+  code       String   @db.VarChar
+  expires_at DateTime @db.Timestamp(6)
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+}
+
+model question {
+  id         String   @id @default(uuid())
+  quiz_id    String   @db.VarChar
+  question   String   @db.VarChar
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+}
+
+model quiz {
+  id          Int      @id
+  campaign_id String   @db.VarChar
+  title       String   @db.VarChar
+  description String?  @db.VarChar
+  created_at  DateTime @db.Timestamp(6)
+  updated_at  DateTime @db.Timestamp(6)
+}
+
+model quiz_option {
+  id          Int      @id
+  question_id String   @db.VarChar
+  option      String   @db.VarChar
+  is_correct  Boolean? @default(false)
+  created_at  DateTime @db.Timestamp(6)
+  updated_at  DateTime @db.Timestamp(6)
+}
+
+model result {
+  id             Int      @id
+  team_member_id String   @db.VarChar
+  answer_id      String   @db.VarChar
+  score          Int      @default(0)
+  created_at     DateTime @db.Timestamp(6)
+  updated_at     DateTime @db.Timestamp(6)
+}
+
+model team_members {
+  id         String   @id @default(uuid())
+  team_id    String   @db.VarChar
+  user_id    String   @db.VarChar
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+}
+
+model teams {
+  id         String   @id @default(uuid())
+  title      String   @db.VarChar
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+}
+
+model users {
+  id         String   @id @default(uuid())
+  sap_id     String   @db.VarChar
+  password   String   @db.VarChar
+  full_name  String   @db.VarChar
+  mobile     String   @db.VarChar
+  role       role
+  status     status?  @default(active)
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+}
+
+enum role {
+  superadmin
+  mios
+  team_lead
+  director
+}
+
+enum status {
+  active
+  deactive
+}
