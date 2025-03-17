@@ -1,0 +1,42 @@
+{
+    "400": {
+      "Bad Request": {
+        "40001": "Bad Request",
+        "40002": "Zod Validation Error",
+        "40003": "Invalid Input",
+        "40004": "PrismaClientValidationError"
+      }
+    },
+    "401": {
+      "Unauthorized": {
+        "40101": "Unauthorized"
+      }
+    },
+    "403": {
+      "Forbidden": {
+        "40301": "Forbidden"
+      }
+    },
+    "404": {
+      "Not Found": {
+        "40401": "Not Found",
+        "40402": "Prisma - Foreign key constraint"
+      }
+    },
+    "409": {
+      "Conflict": {
+        "40902": "Prisma - Duplicate entry error"
+      }
+    },
+    "500": {
+      "Internal Server Error": {
+        "50001": "Internal Server Error"
+      }
+    },
+    "503": {
+      "Service Unavailable": {
+        "50301": "Service Unavailable"
+      }
+    }
+  }
+  

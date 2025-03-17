@@ -2,9 +2,9 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import dotenv from "dotenv";
-import cookieParser from 'cookie-parser';
-// import { errorHandler } from "./middlewares/error-handler";
-// import router from "./routes";
+import cookieParser from "cookie-parser";
+import { errorHandler } from "./middlewares/error-handler";
+import router from "./routes";
 
 // config();
 dotenv.config();
@@ -23,10 +23,10 @@ app.use(cookieParser());
 
 // api endpoints
 app.get("/", (req, res) => {
-  res.send("X-obese APP");
+  res.send("SPD e-Learning APP");
 });
 
-// app.use("/api", router);
+app.use("/api", router);
 
 // 404 handler
 app.use((_req, res) => {
@@ -34,4 +34,4 @@ app.use((_req, res) => {
 });
 
 // Use error handling middleware
-// app.use(errorHandler);
+app.use(errorHandler);
