@@ -11,8 +11,13 @@ async function main() {
     },
     {
       type: "input",
-      name: "username",
-      message: "Enter your username:",
+      name: "mobile",
+      message: "Enter your mobile:",
+    },
+    {
+      type: "input",
+      name: "sap_id",
+      message: "Enter your sap id:",
     },
     {
       type: "password",
@@ -24,23 +29,23 @@ async function main() {
       type: "list",
       name: "role",
       message: "Select your role:",
-      choices: ["admin", "superadmin"],
+      choices: ["superadmin", "mios", "team_lead", "director"],
     },
   ]);
 
-
   // create admin user
-//   await db.users.create({
-//     data: {
-//       username: answers.username,
-//       name: answers.name,
-//       password: await hashPassword(answers.password),
-//       role: answers.role,
-//     }
-//   })
+  await db.users.create({
+    data: {
+      sap_id: answers.sap_id,
+      full_name: answers.name,
+      password: await hashPassword(answers.password),
+      role: answers.role,
+      mobile: answers.mobile,
+    },
+  });
 
   console.log(
-    `Welcome, ${answers.username}! You are signed up as ${answers.role}.`
+    `Welcome, ${answers.name}! You are signed up as ${answers.role}.`
   );
 }
 

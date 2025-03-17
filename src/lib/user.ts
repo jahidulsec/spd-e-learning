@@ -1,10 +1,10 @@
-import db from "@/db/db";
-import { requiredIdTypes } from "@/schemas/required-id";
+import db from "../db/db";
+import { requiredIdTypes } from "../schemas/required-id";
 import {
   createUserInputsTypes,
   updateUserInputTypes,
   usersQueryInputTypes,
-} from "@/schemas/user";
+} from "../schemas/user";
 
 const getMulti = async (queries: usersQueryInputTypes) => {
   const size = queries?.size ?? 20;

@@ -1,10 +1,61 @@
+import { userLoginDTOSchema } from "../../../../../schemas/user";
 import { Request, Response, NextFunction } from "express-serve-static-core";
+import userService from "../../../../../lib/user";
+import { notFoundError, unauthorizedError } from "../../../../../utils/errors";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from "../../../../../utils/token";
+import { isValidPassword } from "../../../../../utils/password";
+
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const formData = req.body;
 
-    res.send("ok");
+    //Validate incoming body data with defined schema
+    const validatedData = userLoginDTOSchema.parse(formData);
+
+    // check user
+    const user = await userService.getSingle({ id: validatedData.sap_id });
+
+    if (!user) {
+      notFoundError("User does not exist");
+    }
+
+    // verify password
+    const isVerified = await isValidPassword(
+      validatedData.password,
+      user?.password as string
+    );
+
+    if (!isVerified) {
+      unauthorizedError("Incorrect password");
+    }
+
+    const accessToken = generateAccessToken(
+      user?.sap_id as string,
+      user?.role as string
+    );
+
+    const refreshToken = generateRefreshToken(user?.sap_id as string);
+
+    const responseData = {
+      success: true,
+      message: `Login is successful`,
+      data: {
+        accessToken: accessToken,
+      },
+    };
+
+    res
+      .status(200)
+      .cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        // secure: ,
+        sameSite: "lax",
+      })
+      .json(responseData);
   } catch (error) {
     console.log("ERROR : ", error);
 
