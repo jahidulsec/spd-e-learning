@@ -53,6 +53,14 @@ const getSingle = async (idObj: requiredIdTypes) => {
   return data;
 };
 
+const getSingleByMobile = async (mobile: string) => {
+  const data = await db.users.findUnique({
+    where: { mobile: mobile },
+  });
+
+  return data;
+};
+
 const createNew = async (info: createUserInputsTypes) => {
   const data = await db.users.create({
     data: {
@@ -94,4 +102,5 @@ export = {
   createNew,
   updateOne,
   deleteOne,
+  getSingleByMobile
 };

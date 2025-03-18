@@ -10,11 +10,6 @@ export const createUserDTOSchema = z.object({
   status: z.enum(["active", "inactive"]).optional(),
 });
 
-export const userLoginDTOSchema = z.object({
-  sap_id: z.string().min(3),
-  password: z.string().min(6),
-});
-
 export const updateUserDTOSchema = createUserDTOSchema.omit({}).partial();
 
 export const usersQuerySchema = z.object({
@@ -28,4 +23,32 @@ export const usersQuerySchema = z.object({
 export type createUserInputsTypes = z.infer<typeof createUserDTOSchema>;
 export type updateUserInputTypes = z.infer<typeof updateUserDTOSchema>;
 export type usersQueryInputTypes = z.infer<typeof usersQuerySchema>;
+
+// login
+
+export const userLoginDTOSchema = z.object({
+  sap_id: z.string().min(3),
+  password: z.string().min(6),
+});
+
 export type usersLoginInputTypes = z.infer<typeof userLoginDTOSchema>;
+
+// forget password
+
+export const userForgetPasswordDTOSchema = z.object({
+  mobile: z.string().regex(phoneRegex, { message: "Invalid phone number" }),
+});
+
+export type userForgetPassworInputTypes = z.infer<typeof userForgetPasswordDTOSchema>;
+
+
+// OTP
+
+export const createOtpDTOSchema = z.object({
+  code: z.string().min(6, {
+    message: "Your one-time password must be 6 characters.",
+  }),
+});
+
+export type createOtpInputTypes = z.infer<typeof createOtpDTOSchema>;
+
