@@ -8,5 +8,6 @@ router.post("/user/login", controller.login);
 router.post("/user/password/forget", controller.forgetPassword);
 router.post("/user/confirm-otp/:id", controller.confirmOtp);
 router.post("/user/password/reset", verifyToken, controller.resetPassoword);
+router.post("/user/login/initial", controller.initialLogin);
 
 export { router as authRoutes };

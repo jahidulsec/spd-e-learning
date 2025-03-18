@@ -9,7 +9,7 @@ datasource db {
 
 model users {
   sap_id       String         @id @unique @db.VarChar
-  password     String         @db.VarChar
+  password     String?         @db.VarChar
   full_name    String         @db.VarChar
   mobile       String         @db.VarChar @unique
   role         role           @default(mios)

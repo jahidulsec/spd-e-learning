@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export const createUserDTOSchema = z.object({
   sap_id: z.string(),
-  password: z.string(),
+  password: z.string().optional(),
   full_name: z.string(),
   mobile: z.string().regex(phoneRegex, { message: "Invalid phone number" }),
   role: z.enum(["superadmin", "mios", "team_lead", "director"]),
@@ -57,4 +57,8 @@ export type createOtpInputTypes = z.infer<typeof createOtpDTOSchema>;
 export const createResetPasswordDTOSchema = z.object({
   new_password: z.string().min(6),
   confirm_password: z.string().min(6),
+});
+
+export const createInitalLogindDTOSchema = z.object({
+  sap_id: z.string(),
 });

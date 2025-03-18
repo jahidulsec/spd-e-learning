@@ -46,10 +46,6 @@ const confirmOtp = async (req: Request, res: Response, next: NextFunction) => {
       user?.role as string
     );
 
-    // generate refresh token
-
-    const refreshToken = generateRefreshToken(user?.sap_id as string);
-
     // delete Otp
     await authService.deleteOtp(validatedId.id);
 
@@ -63,12 +59,6 @@ const confirmOtp = async (req: Request, res: Response, next: NextFunction) => {
 
     res
       .status(200)
-    //   .cookie("refreshToken", refreshToken, {
-    //     httpOnly: true,
-    //     // secure: ,
-    //     sameSite: "lax",
-    //     expires: addMinutesToDate(new Date(), 24 * 60),
-    //   })
       .json(responseData);
   } catch (error) {
     console.log("ERROR : ", error);
