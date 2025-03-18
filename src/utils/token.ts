@@ -21,4 +21,20 @@ const generateRefreshToken = (userId: string) => {
   );
 };
 
-export { generateAccessToken, generateRefreshToken };
+const validateRefreshToken = (refreshToken: string) => {
+  let data: any = null;
+  jwt.verify(
+    refreshToken as string,
+    process.env.ACCESS_TOKEN_SECRET as string,
+    (err, user) => {
+      console.log(err);
+      if (err) forbiddenError("Invalid token");
+
+      data = user;
+    }
+  );
+
+  return data;
+};
+
+export { generateAccessToken, generateRefreshToken, validateRefreshToken };

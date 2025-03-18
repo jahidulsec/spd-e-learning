@@ -10,6 +10,7 @@ import * as jwt from "jsonwebtoken";
 import {
   generateAccessToken,
   generateRefreshToken,
+  validateRefreshToken,
 } from "../../../../../utils/token";
 import { addMinutesToDate } from "../../../../../utils/otp";
 
@@ -30,18 +31,7 @@ const revoke = async (req: Request, res: Response, next: NextFunction) => {
 
     // get token info
 
-    let data: any;
-
-    jwt.verify(
-      refreshToken as string,
-      process.env.REFRESH_TOKEN_SECRET as string,
-      (err, user) => {
-        console.log(err);
-        if (err) forbiddenError("Invalid token");
-
-        data = user;
-      }
-    );
+    let data = validateRefreshToken(refreshToken)
 
     // check user
     const user = await userService.getSingle({ id: data.id as string });
