@@ -25,7 +25,7 @@ const validateRefreshToken = (refreshToken: string) => {
   let data: any = null;
   jwt.verify(
     refreshToken as string,
-    process.env.ACCESS_TOKEN_SECRET as string,
+    process.env.REFRESH_TOKEN_SECRET as string,
     (err, user) => {
       console.log(err);
       if (err) forbiddenError("Invalid token");

@@ -11,6 +11,6 @@ router.post("/user/password/reset", verifyToken, controller.resetPassoword);
 router.post("/user/login/initial", controller.initialLogin);
 
 // token
-router.post("/token/revoke", controller.revokeAccessToken);
+router.get("/token/revoke", controller.revokeAccessToken);
 
 export { router as authRoutes };

@@ -1,12 +1,9 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
-import { createRevokeTokenDTOSchema } from "../../../../../schemas/token";
 import {
-  forbiddenError,
   notFoundError,
   unauthorizedError,
 } from "../../../../../utils/errors";
 import userService from "../../../../../lib/user";
-import * as jwt from "jsonwebtoken";
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -16,16 +13,12 @@ import { addMinutesToDate } from "../../../../../utils/otp";
 
 const revoke = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const formData = req.body;
-
-    //Validate incoming body data with defined schema
-    const validatedData = createRevokeTokenDTOSchema.parse(formData);
 
     // get refresh token from cookie
     const refreshToken = req.cookies.refreshToken;
 
     // validate token
-    if (refreshToken !== validatedData.refresh_token) {
+    if (!req.cookies.refreshToken) {
       unauthorizedError("You are unauthorized for this action");
     }
 
