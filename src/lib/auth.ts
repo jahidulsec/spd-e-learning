@@ -18,4 +18,20 @@ const getForgetPasswordOTP = async (userId: string) => {
   return data;
 };
 
-export = { getForgetPasswordOTP };
+const getOtpProfile = async (id: string) => {
+  const data = await db.otp.findUnique({
+    where: { id },
+  });
+
+  return data;
+};
+
+const deleteOtp = async (id: string) => {
+  const data = await db.otp.delete({
+    where: { id },
+  });
+
+  return data;
+};
+
+export = { getForgetPasswordOTP, getOtpProfile, deleteOtp };

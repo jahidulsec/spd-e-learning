@@ -39,8 +39,9 @@ export const userForgetPasswordDTOSchema = z.object({
   mobile: z.string().regex(phoneRegex, { message: "Invalid phone number" }),
 });
 
-export type userForgetPassworInputTypes = z.infer<typeof userForgetPasswordDTOSchema>;
-
+export type userForgetPassworInputTypes = z.infer<
+  typeof userForgetPasswordDTOSchema
+>;
 
 // OTP
 
@@ -51,4 +52,3 @@ export const createOtpDTOSchema = z.object({
 });
 
 export type createOtpInputTypes = z.infer<typeof createOtpDTOSchema>;
-

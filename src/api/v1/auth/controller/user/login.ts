@@ -7,7 +7,7 @@ import {
   generateRefreshToken,
 } from "../../../../../utils/token";
 import { isValidPassword } from "../../../../../utils/password";
-
+import { addMinutesToDate } from "../../../../../utils/otp";
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -54,6 +54,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
         httpOnly: true,
         // secure: ,
         sameSite: "lax",
+        expires: addMinutesToDate(new Date(), 24 * 60)
       })
       .json(responseData);
   } catch (error) {
