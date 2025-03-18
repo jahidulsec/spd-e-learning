@@ -23,8 +23,9 @@ export function verifyToken(
 
     jwt.verify(
       token as string,
-      process.env.ACCESS_TOKEN_SECRET_KEY as string,
+      process.env.ACCESS_TOKEN_SECRET as string,
       (err, user) => {
+        console.log(err)
         if (err) forbiddenError("Invalid token");
 
         request.user = user as AuthUser;

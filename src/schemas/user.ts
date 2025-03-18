@@ -52,3 +52,9 @@ export const createOtpDTOSchema = z.object({
 });
 
 export type createOtpInputTypes = z.infer<typeof createOtpDTOSchema>;
+
+// reset password
+export const createResetPasswordDTOSchema = z.object({
+  new_password: z.string().min(6),
+  confirm_password: z.string().min(6),
+});

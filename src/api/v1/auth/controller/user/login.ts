@@ -1,5 +1,5 @@
-import { userLoginDTOSchema } from "../../../../../schemas/user";
 import { Request, Response, NextFunction } from "express-serve-static-core";
+import { userLoginDTOSchema } from "../../../../../schemas/user";
 import userService from "../../../../../lib/user";
 import { notFoundError, unauthorizedError } from "../../../../../utils/errors";
 import {

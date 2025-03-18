@@ -63,12 +63,12 @@ const confirmOtp = async (req: Request, res: Response, next: NextFunction) => {
 
     res
       .status(200)
-      .cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        // secure: ,
-        sameSite: "lax",
-        expires: addMinutesToDate(new Date(), 24 * 60),
-      })
+    //   .cookie("refreshToken", refreshToken, {
+    //     httpOnly: true,
+    //     // secure: ,
+    //     sameSite: "lax",
+    //     expires: addMinutesToDate(new Date(), 24 * 60),
+    //   })
       .json(responseData);
   } catch (error) {
     console.log("ERROR : ", error);
