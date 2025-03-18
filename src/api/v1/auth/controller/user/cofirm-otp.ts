@@ -4,11 +4,8 @@ import { requiredIdSchema } from "../../../../../schemas/required-id";
 import authService from "../../../../../lib/auth";
 import userService from "../../../../../lib/user";
 import { badRequestError, notFoundError } from "../../../../../utils/errors";
-import { addMinutesToDate, verifyOtpTime } from "../../../../../utils/otp";
-import {
-  generateAccessToken,
-  generateRefreshToken,
-} from "../../../../../utils/token";
+import { verifyOtpTime } from "../../../../../utils/otp";
+import { generateAccessToken } from "../../../../../utils/token";
 
 const confirmOtp = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -57,9 +54,7 @@ const confirmOtp = async (req: Request, res: Response, next: NextFunction) => {
       },
     };
 
-    res
-      .status(200)
-      .json(responseData);
+    res.status(200).json(responseData);
   } catch (error) {
     console.log("ERROR : ", error);
 

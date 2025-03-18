@@ -1,4 +1,5 @@
 import * as jwt from "jsonwebtoken";
+import { forbiddenError } from "./errors";
 
 const generateAccessToken = (userId: string, role: string) => {
   return jwt.sign(

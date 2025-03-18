@@ -54,7 +54,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
         httpOnly: true,
         // secure: ,
         sameSite: "lax",
-        expires: addMinutesToDate(new Date(), 24 * 60)
+        expires: addMinutesToDate(new Date(), 24 * 60), // for 1 day
       })
       .json(responseData);
   } catch (error) {
