@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
 import { unauthorizedError } from "../utils/errors";
+import { $Enums } from "@prisma/client";
 
-export const verifyRoles = (...allowedRoles: string[]) => {
+export const verifyRoles = (...allowedRoles: $Enums.role[]) => {
   return (request: Request, response: Response, next: NextFunction) => {
     const authUser = request.user;
     if (!authUser) {
@@ -17,7 +18,7 @@ export const verifyRoles = (...allowedRoles: string[]) => {
     //   .map((role: any) => rolesArray.includes(role))
     //   .find((value: any) => value === true);
 
-    const result = rolesArray.includes(authUser?.role as string);
+    const result = rolesArray.includes(authUser?.role as $Enums.role);
 
     if (!result) {
       unauthorizedError("Your are not permitted for this action");
