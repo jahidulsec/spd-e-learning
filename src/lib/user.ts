@@ -53,6 +53,22 @@ const getSingle = async (idObj: requiredIdTypes) => {
   return data;
 };
 
+const getSingleWithTeamInfo = async (id: string) => {
+  // get user team info
+  const userTeamInfo = await db.users.findUnique({
+    where: { sap_id: id },
+    include: {
+      team_members: {
+        select: {
+          team_id: true,
+        },
+      },
+    },
+  });
+
+  return userTeamInfo;
+};
+
 const getSingleByMobile = async (mobile: string) => {
   const data = await db.users.findUnique({
     where: { mobile: mobile },
@@ -102,5 +118,6 @@ export = {
   createNew,
   updateOne,
   deleteOne,
-  getSingleByMobile
+  getSingleByMobile,
+  getSingleWithTeamInfo,
 };

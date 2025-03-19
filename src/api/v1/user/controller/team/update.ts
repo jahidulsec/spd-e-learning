@@ -1,33 +1,48 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
 import { updateTeamDTOSchema } from "../../../../../schemas/team";
-import cmsService from "../../../../../lib/team";
+import teamService from "../../../../../lib/team";
+import userService from "../../../../../lib/user";
 import {
   notFoundError,
   serverError,
   unauthorizedError,
 } from "../../../../../utils/errors";
-import { hashPassword } from "../../../../../utils/password";
 
 const update = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // get auth user
-    // const authUser = req.user;
+    const authUser = req.user;
 
-    // if (!authUser) {
-    //   unauthorizedError("Your are unauthorized for this action");
-    // }
-
-    const formData = req.body;
+    if (!authUser) {
+      unauthorizedError("Your are unauthorized for this action");
+    }
 
     //validate incoming params id
     const validatedId = requiredIdSchema.parse(req.params);
 
+    // get user team info
+    const userTeamInfo = await userService.getSingleWithTeamInfo(
+      authUser?.id as string
+    );
+
+    // check authorization
+    if (
+      authUser?.role !== "superadmin" &&
+      userTeamInfo?.team_members?.team_id !== validatedId.id
+    ) {
+      unauthorizedError(
+        "Your are not a member of this team to perform this action"
+      );
+    }
+
     // Validate incoming body data with defined schema
+    const formData = req.body;
+
     const validatedData = updateTeamDTOSchema.parse(formData);
 
     //check existing Team
-    const existingTeam = await cmsService.getSingle(validatedId);
+    const existingTeam = await teamService.getSingle(validatedId);
 
     if (!existingTeam) {
       //send not found error if not exist
@@ -35,7 +50,7 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     //update with validated data
-    const updated = await cmsService.updateOne(validatedId, validatedData);
+    const updated = await teamService.updateOne(validatedId, validatedData);
 
     if (!updated) {
       serverError("Team not updated");

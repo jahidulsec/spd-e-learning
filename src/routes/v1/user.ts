@@ -29,7 +29,7 @@ router
   .patch(
     verifyToken,
     verifyRoles("superadmin", "team_lead"),
-    controller.updateUser
+    controller.updateTeam
   )
   .delete(verifyToken, verifyRoles("superadmin"), controller.delTeam);
 
