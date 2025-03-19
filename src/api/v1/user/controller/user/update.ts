@@ -11,6 +11,7 @@ import { hashPassword } from "../../../../../utils/password";
 
 const update = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    // get auth user
     const authUser = req.user;
 
     if (!authUser) {
@@ -23,7 +24,7 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
     const validatedId = requiredIdSchema.parse(req.params);
 
     if (authUser?.role === "superadmin" || authUser?.id === validatedId.id) {
-      //Validate incoming body data with defined schema
+      // Validate incoming body data with defined schema
       const validatedData = updateUserDTOSchema.parse(formData);
 
       // hash password

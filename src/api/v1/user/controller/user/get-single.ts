@@ -5,13 +5,14 @@ import { notFoundError, unauthorizedError } from "../../../../../utils/errors";
 
 const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    // get auth user
     const authUser = req.user;
 
     if (!authUser) {
       unauthorizedError("Your are unauthorized for this action");
     }
 
-    //Validate incoming body data with defined schema
+    // Validate incoming body data with defined schema
     const validatedData = requiredIdSchema.parse(req.params);
 
     // check authorization
@@ -33,7 +34,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
       return res.status(200).json(responseData);
     }
 
-    
+
     unauthorizedError("Your are unauthorized for this action");
   } catch (error) {
     console.log("ERROR : ", error);
