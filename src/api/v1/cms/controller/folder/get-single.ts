@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
-import cmsService from "../../../../../lib/category";
+import cmsService from "../../../../../lib/folder";
 import { notFoundError } from "../../../../../utils/errors";
 
 const get = async (req: Request, res: Response, next: NextFunction) => {
@@ -12,12 +12,12 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     const data = await cmsService.getSingle(validatedData);
 
     if (!data) {
-      notFoundError("Category not found!");
+      notFoundError("Folder not found!");
     }
 
     const responseData = {
       success: true,
-      message: "Get category details successfully!",
+      message: "Get folder details successfully!",
       data: data,
     };
 

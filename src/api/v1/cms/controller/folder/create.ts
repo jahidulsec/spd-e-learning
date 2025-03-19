@@ -1,20 +1,20 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
-import { createCategoryDTOSchema } from "../../../../../schemas/category";
-import cmsService from '../../../../../lib/category';
+import { createFolderDTOSchema } from "../../../../../schemas/folder";
+import cmsService from '../../../../../lib/folder';
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const formData = req.body;
 
     //Validate incoming body data with defined schema
-    const validatedData = createCategoryDTOSchema.parse(formData);
+    const validatedData = createFolderDTOSchema.parse(formData);
 
     //create new with validated data
     const created = await cmsService.createNew(validatedData);
 
     const responseData = {
       success: true,
-      message: "New category created successfully!",
+      message: "New folder created successfully!",
       data: created,
     };
 
