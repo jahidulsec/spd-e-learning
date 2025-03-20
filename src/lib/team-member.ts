@@ -125,6 +125,31 @@ const getSingle = async (idObj: requiredIdTypes) => {
   //extract id from validated id by zod
   const data = await db.team_members.findUnique({
     where: { id },
+    include: {
+      user: true,
+      team: {
+        select: {
+          title: true,
+        },
+      },
+    },
+  });
+
+  return data;
+};
+
+const getSingleByTeamId = async (id: string, teamId: string) => {
+  //extract id from validated id by zod
+  const data = await db.team_members.findUnique({
+    where: { id: id, team_id: teamId },
+    include: {
+      user: true,
+      team: {
+        select: {
+          title: true,
+        },
+      },
+    },
   });
 
   return data;
@@ -172,4 +197,5 @@ export = {
   updateOne,
   deleteOne,
   getMultiByTeamId,
+  getSingleByTeamId
 };

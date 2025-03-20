@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
-import teamService from "../../../../../lib/team";
+import teamService from "../../../../../lib/team-member";
 import userService from "../../../../../lib/user";
 import { notFoundError, unauthorizedError } from "../../../../../utils/errors";
 
@@ -21,17 +21,20 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
       authUser?.id as string
     );
 
-    if (
-      authUser?.role !== "superadmin" &&
-      userTeamInfo?.team_members?.team_id !== validatedData.id
-    ) {
-      unauthorizedError(
-        "Your are not a member of this team to perform this action"
-      );
-    }
+    let data: any;
 
-    //get single item with validated id
-    const data = await teamService.getSingle(validatedData);
+    // if team member - then get only team member info
+    if (authUser?.role !== "superadmin") {
+      //get single item with validated id
+      data = await teamService.getSingleByTeamId(
+        validatedData.id,
+        userTeamInfo?.team_members?.team_id ?? "0"
+      );
+    } else {
+      // super admin can get all team member
+      //get single item with validated id
+      data = await teamService.getSingle(validatedData);
+    }
 
     if (!data) {
       notFoundError("User not found!");
@@ -44,7 +47,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     };
 
     //send success response
-    return res.status(200).json(responseData);
+    res.status(200).json(responseData);
   } catch (error) {
     console.log("ERROR : ", error);
 

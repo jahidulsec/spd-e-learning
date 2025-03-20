@@ -61,6 +61,7 @@ const getSingleWithTeamInfo = async (id: string) => {
       team_members: {
         select: {
           team_id: true,
+          id: true,
         },
       },
     },
