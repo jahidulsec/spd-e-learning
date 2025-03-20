@@ -11,6 +11,13 @@ import { getTeams } from "./team/get-multi";
 import { getTeam } from "./team/get-single";
 import { updateTeam } from "./team/update";
 
+// team member
+import { createTeamMember } from "./team-member/create";
+import { delTeamMember } from "./team-member/delete";
+import { getTeamMembers } from "./team-member/get-multi";
+import { getTeamMember } from "./team-member/get-single";
+import { updateTeamMember } from "./team-member/update";
+
 export = {
   createUser,
   getUser,
@@ -22,4 +29,9 @@ export = {
   getTeam,
   getTeams,
   updateTeam,
+  createTeamMember,
+  getTeamMember,
+  getTeamMembers,
+  delTeamMember,
+  updateTeamMember,
 };

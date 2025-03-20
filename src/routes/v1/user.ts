@@ -36,17 +36,13 @@ router
 // team
 router
   .route("/team/member")
-  .get(verifyToken, verifyRoles("superadmin"), controller.getTeams)
-  .post(verifyToken, verifyRoles("superadmin"), controller.createTeam);
+  .get(verifyToken, controller.getTeamMembers)
+  .post(verifyToken, verifyRoles("superadmin"), controller.createTeamMember);
 
 router
   .route("/team/member/:id")
-  .get(verifyToken, controller.getTeam)
-  .patch(
-    verifyToken,
-    verifyRoles("superadmin", "team_lead"),
-    controller.updateTeam
-  )
-  .delete(verifyToken, verifyRoles("superadmin"), controller.delTeam);
+  .get(verifyToken, controller.getTeamMember)
+  .patch(verifyToken, verifyRoles("superadmin"), controller.updateTeamMember)
+  .delete(verifyToken, verifyRoles("superadmin"), controller.delTeamMember);
 
 export { router as userRoutes };
