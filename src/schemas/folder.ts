@@ -13,7 +13,7 @@ export const folderQuerySchema = z.object({
 });
 
 export const updateFolderDTOSchema = createFolderDTOSchema
-  .omit({})
+  .omit({category_id: true})
   .partial();
 
 export type createFolderInputTypes = z.infer<typeof createFolderDTOSchema>;

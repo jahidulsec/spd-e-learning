@@ -13,7 +13,7 @@ export const categoryQuerySchema = z.object({
 });
 
 export const updateCategoryDTOSchema = createCategoryDTOSchema
-  .omit({})
+  .omit({ team_id: true })
   .partial();
 
 export type createCategoryInputTypes = z.infer<typeof createCategoryDTOSchema>;

@@ -96,7 +96,6 @@ model file {
   title      String   @db.VarChar(150)
   filename   String   @db.VarChar(100)
   file_type  String   @db.VarChar(100)
-  file_path  String   @db.VarChar(255)
   folder_id  String   @db.VarChar(100)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
