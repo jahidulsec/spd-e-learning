@@ -12,7 +12,6 @@ const getMulti = async (queries: folderQueryInputTypes) => {
       where: {
         title: {
           startsWith: queries.search || undefined,
-          mode: "insensitive",
         },
       },
       take: queries.size,
@@ -25,7 +24,6 @@ const getMulti = async (queries: folderQueryInputTypes) => {
       where: {
         title: {
           startsWith: queries.search || undefined,
-          mode: "insensitive",
         },
       },
     }),
