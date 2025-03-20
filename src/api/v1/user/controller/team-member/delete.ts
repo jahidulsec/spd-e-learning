@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
-import userService from '../../../../../lib/team';
+import userService from '../../../../../lib/team-member';
 import { notFoundError, serverError } from "../../../../../utils/errors";
 
 
@@ -13,18 +13,18 @@ const del = async (req: Request, res: Response, next: NextFunction) => {
     const data = await userService.getSingle(validatedData);
 
     if (!data) {
-      notFoundError("Team not found!");
+      notFoundError("Team member not found!");
     }
 
     const deleted: any = await userService.deleteOne(validatedData);
 
     if (deleted == 0) {
-      serverError("Team is not deleted");
+      serverError("Team member is not deleted");
     }
 
     const responseData = {
       success: true,
-      message: "Team is deleted successfully!",
+      message: "Team member is deleted successfully!",
       data: data,
     };
 

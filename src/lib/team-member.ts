@@ -24,6 +24,14 @@ const getMulti = async (queries: teamMemberQueryInputTypes) => {
           },
         },
       },
+      include: {
+        user: true,
+        team: {
+          select: {
+            title: true,
+          },
+        },
+      },
       take: queries.size,
       skip: queries.size * (queries.page - 1),
       orderBy: {
@@ -71,6 +79,14 @@ const getMultiByTeamId = async (
         team: {
           title: {
             startsWith: queries.search || undefined,
+          },
+        },
+      },
+      include: {
+        user: true,
+        team: {
+          select: {
+            title: true,
           },
         },
       },
