@@ -33,4 +33,20 @@ router
   )
   .delete(verifyToken, verifyRoles("superadmin"), controller.delTeam);
 
+// team
+router
+  .route("/team/member")
+  .get(verifyToken, verifyRoles("superadmin"), controller.getTeams)
+  .post(verifyToken, verifyRoles("superadmin"), controller.createTeam);
+
+router
+  .route("/team/member/:id")
+  .get(verifyToken, controller.getTeam)
+  .patch(
+    verifyToken,
+    verifyRoles("superadmin", "team_lead"),
+    controller.updateTeam
+  )
+  .delete(verifyToken, verifyRoles("superadmin"), controller.delTeam);
+
 export { router as userRoutes };

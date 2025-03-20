@@ -3,15 +3,15 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model users {
-  sap_id       String        @id @unique @db.VarChar
-  password     String?       @db.VarChar
-  full_name    String        @db.VarChar
-  mobile       String        @unique @db.VarChar
+  sap_id       String        @id @unique @db.VarChar(10)
+  password     String?       @db.VarChar(255)
+  full_name    String        @db.VarChar(100)
+  mobile       String        @unique @db.VarChar(20)
   role         role          @default(mios)
   status       status?       @default(active)
   created_at   DateTime      @default(now())
@@ -34,8 +34,8 @@ enum status {
 
 model otp {
   id         String   @id @default(uuid())
-  user_id    String   @db.VarChar
-  code       String   @db.VarChar
+  user_id    String   @db.VarChar(100)
+  code       String   @db.VarChar(6)
   expires_at DateTime @db.Timestamp(5)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -46,7 +46,7 @@ model otp {
 // team
 model teams {
   id           String         @id @default(uuid())
-  title        String         @db.VarChar
+  title        String         @db.VarChar(50)
   created_at   DateTime       @default(now())
   updated_at   DateTime       @updatedAt
   team_members team_members[]
@@ -56,8 +56,8 @@ model teams {
 
 model team_members {
   id         String   @id @default(uuid())
-  team_id    String   @db.VarChar
-  user_id    String   @unique @db.VarChar
+  team_id    String   @db.VarChar(100)
+  user_id    String   @unique @db.VarChar(100)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -71,8 +71,8 @@ model team_members {
 // content
 model category {
   id         String   @id @default(uuid())
-  title      String   @db.VarChar
-  team_id    String   @db.VarChar
+  title      String   @db.VarChar(150)
+  team_id    String   @db.VarChar(100)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -82,8 +82,8 @@ model category {
 
 model folder {
   id          String   @id @default(uuid())
-  title       String   @db.VarChar
-  category_id String   @db.VarChar
+  title       String   @db.VarChar(150)
+  category_id String   @db.VarChar(100)
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
@@ -93,11 +93,11 @@ model folder {
 
 model file {
   id         String   @id @default(uuid())
-  title      String   @db.VarChar
-  filename   String   @db.VarChar
-  file_type  String   @db.VarChar
-  file_path  String   @db.VarChar
-  folder_id  String   @db.VarChar
+  title      String   @db.VarChar(150)
+  filename   String   @db.VarChar(100)
+  file_type  String   @db.VarChar(100)
+  file_path  String   @db.VarChar(255)
+  folder_id  String   @db.VarChar(100)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -107,8 +107,8 @@ model file {
 // quiz
 model campaign {
   id         String   @id @default(uuid())
-  title      String   @db.VarChar
-  team_id    String   @db.VarChar
+  title      String   @db.VarChar(150)
+  team_id    String   @db.VarChar(100)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -119,9 +119,9 @@ model campaign {
 
 model quiz {
   id          String   @id @default(uuid())
-  campaign_id String   @db.VarChar
-  title       String   @db.VarChar
-  description String?  @db.VarChar
+  campaign_id String   @db.VarChar(100)
+  title       String   @db.VarChar(150)
+  description String?  @db.VarChar(255)
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
@@ -131,8 +131,8 @@ model quiz {
 
 model question {
   id         String   @id @default(uuid())
-  quiz_id    String   @db.VarChar
-  question   String   @db.VarChar
+  quiz_id    String   @db.VarChar(100)
+  question   String   @db.VarChar(255)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -142,8 +142,8 @@ model question {
 
 model quiz_option {
   id          String   @id @default(uuid())
-  question_id String   @db.VarChar
-  option      String   @db.VarChar
+  question_id String   @db.VarChar(100)
+  option      String   @db.VarChar(100)
   is_correct  Boolean? @default(false)
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
@@ -154,8 +154,8 @@ model quiz_option {
 
 model result {
   id             String   @id @default(uuid())
-  team_member_id String   @db.VarChar
-  answer_id      String   @db.VarChar
+  team_member_id String   @db.VarChar(100)
+  answer_id      String   @db.VarChar(100)
   score          Int      @default(0)
   created_at     DateTime @default(now())
   updated_at     DateTime @updatedAt
@@ -167,9 +167,9 @@ model result {
 // e-detailing
 model e_detailing {
   id                 String   @id @default(uuid())
-  campaign_id        String   @db.VarChar
-  title              String   @db.VarChar
-  description        String?  @db.VarChar
+  campaign_id        String   @db.VarChar(100)
+  title              String   @db.VarChar(150)
+  description        String?  @db.VarChar(255)
   deadline           DateTime @db.Timestamp(6)
   score_starting     Decimal  @db.Decimal
   score_content      Decimal  @db.Decimal
@@ -184,9 +184,9 @@ model e_detailing {
 
 model e_detailing_video {
   id             String   @id @default(uuid())
-  e_detailing_id String   @db.VarChar
-  team_member_id String   @db.VarChar
-  title          String   @db.VarChar
+  e_detailing_id String   @db.VarChar(100)
+  team_member_id String   @db.VarChar(100)
+  title          String   @db.VarChar(150)
   description    String?  @db.Text
   created_at     DateTime @default(now())
   updated_at     DateTime @updatedAt
@@ -198,13 +198,13 @@ model e_detailing_video {
 
 model e_detailing_score {
   id                 Int      @id
-  video_id           String   @db.VarChar
+  video_id           String   @db.VarChar(100)
   score_starting     Decimal  @db.Decimal
   score_content      Decimal  @db.Decimal
   score_presentation Decimal  @db.Decimal
   score_closing      Decimal  @db.Decimal
   comment            String?
-  scored_by          String?  @db.VarChar
+  scored_by          String?  @db.VarChar(100)
   created_at         DateTime @default(now())
   updated_at         DateTime @updatedAt
 
