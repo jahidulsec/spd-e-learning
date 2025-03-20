@@ -43,6 +43,7 @@ const getSingle = async (idObj: requiredIdTypes) => {
   return data;
 };
 
+
 const createNew = async (info: createTeamInputTypes) => {
   const data = await db.teams.create({
     data: {

@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
-import userService from "../../../../../lib/team";
-import { createTeamDTOSchema } from "../../../../../schemas/team";
+import userService from "../../../../../lib/team-member";
+import { createTeamMemberDTOSchema } from "../../../../../schemas/team-member";
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const formData = req.body;
 
     //Validate incoming body data with defined schema
-    const validatedData = createTeamDTOSchema.parse(formData);
+    const validatedData = createTeamMemberDTOSchema.parse(formData);
 
     //create new with validated data
     const created = await userService.createNew(validatedData);

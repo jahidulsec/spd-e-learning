@@ -52,6 +52,57 @@ const getMulti = async (queries: teamMemberQueryInputTypes) => {
   return { data, count };
 };
 
+const getMultiByTeamId = async (
+  id: string,
+  queries: teamMemberQueryInputTypes
+) => {
+  const [data, count] = await Promise.all([
+    db.team_members.findMany({
+      where: {
+        team_id: id || "0",
+        user: {
+          full_name: {
+            startsWith: queries.search || undefined,
+          },
+          mobile: {
+            startsWith: queries.search || undefined,
+          },
+        },
+        team: {
+          title: {
+            startsWith: queries.search || undefined,
+          },
+        },
+      },
+      take: queries.size,
+      skip: queries.size * (queries.page - 1),
+      orderBy: {
+        created_at: queries.sort,
+      },
+    }),
+    db.team_members.count({
+      where: {
+        team_id: id || "0",
+        user: {
+          full_name: {
+            startsWith: queries.search || undefined,
+          },
+          mobile: {
+            startsWith: queries.search || undefined,
+          },
+        },
+        team: {
+          title: {
+            startsWith: queries.search || undefined,
+          },
+        },
+      },
+    }),
+  ]);
+
+  return { data, count };
+};
+
 const getSingle = async (idObj: requiredIdTypes) => {
   const { id } = idObj;
 
@@ -104,4 +155,5 @@ export = {
   createNew,
   updateOne,
   deleteOne,
+  getMultiByTeamId,
 };
