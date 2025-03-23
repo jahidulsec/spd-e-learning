@@ -35,6 +35,9 @@ const errorHandler = (
       message: issue.message,
       code: "INVALID_INPUT",
     }));
+  } else if (err instanceof Prisma.PrismaClientInitializationError) {
+    statusCode = 500;
+    message = err.message.split("\n").pop() || "Database error";
   } else if (err instanceof Prisma.PrismaClientValidationError) {
     statusCode = 400;
     code = 40004;

@@ -39,7 +39,7 @@ const getMultiByTeamId = async (
   const [data, count] = await Promise.all([
     db.category.findMany({
       where: {
-        team_id: teamId,
+        team_id: teamId || "",
         title: {
           startsWith: queries.search || undefined,
         },
@@ -52,7 +52,7 @@ const getMultiByTeamId = async (
     }),
     db.category.count({
       where: {
-        team_id: teamId,
+        team_id: teamId || "",
         title: {
           startsWith: queries.search || undefined,
         },
@@ -115,5 +115,5 @@ export = {
   createNew,
   updateOne,
   deleteOne,
-  getMultiByTeamId
+  getMultiByTeamId,
 };
