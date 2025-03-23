@@ -1,6 +1,5 @@
 import { Router } from "express";
 import controller from "../../api/v1/user";
-import { verifyToken } from "../../middlewares/verify-token";
 import { verifyRoles } from "../../middlewares/verify-roles";
 
 const router = Router();
@@ -8,41 +7,37 @@ const router = Router();
 // user
 router
   .route("/user")
-  .get(verifyToken, verifyRoles("superadmin"), controller.getUsers)
-  .post(verifyToken, verifyRoles("superadmin"), controller.createUser);
+  .get(verifyRoles("superadmin"), controller.getUsers)
+  .post(verifyRoles("superadmin"), controller.createUser);
 
 router
   .route("/user/:id")
-  .get(verifyToken, controller.getUser)
-  .patch(verifyToken, controller.updateUser)
-  .delete(verifyToken, verifyRoles("superadmin"), controller.delUser);
+  .get(controller.getUser)
+  .patch(controller.updateUser)
+  .delete(verifyRoles("superadmin"), controller.delUser);
 
 // team
 router
   .route("/team")
-  .get(verifyToken, verifyRoles("superadmin"), controller.getTeams)
-  .post(verifyToken, verifyRoles("superadmin"), controller.createTeam);
+  .get(verifyRoles("superadmin"), controller.getTeams)
+  .post(verifyRoles("superadmin"), controller.createTeam);
 
 router
   .route("/team/:id")
-  .get(verifyToken, controller.getTeam)
-  .patch(
-    verifyToken,
-    verifyRoles("superadmin", "team_lead"),
-    controller.updateTeam
-  )
-  .delete(verifyToken, verifyRoles("superadmin"), controller.delTeam);
+  .get(controller.getTeam)
+  .patch(verifyRoles("superadmin", "team_lead"), controller.updateTeam)
+  .delete(verifyRoles("superadmin"), controller.delTeam);
 
 // team
 router
   .route("/team-member")
-  .get(verifyToken, controller.getTeamMembers)
-  .post(verifyToken, verifyRoles("superadmin"), controller.createTeamMember);
+  .get(controller.getTeamMembers)
+  .post(verifyRoles("superadmin"), controller.createTeamMember);
 
 router
   .route("/team-member/:id")
-  .get(verifyToken, controller.getTeamMember)
-  .patch(verifyToken, verifyRoles("superadmin"), controller.updateTeamMember)
-  .delete(verifyToken, verifyRoles("superadmin"), controller.delTeamMember);
+  .get(controller.getTeamMember)
+  .patch(verifyRoles("superadmin"), controller.updateTeamMember)
+  .delete(verifyRoles("superadmin"), controller.delTeamMember);
 
 export { router as userRoutes };

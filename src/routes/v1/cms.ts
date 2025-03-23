@@ -1,6 +1,6 @@
 import { Router } from "express";
 import controller from "../../api/v1/cms";
-import { verifyToken } from "../../middlewares/verify-token";
+import { authorize } from "../../middlewares/authorize";
 
 const router = Router();
 
@@ -29,10 +29,7 @@ router
   .delete(controller.delFolder);
 
 // file
-router
-  .route("/file")
-  .get(controller.getFiles)
-  .post(controller.createFile);
+router.route("/file").get(controller.getFiles).post(controller.createFile);
 
 router
   .route("/file/:id")
