@@ -8,7 +8,7 @@ const router = Router();
 router
   .route("/category")
   .get(controller.getCategories)
-  .post(authorize('categories', 'create'),controller.createCategory);
+  .post(authorize("categories", "create"), controller.createCategory);
 
 router
   .route("/category/:id")
@@ -20,7 +20,7 @@ router
 router
   .route("/folder")
   .get(controller.getFolders)
-  .post(controller.createFolder);
+  .post(authorize("folders", "create"), controller.createFolder);
 
 router
   .route("/folder/:id")
@@ -29,7 +29,10 @@ router
   .delete(controller.delFolder);
 
 // file
-router.route("/file").get(controller.getFiles).post(controller.createFile);
+router
+  .route("/file")
+  .get(controller.getFiles)
+  .post(authorize("files", "create"), controller.createFile);
 
 router
   .route("/file/:id")

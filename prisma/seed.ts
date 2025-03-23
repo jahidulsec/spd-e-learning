@@ -21,6 +21,12 @@ const users: Prisma.usersCreateInput[] = [
     mobile: "01222333446",
     role: "team_lead",
   },
+  {
+    sap_id: "sap-id-4",
+    full_name: "team leader 2",
+    mobile: "01222333447",
+    role: "team_lead",
+  },
 ];
 
 const teams: Prisma.teamsCreateInput[] = [
