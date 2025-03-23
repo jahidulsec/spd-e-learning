@@ -1,11 +1,24 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
-import cmsService from '../../../../../lib/category';
-import { notFoundError, serverError } from "../../../../../utils/errors";
-
+import cmsService from "../../../../../lib/category";
+import userService from "../../../../../lib/user";
+import {
+  notFoundError,
+  serverError,
+  unauthorizedError,
+} from "../../../../../utils/errors";
+import { hasPermission, User } from "../../../../../policy/policy";
 
 const del = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    // get auth user
+    const authUser = req.user;
+
+    // get user info
+    const user = await userService.getSingleWithTeamInfo(
+      authUser?.id as string
+    );
+
     //Validate incoming body data with defined schema
     const validatedData = requiredIdSchema.parse(req.params);
 
@@ -14,6 +27,18 @@ const del = async (req: Request, res: Response, next: NextFunction) => {
 
     if (!data) {
       notFoundError("Category not found!");
+    }
+
+    // check permission
+    const isPermitted = hasPermission(
+      user as User,
+      "categories",
+      "delete",
+      data as any
+    );
+
+    if (!isPermitted) {
+      unauthorizedError(`You are unauthorized for this action`);
     }
 
     const deleted: any = await cmsService.deleteOne(validatedData);

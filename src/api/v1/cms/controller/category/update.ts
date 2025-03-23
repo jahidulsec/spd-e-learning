@@ -1,11 +1,25 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
 import { updateCategoryDTOSchema } from "../../../../../schemas/category";
+import userService from "../../../../../lib/user";
 import cmsService from "../../../../../lib/category";
-import { notFoundError, serverError } from "../../../../../utils/errors";
+import {
+  notFoundError,
+  serverError,
+  unauthorizedError,
+} from "../../../../../utils/errors";
+import { hasPermission, User } from "../../../../../policy/policy";
 
 const update = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    // get auth user
+    const authUser = req.user;
+
+    // get user info
+    const user = await userService.getSingleWithTeamInfo(
+      authUser?.id as string
+    );
+
     const formData = req.body;
 
     //validate incoming params id
@@ -20,6 +34,18 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
     if (!existingCategory) {
       //send not found error if not exist
       notFoundError("Category does not found");
+    }
+
+    // check permission
+    const isPermitted = hasPermission(
+      user as User,
+      "categories",
+      "update",
+      existingCategory as any
+    );
+
+    if (!isPermitted) {
+      unauthorizedError(`You are unauthorized for this action`);
     }
 
     //update with validated data
