@@ -43,6 +43,24 @@ const getSingle = async (idObj: requiredIdTypes) => {
   return data;
 };
 
+const getSingleWithTeamInfo = async (idObj: requiredIdTypes) => {
+  const { id } = idObj;
+
+  //extract id from validated id by zod
+  const data = await db.folder.findUnique({
+    where: { id },
+    include: {
+      category: {
+        include: {
+          team: true,
+        },
+      },
+    },
+  });
+
+  return data;
+};
+
 const createNew = async (info: createFolderInputTypes) => {
   const data = await db.folder.create({
     data: {
@@ -84,4 +102,5 @@ export = {
   createNew,
   updateOne,
   deleteOne,
+  getSingleWithTeamInfo,
 };
