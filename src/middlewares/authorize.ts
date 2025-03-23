@@ -24,7 +24,7 @@ export const authorize = <Resource extends keyof Permissions>(
       const isPermitted = hasPermission(user as User, resourse, action);
 
       if (!isPermitted) {
-        unauthorizedError("Your are unauthorized for this action");
+        unauthorizedError(`User with role - ${user?.role} has no permission to do this action (${action}) on ${resourse}`);
       }
 
       next();

@@ -8,7 +8,7 @@ const router = Router();
 router
   .route("/category")
   .get(controller.getCategories)
-  .post(controller.createCategory);
+  .post(authorize('categories', 'create'),controller.createCategory);
 
 router
   .route("/category/:id")

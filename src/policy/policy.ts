@@ -6,9 +6,6 @@ export type User = Prisma.usersGetPayload<{
   include: { team_members: { select: { team_id: true; id: true } } };
 }>;
 
-// type Catgory = Prisma.categoryGetPayload<{
-//   include: { team: true };
-// }>;
 
 type Folder = Prisma.folderGetPayload<{
   include: { category: true };
@@ -163,3 +160,10 @@ export function hasPermission<Resource extends keyof Permissions>(
     return data != null && permission(user, data);
   });
 }
+
+
+// Can create a comment
+// hasPermission(user, "comments", "create")
+
+// Can view the `todo` Todo with specific data
+// hasPermission(user, "todos", "view", todo)
