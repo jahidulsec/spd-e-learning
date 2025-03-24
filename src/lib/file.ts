@@ -77,6 +77,13 @@ const getSingle = async (idObj: requiredIdTypes) => {
   //extract id from validated id by zod
   const data = await db.file.findUnique({
     where: { id },
+    include: {
+      folder: {
+        include: {
+          category: true
+        }
+      }
+    }
   });
 
   return data;

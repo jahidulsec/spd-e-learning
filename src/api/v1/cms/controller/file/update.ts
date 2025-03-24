@@ -2,15 +2,29 @@ import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
 import { updateFileDTOSchema } from "../../../../../schemas/file";
 import cmsService from "../../../../../lib/file";
-import { notFoundError, serverError } from "../../../../../utils/errors";
+import {
+  notFoundError,
+  serverError,
+  unauthorizedError,
+} from "../../../../../utils/errors";
 import upload from "../../../../../utils/upload";
 import deleteImage from "../../../../../utils/delete-image";
+import { hasPermission, User } from "../../../../../policy/policy";
+import userService from "../../../../../lib/user";
 
 const update = async (req: Request, res: Response, next: NextFunction) => {
   let uploadedFile: any | null = "";
 
   try {
     uploadedFile = await upload.uploadPhoto(req, res, "file");
+
+    // get auth user
+    const authUser = req.user;
+
+    // get user info
+    const user = await userService.getSingleWithTeamInfo(
+      authUser?.id as string
+    );
 
     const formData = req.body;
 
@@ -26,6 +40,18 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
     if (!existingFile) {
       //send not found error if not exist
       notFoundError("File does not found");
+    }
+
+    // check permission
+    const isPermitted = hasPermission(
+      user as User,
+      "files",
+      "update",
+      existingFile as any
+    );
+
+    if (!isPermitted) {
+      unauthorizedError(`You are unauthorized for this action`);
     }
 
     // if upload new file

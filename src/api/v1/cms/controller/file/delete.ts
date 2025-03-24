@@ -1,12 +1,21 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
-import cmsService from '../../../../../lib/file';
-import { notFoundError, serverError } from "../../../../../utils/errors";
+import userService from "../../../../../lib/user";
+import cmsService from "../../../../../lib/file";
+import { notFoundError, serverError, unauthorizedError } from "../../../../../utils/errors";
 import deleteImage from "../../../../../utils/delete-image";
-
+import { hasPermission, User } from "../../../../../policy/policy";
 
 const del = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    // get auth user
+    const authUser = req.user;
+
+    // get user info
+    const user = await userService.getSingleWithTeamInfo(
+      authUser?.id as string
+    );
+
     //Validate incoming body data with defined schema
     const validatedData = requiredIdSchema.parse(req.params);
 
@@ -17,14 +26,26 @@ const del = async (req: Request, res: Response, next: NextFunction) => {
       notFoundError("File not found!");
     }
 
+    // check permission
+    const isPermitted = hasPermission(
+      user as User,
+      "files",
+      "delete",
+      data as any
+    );
+
+    if (!isPermitted) {
+      unauthorizedError(`You are unauthorized for this action`);
+    }
+
     const deleted: any = await cmsService.deleteOne(validatedData);
 
     if (deleted == 0) {
       serverError("File is not deleted");
     }
 
-     // delete previous file
-     if (data?.filename) {
+    // delete previous file
+    if (data?.filename) {
       deleteImage({ folder: "files", image: data.filename });
     }
 
