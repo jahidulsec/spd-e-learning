@@ -30,7 +30,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
 
       responseData = {
         success: true,
-        message: "All categories get successfully!",
+        message: "All folders get successfully!",
         data: data,
         pagination: {
           ...paginate(validatedData.page, validatedData.size, count),
@@ -44,7 +44,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
 
       responseData = {
         success: true,
-        message: "All categories get successfully!",
+        message: "All folders get successfully!",
         data: data,
         pagination: {
           ...paginate(validatedData.page, validatedData.size, count),

@@ -32,6 +32,45 @@ const getMulti = async (queries: fileQueryInputTypes) => {
   return { data, count };
 };
 
+const getMultiByTeamId = async (
+  teamId: string,
+  queries: fileQueryInputTypes
+) => {
+  const [data, count] = await Promise.all([
+    db.file.findMany({
+      where: {
+        folder: {
+          category: {
+            team_id: teamId || "",
+          },
+        },
+        title: {
+          startsWith: queries.search || undefined,
+        },
+      },
+      take: queries.size,
+      skip: queries.size * (queries.page - 1),
+      orderBy: {
+        created_at: queries.sort,
+      },
+    }),
+    db.file.count({
+      where: {
+        folder: {
+          category: {
+            team_id: teamId || "",
+          },
+        },
+        title: {
+          startsWith: queries.search || undefined,
+        },
+      },
+    }),
+  ]);
+
+  return { data, count };
+};
+
 const getSingle = async (idObj: requiredIdTypes) => {
   const { id } = idObj;
 
@@ -84,4 +123,5 @@ export = {
   createNew,
   updateOne,
   deleteOne,
+  getMultiByTeamId
 };
