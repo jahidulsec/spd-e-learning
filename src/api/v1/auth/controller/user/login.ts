@@ -53,8 +53,8 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       .status(200)
       .cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        // secure: ,
-        sameSite: "strict",
+        sameSite: 'lax',
+        path: '/',
         expires: addMinutesToDate(new Date(), 24 * 60), // for 1 day
       })
       .json(responseData);
