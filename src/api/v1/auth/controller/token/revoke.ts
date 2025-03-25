@@ -55,7 +55,7 @@ const revoke = async (req: Request, res: Response, next: NextFunction) => {
       .cookie("refreshToken", newRefreshToken, {
         httpOnly: true,
         secure: process.env.COOKIE_SECURE === 'true',
-        sameSite: 'none',
+        sameSite: 'strict',
         path: '/',
         expires: addMinutesToDate(new Date(), 24 * 60), // for 1 day
       })
