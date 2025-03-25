@@ -1,9 +1,18 @@
 import * as jwt from "jsonwebtoken";
 import { forbiddenError } from "./errors";
 
-const generateAccessToken = (userId: string, role: string) => {
+const generateAccessToken = (
+  userId: string,
+  role: string,
+  teamMemberId?: string
+) => {
   return jwt.sign(
-    { id: userId, role: role, type: "access" },
+    {
+      id: userId,
+      role: role,
+      type: "access",
+      ...(teamMemberId && { teamMemberId: teamMemberId }),
+    },
     process.env.ACCESS_TOKEN_SECRET as string,
     {
       expiresIn: "10m",

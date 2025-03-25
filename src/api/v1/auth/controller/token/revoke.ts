@@ -36,7 +36,8 @@ const revoke = async (req: Request, res: Response, next: NextFunction) => {
     // generate token
     const accessToken = generateAccessToken(
       user?.sap_id as string,
-      user?.role as string
+      user?.role as string,
+      user?.team_members?.id
     );
 
     const newRefreshToken = generateRefreshToken(user?.sap_id as string);

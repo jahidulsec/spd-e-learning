@@ -35,7 +35,8 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 
     const accessToken = generateAccessToken(
       user?.sap_id as string,
-      user?.role as string
+      user?.role as string,
+      user?.team_members?.id
     );
 
     const refreshToken = generateRefreshToken(user?.sap_id as string);
