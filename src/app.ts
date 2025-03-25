@@ -12,7 +12,10 @@ dotenv.config();
 export const app = express();
 
 // cors
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true
+}));
 
 // middlewares
 const publicFolderUploads = path.join(__dirname, "../uploads/files");

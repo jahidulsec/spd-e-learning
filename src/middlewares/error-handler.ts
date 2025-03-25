@@ -36,8 +36,10 @@ const errorHandler = (
       code: "INVALID_INPUT",
     }));
   } else if (err instanceof Prisma.PrismaClientInitializationError) {
-    statusCode = 500;
-    message = err.message.split("\n").pop() || "Database error";
+    statusCode = 503;
+    code = 50301;
+    error = "Server Unavailable";
+    message = err.message.split("\n").pop() || "Check internet connection";
   } else if (err instanceof Prisma.PrismaClientValidationError) {
     statusCode = 400;
     code = 40004;

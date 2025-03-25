@@ -54,7 +54,7 @@ const revoke = async (req: Request, res: Response, next: NextFunction) => {
       .cookie("refreshToken", newRefreshToken, {
         httpOnly: true,
         // secure: ,
-        sameSite: "lax",
+        sameSite: 'strict',
         expires: addMinutesToDate(new Date(), 24 * 60), // for 1 day
       })
       .json(responseData);
