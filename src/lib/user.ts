@@ -48,6 +48,13 @@ const getSingle = async (idObj: requiredIdTypes) => {
   //extract id from validated id by zod
   const data = await db.users.findUnique({
     where: { sap_id: id },
+    include: {
+      team_members: {
+        include: {
+          team: true
+        }
+      }
+    }
   });
 
   return data;
