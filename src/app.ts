@@ -13,8 +13,8 @@ export const app = express();
 
 // cors
 app.use(cors({
-  origin: "http://localhost:3000",
-  credentials: true,
+  // origin: "http://localhost:3000",
+  // credentials: true,
 }));
 
 // middlewares
@@ -22,7 +22,7 @@ const publicFolderUploads = path.join(__dirname, "../uploads/files");
 app.use("/uploads/files", express.static(publicFolderUploads));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(cookieParser());
+// app.use(cookieParser());
 
 // api endpoints
 app.get("/", (req, res) => {

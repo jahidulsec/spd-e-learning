@@ -51,13 +51,13 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 
     res
       .status(200)
-      .cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        sameSite: 'strict',
-        secure: process.env.COOKIE_SECURE === "true",
-        path: "/",
-        expires: addMinutesToDate(new Date(), 24 * 60), // for 1 day
-      })
+      // .cookie("refreshToken", refreshToken, {
+      //   httpOnly: true,
+      //   sameSite: 'strict',
+      //   secure: process.env.COOKIE_SECURE === "true",
+      //   path: "/",
+      //   expires: addMinutesToDate(new Date(), 24 * 60), // for 1 day
+      // })
       .json(responseData);
   } catch (error) {
     console.log("ERROR : ", error);
