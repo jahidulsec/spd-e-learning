@@ -24,7 +24,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
       authUser?.id as string
     );
 
-    console.log(userTeamInfo?.team_members?.team_id);
+    console.log(authUser);
 
     // if not super user, get team members only
     if (authUser?.role !== "superadmin") {

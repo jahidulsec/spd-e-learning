@@ -10,19 +10,31 @@ const getMulti = async (queries: teamMemberQueryInputTypes) => {
   const [data, count] = await Promise.all([
     db.team_members.findMany({
       where: {
-        user: {
-          full_name: {
-            startsWith: queries.search || undefined,
-          },
-          mobile: {
-            startsWith: queries.search || undefined,
-          },
-        },
-        team: {
-          title: {
-            startsWith: queries.search || undefined,
-          },
-        },
+        ...(queries.search && {
+          OR: [
+            {
+              user: {
+                full_name: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              user: {
+                mobile: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              team: {
+                title: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+          ],
+        }),
       },
       include: {
         user: true,
@@ -40,19 +52,31 @@ const getMulti = async (queries: teamMemberQueryInputTypes) => {
     }),
     db.team_members.count({
       where: {
-        user: {
-          full_name: {
-            startsWith: queries.search || undefined,
-          },
-          mobile: {
-            startsWith: queries.search || undefined,
-          },
-        },
-        team: {
-          title: {
-            startsWith: queries.search || undefined,
-          },
-        },
+        ...(queries.search && {
+          OR: [
+            {
+              user: {
+                full_name: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              user: {
+                mobile: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              team: {
+                title: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+          ],
+        }),
       },
     }),
   ]);
@@ -67,20 +91,36 @@ const getMultiByTeamId = async (
   const [data, count] = await Promise.all([
     db.team_members.findMany({
       where: {
-        team_id: id || "0",
-        user: {
-          full_name: {
-            startsWith: queries.search || undefined,
-          },
-          mobile: {
-            startsWith: queries.search || undefined,
-          },
-        },
-        team: {
-          title: {
-            startsWith: queries.search || undefined,
-          },
-        },
+        ...(queries.search && {
+          AND: [
+            { team_id: id || "0" },
+            {
+              OR: [
+                {
+                  user: {
+                    full_name: {
+                      startsWith: queries.search,
+                    },
+                  },
+                },
+                {
+                  user: {
+                    mobile: {
+                      startsWith: queries.search,
+                    },
+                  },
+                },
+                {
+                  team: {
+                    title: {
+                      startsWith: queries.search,
+                    },
+                  },
+                },
+              ],
+            },
+          ],
+        }),
       },
       include: {
         user: true,
@@ -98,20 +138,36 @@ const getMultiByTeamId = async (
     }),
     db.team_members.count({
       where: {
-        team_id: id || "0",
-        user: {
-          full_name: {
-            startsWith: queries.search || undefined,
-          },
-          mobile: {
-            startsWith: queries.search || undefined,
-          },
-        },
-        team: {
-          title: {
-            startsWith: queries.search || undefined,
-          },
-        },
+        ...(queries.search && {
+          AND: [
+            { team_id: id || "0" },
+            {
+              OR: [
+                {
+                  user: {
+                    full_name: {
+                      startsWith: queries.search,
+                    },
+                  },
+                },
+                {
+                  user: {
+                    mobile: {
+                      startsWith: queries.search,
+                    },
+                  },
+                },
+                {
+                  team: {
+                    title: {
+                      startsWith: queries.search,
+                    },
+                  },
+                },
+              ],
+            },
+          ],
+        }),
       },
     }),
   ]);
@@ -197,5 +253,5 @@ export = {
   updateOne,
   deleteOne,
   getMultiByTeamId,
-  getSingleByTeamId
+  getSingleByTeamId,
 };
