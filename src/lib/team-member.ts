@@ -21,6 +21,13 @@ const getMulti = async (queries: teamMemberQueryInputTypes) => {
             },
             {
               user: {
+                sap_id: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              user: {
                 mobile: {
                   startsWith: queries.search,
                 },
@@ -57,6 +64,13 @@ const getMulti = async (queries: teamMemberQueryInputTypes) => {
             {
               user: {
                 full_name: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              user: {
+                sap_id: {
                   startsWith: queries.search,
                 },
               },
@@ -105,6 +119,13 @@ const getMultiByTeamId = async (
                 },
                 {
                   user: {
+                    sap_id: {
+                      startsWith: queries.search,
+                    },
+                  },
+                },
+                {
+                  user: {
                     mobile: {
                       startsWith: queries.search,
                     },
@@ -146,6 +167,13 @@ const getMultiByTeamId = async (
                 {
                   user: {
                     full_name: {
+                      startsWith: queries.search,
+                    },
+                  },
+                },
+                {
+                  user: {
+                    sap_id: {
                       startsWith: queries.search,
                     },
                   },
