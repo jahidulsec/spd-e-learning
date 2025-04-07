@@ -87,20 +87,31 @@ model folder {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
-  category category @relation(fields: [category_id], references: [id], onDelete: Cascade)
-  file     file[]
+  category   category     @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  sub_folder sub_folder[]
 }
 
-model file {
+model sub_folder {
   id         String   @id @default(uuid())
   title      String   @db.VarChar(150)
-  filename   String   @db.VarChar(100)
-  file_type  String   @db.VarChar(100)
   folder_id  String   @db.VarChar(100)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
   folder folder @relation(fields: [folder_id], references: [id], onDelete: Cascade)
+  file   file[]
+}
+
+model file {
+  id            String   @id @default(uuid())
+  title         String   @db.VarChar(150)
+  filename      String   @db.VarChar(100)
+  file_type     String   @db.VarChar(100)
+  sub_folder_id String   @db.VarChar(100)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  sub_folder sub_folder @relation(fields: [sub_folder_id], references: [id], onDelete: Cascade)
 }
 
 // quiz

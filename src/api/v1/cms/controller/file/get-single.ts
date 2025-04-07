@@ -26,7 +26,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
       return;
     }
 
-    const {folder, ...newData} = data
+    const {sub_folder, ...newData} = data
 
     // check permission
     const isPermitted = hasPermission(

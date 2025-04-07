@@ -6,13 +6,16 @@ export type User = Prisma.usersGetPayload<{
   include: { team_members: { select: { team_id: true; id: true } } };
 }>;
 
-
 type Folder = Prisma.folderGetPayload<{
   include: { category: true };
 }>;
 
 type File = Prisma.fileGetPayload<{
-  include: { folder: { include: { category: true } } };
+  include: {
+    sub_folder: {
+      include: { folder: { include: { category: true } } }
+    }
+  }
 }>;
 
 type PermissionCheck<Key extends keyof Permissions> =
@@ -33,12 +36,10 @@ export type Permissions = {
     action: "view" | "create" | "update" | "delete";
   };
   folders: {
-    // Can do something like Pick<Todo, "userId"> to get just the rows you use
     dataType: Folder;
     action: "view" | "create" | "update" | "delete";
   };
   files: {
-    // Can do something like Pick<Todo, "userId"> to get just the rows you use
     dataType: File;
     action: "view" | "create" | "update" | "delete";
   };
@@ -86,11 +87,11 @@ const ROLES = {
     files: {
       create: true,
       view: (user, file) =>
-        user.team_members?.team_id === file.folder.category.team_id,
+        user.team_members?.team_id === file.sub_folder.folder.category.team_id,
       update: (user, file) =>
-        user.team_members?.team_id === file.folder.category.team_id,
+        user.team_members?.team_id === file.sub_folder.folder.category.team_id,
       delete: (user, file) =>
-        user.team_members?.team_id === file.folder.category.team_id,
+        user.team_members?.team_id === file.sub_folder.folder.category.team_id,
     },
   },
   mios: {
@@ -114,7 +115,7 @@ const ROLES = {
     files: {
       create: false,
       view: (user, file) =>
-        user.team_members?.team_id === file.folder.category.team_id,
+        user.team_members?.team_id === file.sub_folder.folder.category.team_id,
       update: false,
       delete: false,
     },
@@ -160,7 +161,6 @@ export function hasPermission<Resource extends keyof Permissions>(
     return data != null && permission(user, data);
   });
 }
-
 
 // Can create a comment
 // hasPermission(user, "comments", "create")

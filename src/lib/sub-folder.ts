@@ -1,14 +1,14 @@
 import db from "../db/db";
 import {
-  createFileInputTypes,
-  updateFileInputTypes,
-  fileQueryInputTypes,
-} from "../schemas/file";
+  createSubFolderInputTypes,
+  updateSubFolderInputTypes,
+  subFolderQueryInputTypes,
+} from "../schemas/sub-folder";
 import { requiredIdTypes } from "../schemas/required-id";
 
-const getMulti = async (queries: fileQueryInputTypes) => {
+const getMulti = async (queries: subFolderQueryInputTypes) => {
   const [data, count] = await Promise.all([
-    db.file.findMany({
+    db.sub_folder.findMany({
       where: {
         title: {
           startsWith: queries.search || undefined,
@@ -20,7 +20,7 @@ const getMulti = async (queries: fileQueryInputTypes) => {
         created_at: queries.sort,
       },
     }),
-    db.file.count({
+    db.sub_folder.count({
       where: {
         title: {
           startsWith: queries.search || undefined,
@@ -34,16 +34,14 @@ const getMulti = async (queries: fileQueryInputTypes) => {
 
 const getMultiByTeamId = async (
   teamId: string,
-  queries: fileQueryInputTypes
+  queries: subFolderQueryInputTypes
 ) => {
   const [data, count] = await Promise.all([
-    db.file.findMany({
+    db.sub_folder.findMany({
       where: {
-        sub_folder: {
-          folder: {
-            category: {
-              team_id: teamId || "",
-            },
+        folder: {
+          category: {
+            team_id: teamId || "",
           },
         },
         title: {
@@ -56,13 +54,11 @@ const getMultiByTeamId = async (
         created_at: queries.sort,
       },
     }),
-    db.file.count({
+    db.sub_folder.count({
       where: {
-        sub_folder: {
-          folder: {
-            category: {
-              team_id: teamId || "",
-            },
+        folder: {
+          category: {
+            team_id: teamId || "",
           },
         },
         title: {
@@ -79,26 +75,37 @@ const getSingle = async (idObj: requiredIdTypes) => {
   const { id } = idObj;
 
   //extract id from validated id by zod
-  const data = await db.file.findUnique({
+  const data = await db.sub_folder.findUnique({
     where: { id },
-    include: {
-      sub_folder: {
-        include: {
-          folder: {
-            include: {
-              category: true,
-            },
-          },
-        },
-      }
-    }
   });
 
   return data;
 };
 
-const createNew = async (info: createFileInputTypes) => {
-  const data = await db.file.create({
+const getSingleWithTeamInfo = async (idObj: requiredIdTypes) => {
+  const { id } = idObj;
+
+  //extract id from validated id by zod
+  const data = await db.sub_folder.findUnique({
+    where: { id },
+    include: {
+      folder: {
+        include: {
+          category: {
+            include: {
+              team: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return data;
+};
+
+const createNew = async (info: createSubFolderInputTypes) => {
+  const data = await db.sub_folder.create({
     data: {
       ...info,
     },
@@ -109,12 +116,12 @@ const createNew = async (info: createFileInputTypes) => {
 
 const updateOne = async (
   idObj: requiredIdTypes,
-  info: updateFileInputTypes
+  info: updateSubFolderInputTypes
 ) => {
   //extract id from validated id by zod
   const { id } = idObj;
 
-  const updatedData = await db.file.update({
+  const updatedData = await db.sub_folder.update({
     where: { id: id },
     data: { ...info },
   });
@@ -125,7 +132,7 @@ const deleteOne = async (idObj: requiredIdTypes) => {
   //extract id from validated id by zod
   const { id } = idObj;
 
-  const deleted = await db.file.delete({
+  const deleted = await db.sub_folder.delete({
     where: { id: id },
   });
 
@@ -138,5 +145,6 @@ export = {
   createNew,
   updateOne,
   deleteOne,
+  getSingleWithTeamInfo,
   getMultiByTeamId,
 };

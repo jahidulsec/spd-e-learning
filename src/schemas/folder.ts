@@ -2,7 +2,7 @@ import z from "zod";
 
 export const createFolderDTOSchema = z.object({
   title: z.string().min(3),
-  category_id: z.string(),
+  category_id: z.string().min(3),
 });
 
 export const folderQuerySchema = z.object({
@@ -13,7 +13,7 @@ export const folderQuerySchema = z.object({
 });
 
 export const updateFolderDTOSchema = createFolderDTOSchema
-  .omit({category_id: true})
+  .omit({ category_id: true })
   .partial();
 
 export type createFolderInputTypes = z.infer<typeof createFolderDTOSchema>;
