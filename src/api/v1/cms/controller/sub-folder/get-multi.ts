@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
-import { folderQuerySchema } from "../../../../../schemas/folder";
-import cmsService from "../../../../../lib/folder";
+import { subFolderQuerySchema } from "../../../../../schemas/sub-folder";
+import cmsService from "../../../../../lib/sub-folder";
 import userService from "../../../../../lib/user";
 import { paginate } from "../../../../../utils/pagination";
 import { $Enums } from "@prisma/client";
@@ -16,7 +16,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     );
 
     // validate incoming body data with defined schema
-    const validatedData = folderQuerySchema.parse(req.query);
+    const validatedData = subFolderQuerySchema.parse(req.query);
 
     let responseData: any;
 
@@ -62,4 +62,4 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { get as getFolders };
+export { get as getSubFolders };

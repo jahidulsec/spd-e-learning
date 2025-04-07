@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
-import { unauthorizedError } from "../utils/errors";
+import { forbiddenError } from "../utils/errors";
 import userService from "../lib/user";
 import { hasPermission, Permissions, User } from "../policy/policy";
 
@@ -12,7 +12,7 @@ export const authorize = <Resource extends keyof Permissions>(
       const authUser = req.user;
 
       if (!authUser) {
-        unauthorizedError("Your are unauthorized");
+        forbiddenError("Your are unauthorized");
       }
 
       // get user info
@@ -24,7 +24,7 @@ export const authorize = <Resource extends keyof Permissions>(
       const isPermitted = hasPermission(user as User, resourse, action);
 
       if (!isPermitted) {
-        unauthorizedError(`User with role - ${user?.role} has no permission to do this action (${action}) on ${resourse}`);
+        forbiddenError(`User with role - ${user?.role} has no permission to do this action (${action}) on ${resourse}`);
       }
 
       next();

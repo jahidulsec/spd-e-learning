@@ -1,4 +1,5 @@
 import { $Enums, category, Prisma } from "@prisma/client";
+import subFolder from "../lib/sub-folder";
 
 type Role = $Enums.role;
 
@@ -10,12 +11,22 @@ type Folder = Prisma.folderGetPayload<{
   include: { category: true };
 }>;
 
+type SubFolder = Prisma.sub_folderGetPayload<{
+  include: {
+    folder: {
+      include: {
+        category: true;
+      };
+    };
+  };
+}>;
+
 type File = Prisma.fileGetPayload<{
   include: {
     sub_folder: {
-      include: { folder: { include: { category: true } } }
-    }
-  }
+      include: { folder: { include: { category: true } } };
+    };
+  };
 }>;
 
 type PermissionCheck<Key extends keyof Permissions> =
@@ -39,6 +50,10 @@ export type Permissions = {
     dataType: Folder;
     action: "view" | "create" | "update" | "delete";
   };
+  subfolders: {
+    dataType: SubFolder;
+    action: "view" | "create" | "update" | "delete";
+  };
   files: {
     dataType: File;
     action: "view" | "create" | "update" | "delete";
@@ -54,6 +69,12 @@ const ROLES = {
       delete: true,
     },
     folders: {
+      create: true,
+      view: true,
+      update: true,
+      delete: true,
+    },
+    subfolders: {
       create: true,
       view: true,
       update: true,
@@ -84,6 +105,15 @@ const ROLES = {
       delete: (user, folder) =>
         user.team_members?.team_id === folder.category.team_id,
     },
+    subfolders: {
+      create: true,
+      view: (user, subfolder) =>
+        user.team_members?.team_id === subfolder.folder.category.team_id,
+      update: (user, subfolder) =>
+        user.team_members?.team_id === subfolder.folder.category.team_id,
+      delete: (user, subfolder) =>
+        user.team_members?.team_id === subfolder.folder.category.team_id,
+    },
     files: {
       create: true,
       view: (user, file) =>
@@ -112,6 +142,13 @@ const ROLES = {
       update: false,
       delete: false,
     },
+    subfolders: {
+      create: false,
+      view: (user, subfolder) =>
+        user.team_members?.team_id === subfolder.folder.category.team_id,
+      update: false,
+      delete: false,
+    },
     files: {
       create: false,
       view: (user, file) =>
@@ -129,6 +166,12 @@ const ROLES = {
       delete: false,
     },
     folders: {
+      create: false,
+      view: true,
+      update: false,
+      delete: false,
+    },
+    subfolders: {
       create: false,
       view: true,
       update: false,

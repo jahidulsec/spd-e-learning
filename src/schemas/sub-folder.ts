@@ -12,7 +12,7 @@ export const subFolderQuerySchema = z.object({
   search: z.string().optional(),
 });
 
-export const updateFolderDTOSchema = createSubFolderDTOSchema
+export const updateSubFolderDTOSchema = createSubFolderDTOSchema
   .omit({ folder_id: true })
   .partial();
 
@@ -20,4 +20,4 @@ export type createSubFolderInputTypes = z.infer<typeof createSubFolderDTOSchema>
 
 export type subFolderQueryInputTypes = z.infer<typeof subFolderQuerySchema>;
 
-export type updateSubFolderInputTypes = z.infer<typeof updateFolderDTOSchema>;
+export type updateSubFolderInputTypes = z.infer<typeof updateSubFolderDTOSchema>;
