@@ -3,6 +3,7 @@ import { requiredIdSchema } from "../../../../../schemas/required-id";
 import teamService from "../../../../../lib/team";
 import userService from "../../../../../lib/user";
 import { notFoundError, unauthorizedError } from "../../../../../utils/errors";
+import { $Enums } from "@prisma/client";
 
 const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -21,8 +22,10 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
       authUser?.id as string
     );
 
+    const permittedRole: $Enums.role[] = ["superadmin", "director"];
+
     if (
-      authUser?.role !== "superadmin" &&
+      permittedRole.includes(authUser?.role as $Enums.role) &&
       userTeamInfo?.team_members?.team_id !== validatedData.id
     ) {
       unauthorizedError(

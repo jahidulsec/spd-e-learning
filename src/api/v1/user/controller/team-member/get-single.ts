@@ -26,7 +26,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
 
     // if team member - then get only team member info
     const permittedRole: $Enums.role[] = ["superadmin", "director"];
-    
+
     if (permittedRole.includes(authUser?.role as $Enums.role)) {
       //get single item with validated id
       data = await teamService.getSingleByTeamId(
