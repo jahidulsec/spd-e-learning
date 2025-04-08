@@ -4,6 +4,7 @@ import userService from "../../../../../lib/user";
 import { paginate } from "../../../../../utils/pagination";
 import { teamQuerySchema } from "../../../../../schemas/team";
 import { unauthorizedError } from "../../../../../utils/errors";
+import { $Enums } from "@prisma/client";
 
 const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -27,7 +28,10 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     console.log(authUser);
 
     // if not super user, get team members only
-    if (authUser?.role !== "superadmin") {
+
+    const permittedRole: $Enums.role[] = ["superadmin", "director"];
+
+    if (permittedRole.includes(authUser?.role as $Enums.role)) {
       const { data, count } = await teamMemberService.getMultiByTeamId(
         userTeamInfo?.team_members?.team_id as string,
         validatedData

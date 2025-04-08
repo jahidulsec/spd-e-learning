@@ -3,6 +3,7 @@ import { requiredIdSchema } from "../../../../../schemas/required-id";
 import teamService from "../../../../../lib/team-member";
 import userService from "../../../../../lib/user";
 import { notFoundError, unauthorizedError } from "../../../../../utils/errors";
+import { $Enums } from "@prisma/client";
 
 const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -24,7 +25,9 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     let data: any;
 
     // if team member - then get only team member info
-    if (authUser?.role !== "superadmin") {
+    const permittedRole: $Enums.role[] = ["superadmin", "director"];
+    
+    if (permittedRole.includes(authUser?.role as $Enums.role)) {
       //get single item with validated id
       data = await teamService.getSingleByTeamId(
         validatedData.id,
