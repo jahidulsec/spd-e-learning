@@ -17,28 +17,24 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
     const formData = req.body;
 
-    //Validate incoming body data with defined schema
-    const validatedData = createFolderDTOSchema.parse(formData);
-
-    if (!validatedData.category_id && !validatedData.parent_folder_id) {
-      badRequestError("At least enter category or parent folder id");
-    }
-
-    // if category id is given
-    if (validatedData.category_id) {
-      // get category
-      const category = await categoryService.getSingle({
-        id: validatedData.category_id as string,
+    // check parent folder id
+    if (formData["parent_folder_id"]) {
+      const parentFolder = await cmsService.getSingleWithTeamInfo({
+        id: formData["parent_folder_id"],
       });
 
       // if not superuser, add team id from user info
       if (user?.role !== "superadmin") {
-        if (category?.team_id !== user?.team_members?.team_id) {
+        if (parentFolder?.category?.team_id !== user?.team_members?.team_id) {
           notFoundError("Category does not exist");
         }
       }
+
+      formData["category_id"] = parentFolder?.category_id
     }
 
+    //Validate incoming body data with defined schema
+    const validatedData = createFolderDTOSchema.parse(formData);
 
     //create new with validated data
     const created = await cmsService.createNew(validatedData);

@@ -23,6 +23,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
 
     if (!data) {
       notFoundError("Folder not found!");
+      return
     }
 
     // check permission
@@ -37,10 +38,13 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
       unauthorizedError(`You are unauthorized for this action`);
     }
 
+    // extract category info
+    const {category, ...restData} = data
+
     const responseData = {
       success: true,
       message: "Get folder details successfully!",
-      data: data,
+      data: restData,
     };
 
     //send success response

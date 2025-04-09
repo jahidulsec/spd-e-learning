@@ -13,9 +13,7 @@ const getMulti = async (queries: folderQueryInputTypes) => {
         title: {
           startsWith: queries.search || undefined,
         },
-        category_id: {
-          not: null,
-        },
+        parent_folder_id: null,
       },
       take: queries.size,
       skip: queries.size * (queries.page - 1),
@@ -28,9 +26,7 @@ const getMulti = async (queries: folderQueryInputTypes) => {
         title: {
           startsWith: queries.search || undefined,
         },
-        category_id: {
-          not: null,
-        },
+        parent_folder_id: null,
       },
     }),
   ]);
@@ -48,9 +44,7 @@ const getMultiByTeamId = async (
         category: {
           team_id: teamId || "",
         },
-        category_id: {
-          not: null,
-        },
+        parent_folder_id: null,
         title: {
           startsWith: queries.search || undefined,
         },
@@ -66,9 +60,7 @@ const getMultiByTeamId = async (
         category: {
           team_id: teamId || "",
         },
-        category_id: {
-          not: null,
-        },
+        parent_folder_id: null,
         title: {
           startsWith: queries.search || undefined,
         },
@@ -85,6 +77,9 @@ const getSingle = async (idObj: requiredIdTypes) => {
   //extract id from validated id by zod
   const data = await db.folder.findUnique({
     where: { id },
+    include: {
+      sub_folder: true,
+    },
   });
 
   return data;
@@ -102,6 +97,7 @@ const getSingleWithTeamInfo = async (idObj: requiredIdTypes) => {
           team: true,
         },
       },
+      sub_folder: true
     },
   });
 

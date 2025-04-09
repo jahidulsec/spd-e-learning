@@ -2,7 +2,7 @@ import z from "zod";
 
 export const createFolderDTOSchema = z.object({
   title: z.string().min(3),
-  category_id: z.string().min(3).optional(),
+  category_id: z.string().min(3),
   parent_folder_id: z.string().min(3).optional(),
 });
 
