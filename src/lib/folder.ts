@@ -97,7 +97,8 @@ const getSingleWithTeamInfo = async (idObj: requiredIdTypes) => {
           team: true,
         },
       },
-      sub_folder: true
+      sub_folder: true,
+      file: true,
     },
   });
 
