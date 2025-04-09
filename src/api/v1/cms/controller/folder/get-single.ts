@@ -23,13 +23,13 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
 
     if (!data) {
       notFoundError("Folder not found!");
-      return
+      return;
     }
 
     // check permission
     const isPermitted = hasPermission(
       user as User,
-      'folders',
+      "folders",
       "view",
       data as any
     );
@@ -39,12 +39,22 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     // extract category info
-    const {category, ...restData} = data
+    const { category, file, ...restData } = data;
 
     const responseData = {
       success: true,
       message: "Get folder details successfully!",
-      data: restData,
+      data: {
+        ...restData,
+        file: file.map((item) => {
+          return {
+            ...item,
+            file_path: `${req.protocol}://${req.get("host")}/uploads/files/${
+              item.filename
+            }`,
+          };
+        }),
+      },
     };
 
     //send success response
