@@ -1,5 +1,4 @@
 import { $Enums, category, Prisma } from "@prisma/client";
-import subFolder from "../lib/sub-folder";
 
 type Role = $Enums.role;
 
@@ -10,8 +9,6 @@ export type User = Prisma.usersGetPayload<{
 type Folder = Prisma.folderGetPayload<{
   include: { category: true };
 }>;
-
-
 
 type File = Prisma.fileGetPayload<{
   include: {
