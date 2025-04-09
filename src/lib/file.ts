@@ -39,11 +39,9 @@ const getMultiByTeamId = async (
   const [data, count] = await Promise.all([
     db.file.findMany({
       where: {
-        sub_folder: {
-          folder: {
-            category: {
-              team_id: teamId || "",
-            },
+        folder: {
+          category: {
+            team_id: teamId || "",
           },
         },
         title: {
@@ -58,11 +56,9 @@ const getMultiByTeamId = async (
     }),
     db.file.count({
       where: {
-        sub_folder: {
-          folder: {
-            category: {
-              team_id: teamId || "",
-            },
+        folder: {
+          category: {
+            team_id: teamId || "",
           },
         },
         title: {
@@ -82,16 +78,12 @@ const getSingle = async (idObj: requiredIdTypes) => {
   const data = await db.file.findUnique({
     where: { id },
     include: {
-      sub_folder: {
+      folder: {
         include: {
-          folder: {
-            include: {
-              category: true,
-            },
-          },
+          category: true,
         },
-      }
-    }
+      },
+    },
   });
 
   return data;

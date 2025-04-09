@@ -2,17 +2,13 @@ import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
 import teamService from "../../../../../lib/team";
 import userService from "../../../../../lib/user";
-import { notFoundError, unauthorizedError } from "../../../../../utils/errors";
+import { forbiddenError, notFoundError, unauthorizedError } from "../../../../../utils/errors";
 import { $Enums } from "@prisma/client";
 
 const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // get auth user
     const authUser = req.user;
-
-    if (!authUser) {
-      unauthorizedError("Your are unauthorized for this action");
-    }
 
     // Validate incoming body data with defined schema
     const validatedData = requiredIdSchema.parse(req.params);
@@ -25,10 +21,10 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     const permittedRole: $Enums.role[] = ["superadmin", "director"];
 
     if (
-      permittedRole.includes(authUser?.role as $Enums.role) &&
+      !permittedRole.includes(authUser?.role as $Enums.role) &&
       userTeamInfo?.team_members?.team_id !== validatedData.id
     ) {
-      unauthorizedError(
+      forbiddenError(
         "Your are not a member of this team to perform this action"
       );
     }

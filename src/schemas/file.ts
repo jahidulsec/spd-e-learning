@@ -2,7 +2,7 @@ import z from "zod";
 
 export const createFileDTOSchema = z.object({
   title: z.string().min(3),
-  sub_folder_id: z.string().min(3),
+  folder_id: z.string().min(3),
   file_type: z.string().min(3),
   filename: z.string().min(3),
 });
@@ -15,7 +15,7 @@ export const fileQuerySchema = z.object({
 });
 
 export const updateFileDTOSchema = createFileDTOSchema
-  .omit({ sub_folder_id: true })
+  .omit({ folder_id: true })
   .partial();
 
 export type createFileInputTypes = z.infer<typeof createFileDTOSchema>;

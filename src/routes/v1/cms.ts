@@ -29,16 +29,16 @@ router
   .delete(controller.delFolder);
 
 // sub folder
-router
-  .route("/sub-folder")
-  .get(controller.getSubFolders)
-  .post(authorize("subfolders", "create"), controller.createSubFolder);
+// router
+//   .route("/sub-folder")
+//   .get(controller.getSubFolders)
+//   .post(authorize("subfolders", "create"), controller.createSubFolder);
 
-router
-  .route("/sub-folder/:id")
-  .get(controller.getSubFolder)
-  .patch(controller.updateSubFolder)
-  .delete(controller.delSubFolder);
+// router
+//   .route("/sub-folder/:id")
+//   .get(controller.getSubFolder)
+//   .patch(controller.updateSubFolder)
+//   .delete(controller.delSubFolder);
 
 // file
 router

@@ -11,20 +11,12 @@ type Folder = Prisma.folderGetPayload<{
   include: { category: true };
 }>;
 
-type SubFolder = Prisma.sub_folderGetPayload<{
-  include: {
-    folder: {
-      include: {
-        category: true;
-      };
-    };
-  };
-}>;
+
 
 type File = Prisma.fileGetPayload<{
   include: {
-    sub_folder: {
-      include: { folder: { include: { category: true } } };
+    folder: {
+      include: { category: true };
     };
   };
 }>;
@@ -50,10 +42,6 @@ export type Permissions = {
     dataType: Folder;
     action: "view" | "create" | "update" | "delete";
   };
-  subfolders: {
-    dataType: SubFolder;
-    action: "view" | "create" | "update" | "delete";
-  };
   files: {
     dataType: File;
     action: "view" | "create" | "update" | "delete";
@@ -69,12 +57,6 @@ const ROLES = {
       delete: true,
     },
     folders: {
-      create: true,
-      view: true,
-      update: true,
-      delete: true,
-    },
-    subfolders: {
       create: true,
       view: true,
       update: true,
@@ -99,29 +81,20 @@ const ROLES = {
     folders: {
       create: true,
       view: (user, folder) =>
-        user.team_members?.team_id === folder.category.team_id,
+        user.team_members?.team_id === folder.category?.team_id,
       update: (user, folder) =>
-        user.team_members?.team_id === folder.category.team_id,
+        user.team_members?.team_id === folder.category?.team_id,
       delete: (user, folder) =>
-        user.team_members?.team_id === folder.category.team_id,
-    },
-    subfolders: {
-      create: true,
-      view: (user, subfolder) =>
-        user.team_members?.team_id === subfolder.folder.category.team_id,
-      update: (user, subfolder) =>
-        user.team_members?.team_id === subfolder.folder.category.team_id,
-      delete: (user, subfolder) =>
-        user.team_members?.team_id === subfolder.folder.category.team_id,
+        user.team_members?.team_id === folder.category?.team_id,
     },
     files: {
       create: true,
       view: (user, file) =>
-        user.team_members?.team_id === file.sub_folder.folder.category.team_id,
+        user.team_members?.team_id === file.folder.category?.team_id,
       update: (user, file) =>
-        user.team_members?.team_id === file.sub_folder.folder.category.team_id,
+        user.team_members?.team_id === file.folder.category?.team_id,
       delete: (user, file) =>
-        user.team_members?.team_id === file.sub_folder.folder.category.team_id,
+        user.team_members?.team_id === file.folder.category?.team_id,
     },
   },
   mios: {
@@ -138,21 +111,14 @@ const ROLES = {
     folders: {
       create: false,
       view: (user, folder) =>
-        user.team_members?.team_id === folder.category.team_id,
-      update: false,
-      delete: false,
-    },
-    subfolders: {
-      create: false,
-      view: (user, subfolder) =>
-        user.team_members?.team_id === subfolder.folder.category.team_id,
+        user.team_members?.team_id === folder.category?.team_id,
       update: false,
       delete: false,
     },
     files: {
       create: false,
       view: (user, file) =>
-        user.team_members?.team_id === file.sub_folder.folder.category.team_id,
+        user.team_members?.team_id === file.folder.category?.team_id,
       update: false,
       delete: false,
     },
@@ -166,12 +132,6 @@ const ROLES = {
       delete: false,
     },
     folders: {
-      create: false,
-      view: true,
-      update: false,
-      delete: false,
-    },
-    subfolders: {
       create: false,
       view: true,
       update: false,

@@ -42,6 +42,8 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
         validatedData
       );
 
+      console.log(user?.team_members?.team_id )
+
       responseData = {
         success: true,
         message: "All folders get successfully!",

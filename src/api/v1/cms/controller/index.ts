@@ -12,13 +12,6 @@ import { getFolder } from "./folder/get-single";
 import { updateFolder } from "./folder/update";
 import { delFolder } from "./folder/delete";
 
-// folder
-import { createSubFolder } from "./sub-folder/create";
-import { getSubFolders } from "./sub-folder/get-multi";
-import { getSubFolder } from "./sub-folder/get-single";
-import { updateSubFolder } from "./sub-folder/update";
-import { delSubFolder } from "./sub-folder/delete";
-
 // file
 import { createFile } from "./file/create";
 import { getFiles } from "./file/get-multi";
@@ -42,9 +35,4 @@ export = {
   getFolders,
   updateFolder,
   delFolder,
-  createSubFolder,
-  getSubFolder,
-  getSubFolders,
-  updateSubFolder,
-  delSubFolder,
 };

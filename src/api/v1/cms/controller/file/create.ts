@@ -3,7 +3,6 @@ import userService from "../../../../../lib/user";
 import { createFileDTOSchema } from "../../../../../schemas/file";
 import cmsService from "../../../../../lib/file";
 import folderService from "../../../../../lib/folder";
-import subFolderService from "../../../../../lib/sub-folder";
 import upload from "../../../../../utils/upload";
 import { badRequestError, notFoundError } from "../../../../../utils/errors";
 import deleteImage from "../../../../../utils/delete-image";
@@ -36,13 +35,13 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     const validatedData = createFileDTOSchema.parse(formData);
 
     // get folder
-    const subFolder = await subFolderService.getSingleWithTeamInfo({
-      id: validatedData.sub_folder_id,
+    const folder = await folderService.getSingleWithTeamInfo({
+      id: validatedData.folder_id,
     });
 
     // if not superuser, add team id from user info
     if (user?.role !== "superadmin") {
-      if (subFolder?.folder?.category.team_id !== user?.team_members?.team_id) {
+      if (folder?.category?.team_id !== user?.team_members?.team_id) {
         notFoundError("Folder does not exist");
       }
     }

@@ -13,6 +13,9 @@ const getMulti = async (queries: folderQueryInputTypes) => {
         title: {
           startsWith: queries.search || undefined,
         },
+        category_id: {
+          not: null,
+        },
       },
       take: queries.size,
       skip: queries.size * (queries.page - 1),
@@ -24,6 +27,9 @@ const getMulti = async (queries: folderQueryInputTypes) => {
       where: {
         title: {
           startsWith: queries.search || undefined,
+        },
+        category_id: {
+          not: null,
         },
       },
     }),
@@ -42,6 +48,9 @@ const getMultiByTeamId = async (
         category: {
           team_id: teamId || "",
         },
+        category_id: {
+          not: null,
+        },
         title: {
           startsWith: queries.search || undefined,
         },
@@ -56,6 +65,9 @@ const getMultiByTeamId = async (
       where: {
         category: {
           team_id: teamId || "",
+        },
+        category_id: {
+          not: null,
         },
         title: {
           startsWith: queries.search || undefined,

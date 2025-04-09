@@ -81,37 +81,39 @@ model category {
 }
 
 model folder {
-  id          String   @id @default(uuid())
-  title       String   @db.VarChar(150)
-  category_id String   @db.VarChar(100)
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
+  id               String   @id @default(uuid())
+  title            String   @db.VarChar(150)
+  category_id      String?  @db.VarChar(100)
+  parent_folder_id String?
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
 
-  category   category     @relation(fields: [category_id], references: [id], onDelete: Cascade)
-  sub_folder sub_folder[]
+  parent_folder folder?   @relation("SubFolder", fields: [parent_folder_id], references: [id], onDelete: SetNull)
+  sub_folder    folder[]  @relation("SubFolder")
+  category      category? @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  file          file[]
 }
 
-model sub_folder {
+// model sub_folder {
+//   id         String   @id @default(uuid())
+//   title      String   @db.VarChar(150)
+//   folder_id  String   @db.VarChar(100)
+//   created_at DateTime @default(now())
+//   updated_at DateTime @updatedAt
+
+//   folder folder @relation(fields: [folder_id], references: [id], onDelete: Cascade)
+// }
+
+model file {
   id         String   @id @default(uuid())
   title      String   @db.VarChar(150)
+  filename   String   @db.VarChar(100)
+  file_type  String   @db.VarChar(100)
   folder_id  String   @db.VarChar(100)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
   folder folder @relation(fields: [folder_id], references: [id], onDelete: Cascade)
-  file   file[]
-}
-
-model file {
-  id            String   @id @default(uuid())
-  title         String   @db.VarChar(150)
-  filename      String   @db.VarChar(100)
-  file_type     String   @db.VarChar(100)
-  sub_folder_id String   @db.VarChar(100)
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
-
-  sub_folder sub_folder @relation(fields: [sub_folder_id], references: [id], onDelete: Cascade)
 }
 
 // quiz

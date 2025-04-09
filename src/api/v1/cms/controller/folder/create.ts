@@ -3,7 +3,7 @@ import userService from "../../../../../lib/user";
 import { createFolderDTOSchema } from "../../../../../schemas/folder";
 import cmsService from "../../../../../lib/folder";
 import categoryService from "../../../../../lib/category";
-import { notFoundError } from "../../../../../utils/errors";
+import { badRequestError, notFoundError } from "../../../../../utils/errors";
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -20,17 +20,25 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     //Validate incoming body data with defined schema
     const validatedData = createFolderDTOSchema.parse(formData);
 
-    // get category
-    const category = await categoryService.getSingle({
-      id: validatedData.category_id,
-    });
+    if (!validatedData.category_id && !validatedData.parent_folder_id) {
+      badRequestError("At least enter category or parent folder id");
+    }
 
-    // if not superuser, add team id from user info
-    if (user?.role !== "superadmin") {
-      if (category?.team_id !== user?.team_members?.team_id) {
-        notFoundError("Category does not exist");
+    // if category id is given
+    if (validatedData.category_id) {
+      // get category
+      const category = await categoryService.getSingle({
+        id: validatedData.category_id as string,
+      });
+
+      // if not superuser, add team id from user info
+      if (user?.role !== "superadmin") {
+        if (category?.team_id !== user?.team_members?.team_id) {
+          notFoundError("Category does not exist");
+        }
       }
     }
+
 
     //create new with validated data
     const created = await cmsService.createNew(validatedData);
