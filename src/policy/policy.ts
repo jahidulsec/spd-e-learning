@@ -18,6 +18,8 @@ type File = Prisma.fileGetPayload<{
   };
 }>;
 
+type Quater = Prisma.quaterGetPayload<{}>;
+
 type PermissionCheck<Key extends keyof Permissions> =
   | boolean
   | ((user: User, data: Permissions[Key]["dataType"]) => boolean);
@@ -43,6 +45,10 @@ export type Permissions = {
     dataType: File;
     action: "view" | "create" | "update" | "delete";
   };
+  quater: {
+    dataType: Quater;
+    action: "view" | "create" | "update" | "delete";
+  };
 };
 
 const ROLES = {
@@ -60,6 +66,12 @@ const ROLES = {
       delete: true,
     },
     files: {
+      create: true,
+      view: true,
+      update: true,
+      delete: true,
+    },
+    quater: {
       create: true,
       view: true,
       update: true,
@@ -93,6 +105,12 @@ const ROLES = {
       delete: (user, file) =>
         user.team_members?.team_id === file.folder.category?.team_id,
     },
+    quater: {
+      create: true,
+      view: true,
+      update: true,
+      delete: true,
+    },
   },
   mios: {
     categories: {
@@ -119,6 +137,12 @@ const ROLES = {
       update: false,
       delete: false,
     },
+    quater: {
+      create: false,
+      view: true,
+      update: false,
+      delete: false,
+    },
   },
 
   director: {
@@ -135,6 +159,12 @@ const ROLES = {
       delete: false,
     },
     files: {
+      create: false,
+      view: true,
+      update: false,
+      delete: false,
+    },
+    quater: {
       create: false,
       view: true,
       update: false,
