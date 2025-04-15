@@ -1,9 +1,12 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
+import cmsService from "../../../../../lib/campaign";
 import userService from "../../../../../lib/user";
-import cmsService from "../../../../../lib/file";
-import { forbiddenError, notFoundError, serverError } from "../../../../../utils/errors";
-import deleteImage from "../../../../../utils/delete-image";
+import {
+  forbiddenError,
+  notFoundError,
+  serverError,
+} from "../../../../../utils/errors";
 import { hasPermission, User } from "../../../../../policy/policy";
 
 const del = async (req: Request, res: Response, next: NextFunction) => {
@@ -23,13 +26,13 @@ const del = async (req: Request, res: Response, next: NextFunction) => {
     const data = await cmsService.getSingle(validatedData);
 
     if (!data) {
-      notFoundError("File not found!");
+      notFoundError("Campaign not found!");
     }
 
     // check permission
     const isPermitted = hasPermission(
       user as User,
-      "files",
+      "campaign",
       "delete",
       data as any
     );
@@ -41,17 +44,12 @@ const del = async (req: Request, res: Response, next: NextFunction) => {
     const deleted: any = await cmsService.deleteOne(validatedData);
 
     if (deleted == 0) {
-      serverError("File is not deleted");
-    }
-
-    // delete previous file
-    if (data?.filename) {
-      deleteImage({ folder: "files", image: data.filename });
+      serverError("Campaign is not deleted");
     }
 
     const responseData = {
       success: true,
-      message: "File is deleted successfully!",
+      message: "Campaign is deleted successfully!",
       data: data,
     };
 
@@ -65,4 +63,4 @@ const del = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { del as delFile };
+export { del as delCampaign };

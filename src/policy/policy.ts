@@ -19,6 +19,7 @@ type File = Prisma.fileGetPayload<{
 }>;
 
 type Quater = Prisma.quaterGetPayload<{}>;
+type Campaign = Prisma.campaignGetPayload<{}>;
 
 type PermissionCheck<Key extends keyof Permissions> =
   | boolean
@@ -49,6 +50,10 @@ export type Permissions = {
     dataType: Quater;
     action: "view" | "create" | "update" | "delete";
   };
+  campaign: {
+    dataType: Campaign;
+    action: "view" | "create" | "update" | "delete";
+  };
 };
 
 const ROLES = {
@@ -72,6 +77,12 @@ const ROLES = {
       delete: true,
     },
     quater: {
+      create: true,
+      view: true,
+      update: true,
+      delete: true,
+    },
+    campaign: {
       create: true,
       view: true,
       update: true,
@@ -111,6 +122,14 @@ const ROLES = {
       update: true,
       delete: true,
     },
+    campaign: {
+      create: true,
+      view: (user, campaign) => user.team_members?.team_id === campaign.team_id,
+      update: (user, campaign) =>
+        user.team_members?.team_id === campaign.team_id,
+      delete: (user, campaign) =>
+        user.team_members?.team_id === campaign.team_id,
+    },
   },
   mios: {
     categories: {
@@ -143,6 +162,12 @@ const ROLES = {
       update: false,
       delete: false,
     },
+    campaign: {
+      create: false,
+      view: (user, campaign) => user.team_members?.team_id === campaign.team_id,
+      update: false,
+      delete: false,
+    },
   },
 
   director: {
@@ -165,6 +190,12 @@ const ROLES = {
       delete: false,
     },
     quater: {
+      create: false,
+      view: true,
+      update: false,
+      delete: false,
+    },
+    campaign: {
       create: false,
       view: true,
       update: false,

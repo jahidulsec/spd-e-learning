@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
 import userService from "../../../../../lib/user";
 import cmsService from "../../../../../lib/category";
-import { notFoundError, unauthorizedError } from "../../../../../utils/errors";
+import { forbiddenError, notFoundError } from "../../../../../utils/errors";
 import { hasPermission, User } from "../../../../../policy/policy";
 
 const get = async (req: Request, res: Response, next: NextFunction) => {
@@ -29,7 +29,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     const isPermitted = hasPermission(user as User, 'categories', 'view', data as any);
 
     if (!isPermitted) {
-      unauthorizedError(
+      forbiddenError(
         `You are unauthorized for this action`
       );
     }

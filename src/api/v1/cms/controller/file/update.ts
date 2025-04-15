@@ -3,9 +3,9 @@ import { requiredIdSchema } from "../../../../../schemas/required-id";
 import { updateFileDTOSchema } from "../../../../../schemas/file";
 import cmsService from "../../../../../lib/file";
 import {
+  forbiddenError,
   notFoundError,
   serverError,
-  unauthorizedError,
 } from "../../../../../utils/errors";
 import upload from "../../../../../utils/upload";
 import deleteImage from "../../../../../utils/delete-image";
@@ -51,7 +51,7 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
     );
 
     if (!isPermitted) {
-      unauthorizedError(`You are unauthorized for this action`);
+      forbiddenError(`You are unauthorized for this action`);
     }
 
     // if upload new file

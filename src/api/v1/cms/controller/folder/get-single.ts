@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
 import cmsService from "../../../../../lib/folder";
-import { notFoundError, unauthorizedError } from "../../../../../utils/errors";
+import { forbiddenError, notFoundError } from "../../../../../utils/errors";
 import userService from "../../../../../lib/user";
 import { hasPermission, User } from "../../../../../policy/policy";
 
@@ -35,7 +35,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     );
 
     if (!isPermitted) {
-      unauthorizedError(`You are unauthorized for this action`);
+      forbiddenError(`You are unauthorized for this action`);
     }
 
     // extract category info

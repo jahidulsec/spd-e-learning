@@ -2,7 +2,11 @@ import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
 import { updateFolderDTOSchema } from "../../../../../schemas/folder";
 import cmsService from "../../../../../lib/folder";
-import { notFoundError, serverError, unauthorizedError } from "../../../../../utils/errors";
+import {
+  forbiddenError,
+  notFoundError,
+  serverError,
+} from "../../../../../utils/errors";
 import userService from "../../../../../lib/user";
 import { hasPermission, User } from "../../../../../policy/policy";
 
@@ -36,12 +40,12 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
     const isPermitted = hasPermission(
       user as User,
       "folders",
-      'update',
+      "update",
       existingFolder as any
     );
 
     if (!isPermitted) {
-      unauthorizedError(`You are unauthorized for this action`);
+      forbiddenError(`You are unauthorized for this action`);
     }
 
     //update with validated data

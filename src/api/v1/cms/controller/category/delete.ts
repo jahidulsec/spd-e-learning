@@ -3,9 +3,9 @@ import { requiredIdSchema } from "../../../../../schemas/required-id";
 import cmsService from "../../../../../lib/category";
 import userService from "../../../../../lib/user";
 import {
+  forbiddenError,
   notFoundError,
   serverError,
-  unauthorizedError,
 } from "../../../../../utils/errors";
 import { hasPermission, User } from "../../../../../policy/policy";
 
@@ -38,7 +38,7 @@ const del = async (req: Request, res: Response, next: NextFunction) => {
     );
 
     if (!isPermitted) {
-      unauthorizedError(`You are unauthorized for this action`);
+      forbiddenError(`You are unauthorized for this action`);
     }
 
     const deleted: any = await cmsService.deleteOne(validatedData);

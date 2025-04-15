@@ -19,6 +19,13 @@ import { getFile } from "./file/get-single";
 import { updateFile } from "./file/update";
 import { delFile } from "./file/delete";
 
+// campaign
+import { createCampaign } from "./campaign/create";
+import { getCampaigns } from "./campaign/get-multi";
+import { getCampaign } from "./campaign/get-single";
+import { updateCampaign } from "./campaign/update";
+import { delCampaign } from "./campaign/delete";
+
 export = {
   createCategory,
   getCategories,
@@ -35,4 +42,9 @@ export = {
   getFolders,
   updateFolder,
   delFolder,
+  createCampaign,
+  getCampaign,
+  getCampaigns,
+  updateCampaign,
+  delCampaign,
 };

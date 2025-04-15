@@ -1,12 +1,11 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
 import userService from "../../../../../lib/user";
-import cmsService from "../../../../../lib/file";
-import { forbiddenError, notFoundError, serverError } from "../../../../../utils/errors";
-import deleteImage from "../../../../../utils/delete-image";
+import cmsService from "../../../../../lib/campaign";
+import { forbiddenError, notFoundError } from "../../../../../utils/errors";
 import { hasPermission, User } from "../../../../../policy/policy";
 
-const del = async (req: Request, res: Response, next: NextFunction) => {
+const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // get auth user
     const authUser = req.user;
@@ -23,14 +22,14 @@ const del = async (req: Request, res: Response, next: NextFunction) => {
     const data = await cmsService.getSingle(validatedData);
 
     if (!data) {
-      notFoundError("File not found!");
+      notFoundError("Campaign not found!");
     }
 
     // check permission
     const isPermitted = hasPermission(
       user as User,
-      "files",
-      "delete",
+      "campaign",
+      "view",
       data as any
     );
 
@@ -38,20 +37,9 @@ const del = async (req: Request, res: Response, next: NextFunction) => {
       forbiddenError(`You are unauthorized for this action`);
     }
 
-    const deleted: any = await cmsService.deleteOne(validatedData);
-
-    if (deleted == 0) {
-      serverError("File is not deleted");
-    }
-
-    // delete previous file
-    if (data?.filename) {
-      deleteImage({ folder: "files", image: data.filename });
-    }
-
     const responseData = {
       success: true,
-      message: "File is deleted successfully!",
+      message: "Get Campaign details successfully!",
       data: data,
     };
 
@@ -65,4 +53,4 @@ const del = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { del as delFile };
+export { get as getCampaign };

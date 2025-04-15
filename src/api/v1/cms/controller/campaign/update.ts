@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
-import cmsService from "../../../../../lib/folder";
+import { updateCampaignDTOSchema } from "../../../../../schemas/campaign";
 import userService from "../../../../../lib/user";
+import cmsService from "../../../../../lib/campaign";
 import {
   forbiddenError,
   notFoundError,
@@ -9,7 +10,7 @@ import {
 } from "../../../../../utils/errors";
 import { hasPermission, User } from "../../../../../policy/policy";
 
-const del = async (req: Request, res: Response, next: NextFunction) => {
+const update = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // get auth user
     const authUser = req.user;
@@ -19,38 +20,45 @@ const del = async (req: Request, res: Response, next: NextFunction) => {
       authUser?.id as string
     );
 
+    const formData = req.body;
+
+    //validate incoming params id
+    const validatedId = requiredIdSchema.parse(req.params);
+
     //Validate incoming body data with defined schema
-    const validatedData = requiredIdSchema.parse(req.params);
+    const validatedData = updateCampaignDTOSchema.parse(formData);
 
-    //get single item with validated id
-    const data = await cmsService.getSingleWithTeamInfo(validatedData);
+    //check existing Campaign
+    const existingCampaign = await cmsService.getSingle(validatedId);
 
-    if (!data) {
-      notFoundError("Folder not found!");
+    if (!existingCampaign) {
+      //send not found error if not exist
+      notFoundError("Campaign does not found");
     }
 
     // check permission
     const isPermitted = hasPermission(
       user as User,
-      "folders",
-      "delete",
-      data as any
+      "campaign",
+      "update",
+      existingCampaign as any
     );
 
     if (!isPermitted) {
       forbiddenError(`You are unauthorized for this action`);
     }
 
-    const deleted: any = await cmsService.deleteOne(validatedData);
+    //update with validated data
+    const updated = await cmsService.updateOne(validatedId, validatedData);
 
-    if (deleted == 0) {
-      serverError("Folder is not deleted");
+    if (!updated) {
+      serverError("Campaign not updated");
     }
 
     const responseData = {
       success: true,
-      message: "Folder is deleted successfully!",
-      data: data,
+      message: "Campaign updated successfully!",
+      data: updated,
     };
 
     //send success response
@@ -63,4 +71,4 @@ const del = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { del as delFolder };
+export { update as updateCampaign };

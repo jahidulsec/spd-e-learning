@@ -1,14 +1,9 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
-import { updateCategoryDTOSchema } from "../../../../../schemas/category";
+import { updateFolderDTOSchema } from "../../../../../schemas/folder";
+import cmsService from "../../../../../lib/folder";
+import { notFoundError, serverError, unauthorizedError } from "../../../../../utils/errors";
 import userService from "../../../../../lib/user";
-import cmsService from "../../../../../lib/category";
-import {
-  forbiddenError,
-  notFoundError,
-  serverError,
-  unauthorizedError,
-} from "../../../../../utils/errors";
 import { hasPermission, User } from "../../../../../policy/policy";
 
 const update = async (req: Request, res: Response, next: NextFunction) => {
@@ -27,38 +22,38 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
     const validatedId = requiredIdSchema.parse(req.params);
 
     //Validate incoming body data with defined schema
-    const validatedData = updateCategoryDTOSchema.parse(formData);
+    const validatedData = updateFolderDTOSchema.parse(formData);
 
-    //check existing Category
-    const existingCategory = await cmsService.getSingle(validatedId);
+    //check existing Folder
+    const existingFolder = await cmsService.getSingleWithTeamInfo(validatedId);
 
-    if (!existingCategory) {
+    if (!existingFolder) {
       //send not found error if not exist
-      notFoundError("Category does not found");
+      notFoundError("Folder does not found");
     }
 
     // check permission
     const isPermitted = hasPermission(
       user as User,
-      "categories",
-      "update",
-      existingCategory as any
+      "folders",
+      'update',
+      existingFolder as any
     );
 
     if (!isPermitted) {
-      forbiddenError(`You are unauthorized for this action`);
+      unauthorizedError(`You are unauthorized for this action`);
     }
 
     //update with validated data
     const updated = await cmsService.updateOne(validatedId, validatedData);
 
     if (!updated) {
-      serverError("Category not updated");
+      serverError("Folder not updated");
     }
 
     const responseData = {
       success: true,
-      message: "Category updated successfully!",
+      message: "Folder updated successfully!",
       data: updated,
     };
 
@@ -72,4 +67,4 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { update as updateCategory };
+export { update as updateFolder };

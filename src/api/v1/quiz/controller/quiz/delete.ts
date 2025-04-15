@@ -1,9 +1,12 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
+import cmsService from "../../../../../lib/folder";
 import userService from "../../../../../lib/user";
-import cmsService from "../../../../../lib/file";
-import { forbiddenError, notFoundError, serverError } from "../../../../../utils/errors";
-import deleteImage from "../../../../../utils/delete-image";
+import {
+  notFoundError,
+  serverError,
+  unauthorizedError,
+} from "../../../../../utils/errors";
 import { hasPermission, User } from "../../../../../policy/policy";
 
 const del = async (req: Request, res: Response, next: NextFunction) => {
@@ -20,38 +23,33 @@ const del = async (req: Request, res: Response, next: NextFunction) => {
     const validatedData = requiredIdSchema.parse(req.params);
 
     //get single item with validated id
-    const data = await cmsService.getSingle(validatedData);
+    const data = await cmsService.getSingleWithTeamInfo(validatedData);
 
     if (!data) {
-      notFoundError("File not found!");
+      notFoundError("Folder not found!");
     }
 
     // check permission
     const isPermitted = hasPermission(
       user as User,
-      "files",
+      "folders",
       "delete",
       data as any
     );
 
     if (!isPermitted) {
-      forbiddenError(`You are unauthorized for this action`);
+      unauthorizedError(`You are unauthorized for this action`);
     }
 
     const deleted: any = await cmsService.deleteOne(validatedData);
 
     if (deleted == 0) {
-      serverError("File is not deleted");
-    }
-
-    // delete previous file
-    if (data?.filename) {
-      deleteImage({ folder: "files", image: data.filename });
+      serverError("Folder is not deleted");
     }
 
     const responseData = {
       success: true,
-      message: "File is deleted successfully!",
+      message: "Folder is deleted successfully!",
       data: data,
     };
 
@@ -65,4 +63,4 @@ const del = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { del as delFile };
+export { del as delFolder };
