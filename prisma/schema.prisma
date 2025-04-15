@@ -138,7 +138,7 @@ model quiz {
 model question {
   id         String   @id @default(uuid())
   quiz_id    String   @db.VarChar(100)
-  question   String   @db.VarChar(255)
+  title      String   @db.VarChar(255)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -149,7 +149,7 @@ model question {
 model quiz_option {
   id          String   @id @default(uuid())
   question_id String   @db.VarChar(100)
-  option      String   @db.VarChar(100)
+  title       String   @db.VarChar(100)
   is_correct  Boolean? @default(false)
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt

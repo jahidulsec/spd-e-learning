@@ -16,4 +16,9 @@ router
   .patch(controller.updateQuiz)
   .delete(controller.delQuiz);
 
+// question
+router
+  .route("/question")
+  .post(authorize("question", "create"), controller.createQuestion);
+
 export { router as quizRouter };
