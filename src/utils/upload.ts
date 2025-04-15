@@ -1,7 +1,6 @@
 import { Request, Response } from "express-serve-static-core";
 import multer from "multer";
 import path from "path";
-import { v4 as uuidv4 } from "uuid";
 
 interface MulterRequest extends Request {
   file?: Express.Multer.File;
@@ -13,9 +12,9 @@ const storage = multer.diskStorage({
     cb(null, "uploads/files"); // Set the destination directory
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = `${uuidv4()}-${Date.now()}${path.extname(
+    const uniqueSuffix = `${crypto.randomUUID()}-${
       file.originalname
-    )}`;
+    }${path.extname(file.originalname)}`;
     cb(null, uniqueSuffix); // Generate a unique filename
   },
 });

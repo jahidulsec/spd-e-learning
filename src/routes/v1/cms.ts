@@ -40,16 +40,5 @@ router
   .patch(controller.updateFile)
   .delete(controller.delFile);
 
-// campaign
-router
-  .route("/campaign")
-  .get(controller.getCampaigns)
-  .post(authorize("campaign", "create"), controller.createCampaign);
-
-router
-  .route("/campaign/:id")
-  .get(controller.getCampaign)
-  .patch(controller.updateCampaign)
-  .delete(controller.delCampaign);
 
 export { router as cmsRoutes };

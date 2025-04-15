@@ -1,18 +1,41 @@
 import db from "../db/db";
 import {
-  createFileInputTypes,
-  updateFileInputTypes,
-  fileQueryInputTypes,
-} from "../schemas/file";
+  createQuizInputTypes,
+  updateQuizInputTypes,
+  quizQueryInputTypes,
+} from "../schemas/quiz";
 import { requiredIdTypes } from "../schemas/required-id";
 
-const getMulti = async (queries: fileQueryInputTypes) => {
+const getMulti = async (queries: quizQueryInputTypes) => {
   const [data, count] = await Promise.all([
-    db.file.findMany({
+    db.quiz.findMany({
       where: {
-        title: {
-          startsWith: queries.search || undefined,
-        },
+        ...(queries.search && {
+          OR: [
+            {
+              title: {
+                startsWith: queries.search,
+              },
+            },
+            {
+              quater: {
+                title: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              quater: {
+                title: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              team_id: queries.search,
+            },
+          ],
+        }),
       },
       take: queries.size,
       skip: queries.size * (queries.page - 1),
@@ -20,11 +43,34 @@ const getMulti = async (queries: fileQueryInputTypes) => {
         created_at: queries.sort,
       },
     }),
-    db.file.count({
+    db.quiz.count({
       where: {
-        title: {
-          startsWith: queries.search || undefined,
-        },
+        ...(queries.search && {
+          OR: [
+            {
+              title: {
+                startsWith: queries.search,
+              },
+            },
+            {
+              quater: {
+                title: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              quater: {
+                title: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              team_id: queries.search,
+            },
+          ],
+        }),
       },
     }),
   ]);
@@ -34,19 +80,35 @@ const getMulti = async (queries: fileQueryInputTypes) => {
 
 const getMultiByTeamId = async (
   teamId: string,
-  queries: fileQueryInputTypes
+  queries: quizQueryInputTypes
 ) => {
   const [data, count] = await Promise.all([
-    db.file.findMany({
+    db.quiz.findMany({
       where: {
-        folder: {
-          category: {
-            team_id: teamId || "",
-          },
-        },
-        title: {
-          startsWith: queries.search || undefined,
-        },
+        ...(queries.search && {
+          OR: [
+            {
+              title: {
+                startsWith: queries.search,
+              },
+            },
+            {
+              quater: {
+                title: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              quater: {
+                title: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+          ],
+        }),
+        team_id: teamId || "",
       },
       take: queries.size,
       skip: queries.size * (queries.page - 1),
@@ -54,16 +116,32 @@ const getMultiByTeamId = async (
         created_at: queries.sort,
       },
     }),
-    db.file.count({
+    db.quiz.count({
       where: {
-        folder: {
-          category: {
-            team_id: teamId || "",
-          },
-        },
-        title: {
-          startsWith: queries.search || undefined,
-        },
+        ...(queries.search && {
+          OR: [
+            {
+              title: {
+                startsWith: queries.search,
+              },
+            },
+            {
+              quater: {
+                title: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              quater: {
+                title: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+          ],
+        }),
+        team_id: teamId || "",
       },
     }),
   ]);
@@ -75,22 +153,18 @@ const getSingle = async (idObj: requiredIdTypes) => {
   const { id } = idObj;
 
   //extract id from validated id by zod
-  const data = await db.file.findUnique({
+  const data = await db.quiz.findUnique({
     where: { id },
     include: {
-      folder: {
-        include: {
-          category: true,
-        },
-      },
+      quater: true,
     },
   });
 
   return data;
 };
 
-const createNew = async (info: createFileInputTypes) => {
-  const data = await db.file.create({
+const createNew = async (info: createQuizInputTypes) => {
+  const data = await db.quiz.create({
     data: {
       ...info,
     },
@@ -101,12 +175,12 @@ const createNew = async (info: createFileInputTypes) => {
 
 const updateOne = async (
   idObj: requiredIdTypes,
-  info: updateFileInputTypes
+  info: updateQuizInputTypes
 ) => {
   //extract id from validated id by zod
   const { id } = idObj;
 
-  const updatedData = await db.file.update({
+  const updatedData = await db.quiz.update({
     where: { id: id },
     data: { ...info },
   });
@@ -117,7 +191,7 @@ const deleteOne = async (idObj: requiredIdTypes) => {
   //extract id from validated id by zod
   const { id } = idObj;
 
-  const deleted = await db.file.delete({
+  const deleted = await db.quiz.delete({
     where: { id: id },
   });
 
