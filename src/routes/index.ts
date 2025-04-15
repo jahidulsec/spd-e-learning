@@ -11,7 +11,7 @@ const router = Router();
 router.use("/auth/v1", authRoutes);
 router.use("/cms/v1", verifyToken, cmsRoutes);
 router.use("/user/v1", verifyToken, userRoutes);
-router.use("/quiz/v1", verifyToken, quizRouter);
 router.use("/other/v1", verifyToken, otherRouter);
+router.use("/quiz/v1", verifyToken, quizRouter);
 
 export default router;

@@ -1,18 +1,19 @@
 import { Router } from "express";
 import { authorize } from "../../middlewares/authorize";
-// import controller from "../../api/v1/quiz";
+import controller from "../../api/v1/quiz";
 
 const router = Router();
 
-// router
-//   .route("/quater")
-//   .get(authorize("quater", "view"), controller.getQuaters)
-//   .post(authorize("quater", "create"), controller.createQuater);
+// quiz
+router
+  .route("/quiz")
+  .get(controller.getQuizzes)
+  .post(authorize("quiz", "create"), controller.createQuiz);
 
-// router
-//   .route("/quater/:id")
-//   .get(authorize("quater", "view"), controller.getQuater)
-//   .patch(authorize("quater", "view"), controller.updateQuater)
-//   .delete(authorize("quater", "view"), controller.delQuater);
+router
+  .route("/quiz/:id")
+  .get(controller.getQuiz)
+  .patch(controller.updateQuiz)
+  .delete(controller.delQuiz);
 
 export { router as quizRouter };
