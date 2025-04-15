@@ -19,6 +19,13 @@ router
 // question
 router
   .route("/question")
+  .get(controller.getQuestions)
   .post(authorize("question", "create"), controller.createQuestion);
+
+router
+  .route("/question/:id")
+  .get(controller.getQuestion)
+  .patch(controller.updateQuestion)
+  .delete(controller.delQuestion);
 
 export { router as quizRouter };

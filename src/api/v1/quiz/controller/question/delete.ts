@@ -1,9 +1,8 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
 import userService from "../../../../../lib/user";
-import cmsService from "../../../../../lib/file";
+import questionService from "../../../../../lib/question";
 import { forbiddenError, notFoundError, serverError } from "../../../../../utils/errors";
-import deleteImage from "../../../../../utils/delete-image";
 import { hasPermission, User } from "../../../../../policy/policy";
 
 const del = async (req: Request, res: Response, next: NextFunction) => {
@@ -20,16 +19,17 @@ const del = async (req: Request, res: Response, next: NextFunction) => {
     const validatedData = requiredIdSchema.parse(req.params);
 
     //get single item with validated id
-    const data = await cmsService.getSingle(validatedData);
+    const data = await questionService.getSingle(validatedData);
 
     if (!data) {
-      notFoundError("File not found!");
+      notFoundError("Question not found!");
+      return
     }
 
     // check permission
     const isPermitted = hasPermission(
       user as User,
-      "files",
+      "question",
       "delete",
       data as any
     );
@@ -38,21 +38,18 @@ const del = async (req: Request, res: Response, next: NextFunction) => {
       forbiddenError(`You are unauthorized for this action`);
     }
 
-    const deleted: any = await cmsService.deleteOne(validatedData);
+    const deleted: any = await questionService.deleteOne(validatedData);
 
     if (deleted == 0) {
-      serverError("File is not deleted");
+      serverError("Question is not deleted");
     }
 
-    // delete previous file
-    if (data?.filename) {
-      deleteImage({ folder: "files", image: data.filename });
-    }
+    const {quiz, ...rest} = data
 
     const responseData = {
       success: true,
-      message: "File is deleted successfully!",
-      data: data,
+      message: "Question is deleted successfully!",
+      data: rest,
     };
 
     //send success response
@@ -65,4 +62,4 @@ const del = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { del as delFile };
+export { del as delQuestion };

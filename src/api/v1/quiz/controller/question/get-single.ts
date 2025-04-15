@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
 import userService from "../../../../../lib/user";
-import cmsService from "../../../../../lib/file";
+import questionService from "../../../../../lib/question";
 import { forbiddenError, notFoundError } from "../../../../../utils/errors";
 import { hasPermission, User } from "../../../../../policy/policy";
 
@@ -19,10 +19,10 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     const validatedData = requiredIdSchema.parse(req.params);
 
     //get single item with validated id
-    const data = await cmsService.getSingle(validatedData);
+    const data = await questionService.getSingle(validatedData);
 
     if (!data) {
-      notFoundError("File not found!");
+      notFoundError("question not found!");
       return;
     }
 
@@ -31,7 +31,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     // check permission
     const isPermitted = hasPermission(
       user as User,
-      "files",
+      "question",
       "view",
       data as any
     );
@@ -40,15 +40,12 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
       forbiddenError(`You are unauthorized for this action`);
     }
 
+    const {quiz, ...rest} = data
+
     const responseData = {
       success: true,
-      message: "Get file details successfully!",
-      data: {
-        data,
-        file_path: `${req.protocol}://${req.get("host")}/uploads/files/${
-          data?.filename
-        }`,
-      },
+      message: "Get question details successfully!",
+      data: rest,
     };
 
     //send success response
@@ -61,4 +58,4 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { get as getFile };
+export { get as getQuestion };

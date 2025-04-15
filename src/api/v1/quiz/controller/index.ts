@@ -6,6 +6,10 @@ import { delQuiz } from "./quiz/delete";
 
 // question
 import { createQuestion } from "./question/create";
+import { delQuestion } from "./question/delete";
+import { getQuestions } from "./question/get-multi";
+import { getQuestion } from "./question/get-single";
+import { updateQuestion } from "./question/update";
 
 export = {
   createQuiz,
@@ -14,4 +18,8 @@ export = {
   updateQuiz,
   delQuiz,
   createQuestion,
+  delQuestion,
+  getQuestion,
+  getQuestions,
+  updateQuestion,
 };

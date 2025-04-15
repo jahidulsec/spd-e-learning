@@ -10,9 +10,25 @@ const getMulti = async (queries: questionQueryInputTypes) => {
   const [data, count] = await Promise.all([
     db.question.findMany({
       where: {
-        title: {
-          startsWith: queries.search || undefined,
-        },
+        ...(queries.search && {
+          OR: [
+            {
+              title: {
+                startsWith: queries.search || undefined,
+              },
+            },
+            {
+              quiz: {
+                title: {
+                  startsWith: queries.search || undefined,
+                },
+              },
+            },
+          ],
+        }),
+      },
+      include: {
+        quiz_option: true,
       },
       take: queries.size,
       skip: queries.size * (queries.page - 1),
@@ -22,9 +38,22 @@ const getMulti = async (queries: questionQueryInputTypes) => {
     }),
     db.question.count({
       where: {
-        title: {
-          startsWith: queries.search || undefined,
-        },
+        ...(queries.search && {
+          OR: [
+            {
+              title: {
+                startsWith: queries.search || undefined,
+              },
+            },
+            {
+              quiz: {
+                title: {
+                  startsWith: queries.search || undefined,
+                },
+              },
+            },
+          ],
+        }),
       },
     }),
   ]);
@@ -42,9 +71,25 @@ const getMultiByTeamId = async (
         quiz: {
           team_id: teamId || "",
         },
-        title: {
-          startsWith: queries.search || undefined,
-        },
+        ...(queries.search && {
+          OR: [
+            {
+              title: {
+                startsWith: queries.search || undefined,
+              },
+            },
+            {
+              quiz: {
+                title: {
+                  startsWith: queries.search || undefined,
+                },
+              },
+            },
+          ],
+        }),
+      },
+      include: {
+        quiz_option: true,
       },
       take: queries.size,
       skip: queries.size * (queries.page - 1),
@@ -57,9 +102,22 @@ const getMultiByTeamId = async (
         quiz: {
           team_id: teamId || "",
         },
-        title: {
-          startsWith: queries.search || undefined,
-        },
+        ...(queries.search && {
+          OR: [
+            {
+              title: {
+                startsWith: queries.search || undefined,
+              },
+            },
+            {
+              quiz: {
+                title: {
+                  startsWith: queries.search || undefined,
+                },
+              },
+            },
+          ],
+        }),
       },
     }),
   ]);
@@ -75,6 +133,7 @@ const getSingle = async (idObj: requiredIdTypes) => {
     where: { id },
     include: {
       quiz: true,
+      quiz_option: true,
     },
   });
 
@@ -93,6 +152,7 @@ const getSingleWithTeamInfo = async (idObj: requiredIdTypes) => {
           team: true,
         },
       },
+      quiz_option: true,
     },
   });
 
@@ -113,8 +173,8 @@ const createNew = async (info: createQuestionInputTypes) => {
       },
     },
     include: {
-      quiz_option: true
-    }
+      quiz_option: true,
+    },
   });
 
   return data;

@@ -19,7 +19,7 @@ export const questionQuerySchema = z.object({
 });
 
 export const updateQuestionDTOSchema = createQuestionDTOSchema
-  .omit({ quiz_id: true })
+  .omit({ quiz_id: true, options: true })
   .partial();
 
 export type createQuestionInputTypes = z.infer<typeof createQuestionDTOSchema>;

@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import { paginate } from "../../../../../utils/pagination";
 import userService from "../../../../../lib/user";
-import { fileQuerySchema } from "../../../../../schemas/file";
-import cmsService from "../../../../../lib/file";
-import { $Enums, file } from "@prisma/client";
+import { questionQuerySchema } from "../../../../../schemas/question";
+import questionService from "../../../../../lib/question";
+import { $Enums } from "@prisma/client";
 
 const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -16,10 +16,10 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     );
 
     // validate incoming body data with defined schema
-    const validatedData = fileQuerySchema.parse(req.query);
+    const validatedData = questionQuerySchema.parse(req.query);
 
     // authorization section
-    let data: file[] = [];
+    let data: any[] = [];
     let count: number = 0;
 
     if (
@@ -28,12 +28,12 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
       )
     ) {
       //get all items with validated queries
-      const result = await cmsService.getMulti(validatedData);
+      const result = await questionService.getMulti(validatedData);
 
       data = result.data;
       count = result.count;
     } else {
-      const result = await cmsService.getMultiByTeamId(
+      const result = await questionService.getMultiByTeamId(
         user?.team_members?.team_id as string,
         validatedData
       );
@@ -42,20 +42,10 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
       count = result.count;
     }
 
-    // adding file_path in every file
-    const modifiedData = data.map((file) => {
-      return {
-        ...file,
-        file_path: `${req.protocol}://${req.get("host")}/uploads/files/${
-          file.filename
-        }`,
-      };
-    });
-
     const responseData = {
       success: true,
       message: "All files get successfully!",
-      data: modifiedData,
+      data: data,
       pagination: {
         ...paginate(validatedData.page, validatedData.size, count),
       },
@@ -71,4 +61,4 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { get as getFiles };
+export { get as getQuestions };
