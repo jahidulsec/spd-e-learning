@@ -2,7 +2,11 @@ import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
 import { updateQuaterDTOSchema } from "../../../../../schemas/quater";
 import quaterService from "../../../../../lib/quater";
-import { notFoundError, serverError } from "../../../../../utils/errors";
+import {
+  badRequestError,
+  notFoundError,
+  serverError,
+} from "../../../../../utils/errors";
 
 const update = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -20,6 +24,15 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
     if (!existingQuater) {
       //send not found error if not exist
       notFoundError("Quater does not found");
+      return;
+    }
+
+    // check start date should be less than end date
+    const startDate = validatedData.start_date ?? existingQuater?.start_date;
+    const endDate = validatedData.end_date ?? existingQuater?.end_date;
+
+    if (startDate > endDate) {
+      badRequestError("Start date should be less than end date");
     }
 
     //update with validated data

@@ -5,12 +5,12 @@ import controller from "../../api/v1/other";
 const router = Router();
 
 router
-  .route("/other")
+  .route("/quater")
   .get(authorize("quater", "view"), controller.getQuaters)
   .post(authorize("quater", "create"), controller.createQuater);
 
 router
-  .route("/other/:id")
+  .route("/quater/:id")
   .get(authorize("quater", "view"), controller.getQuater)
   .patch(authorize("quater", "view"), controller.updateQuater)
   .delete(authorize("quater", "view"), controller.delQuater);
