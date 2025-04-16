@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express-serve-static-core";
 import quizService from "../../../../../lib/quater";
 import { createQuaterDTOSchema } from "../../../../../schemas/quater";
 import { badRequestError } from "../../../../../utils/errors";
+import db from "../../../../../db/db";
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -16,27 +17,30 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     // check existing quater by start date to avoid duplication
-    const existingQuaters = await quizService.getMulti({
-      start_date: validatedData.start_date,
-      page: 1,
-      size: 20,
-      sort: "desc",
+    const existingQuaters = await db.quater.count({
+      where: {
+        start_date: {
+          gte: validatedData.start_date,
+        },
+      },
     });
 
     // check for end date
-    const existingQuaters2 = await quizService.getMulti({
-      end_date: validatedData.end_date,
-      page: 1,
-      size: 20,
-      sort: "desc",
+    const existingQuaters2 = await db.quater.count({
+      where: {
+        start_date: {
+          gte: validatedData.start_date,
+        },
+        end_date: {
+          lte: validatedData.end_date,
+        },
+      },
     });
 
-    if (existingQuaters.count > 0 || existingQuaters2.count > 0) {
+    if (existingQuaters > 0 || existingQuaters2 > 0) {
       badRequestError(
-        `No of ${
-          existingQuaters.count || existingQuaters2.count
-        } quater is exist${
-          existingQuaters.count > 1 || existingQuaters2.count > 1 ? "s" : ""
+        `No of ${existingQuaters || existingQuaters2} quater is exist${
+          existingQuaters > 1 || existingQuaters2 > 1 ? "s" : ""
         } in this date range`
       );
     }
