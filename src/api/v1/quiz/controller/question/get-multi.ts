@@ -44,7 +44,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
 
     const responseData = {
       success: true,
-      message: "All files get successfully!",
+      message: "All questions get successfully!",
       data: data,
       pagination: {
         ...paginate(validatedData.page, validatedData.size, count),
