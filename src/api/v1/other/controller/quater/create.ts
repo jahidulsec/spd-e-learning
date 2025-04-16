@@ -15,16 +15,26 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
       badRequestError("Start date should be less than end date");
     }
 
-    // check existing quater by end date to avoid duplication
+    // check existing quater by start date to avoid duplication
     const existingQuaters = await quizService.getMulti({
-      end_date: validatedData.end_date,
+      start_date: validatedData.start_date,
       page: 1,
-      size: 1,
+      size: 20,
       sort: "desc",
     });
 
-    if (existingQuaters.count > 0) {
-      badRequestError("A quater is exist in this date range");
+    // check for end date
+    const existingQuaters2 = await quizService.getMulti({
+      end_date: validatedData.end_date,
+      page: 1,
+      size: 20,
+      sort: "desc",
+    });
+
+    console.log(existingQuaters)
+
+    if (existingQuaters.count > 0 || existingQuaters2.count > 0) {
+      badRequestError(`No of ${existingQuaters.count || existingQuaters2.count} quater is exist in this date range`);
     }
 
     //create new with validated data

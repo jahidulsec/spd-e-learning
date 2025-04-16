@@ -20,7 +20,7 @@ const getMulti = async (queries: quaterQueryInputTypes) => {
           gte: queries?.start_date ?? undefined,
         },
         end_date: {
-          lt: queries?.end_date ?? undefined,
+          lte: queries?.end_date ?? undefined,
         },
       },
       take: size,
@@ -38,7 +38,7 @@ const getMulti = async (queries: quaterQueryInputTypes) => {
           gte: queries?.start_date ?? undefined,
         },
         end_date: {
-          lt: queries?.end_date ?? undefined,
+          lte: queries?.end_date ?? undefined,
         },
       },
     }),
