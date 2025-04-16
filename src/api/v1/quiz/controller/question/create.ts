@@ -27,7 +27,7 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
     // if not superuser, add team id from user info
     if (user?.role !== "superadmin") {
-      if (quiz?.team_id !== user?.team_members?.team_id) {
+      if (quiz.data?.team_id !== user?.team_members?.team_id) {
         notFoundError("Quiz does not exist");
       }
     }

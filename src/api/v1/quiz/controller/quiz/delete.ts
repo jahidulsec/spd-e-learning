@@ -25,7 +25,7 @@ const del = async (req: Request, res: Response, next: NextFunction) => {
     //get single item with validated id
     const data = await quizService.getSingle(validatedData);
 
-    if (!data) {
+    if (!data.data) {
       notFoundError("Quiz not found!");
     }
 

@@ -21,7 +21,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     //get single item with validated id
     const data = await quizService.getSingle(validatedData);
 
-    if (!data) {
+    if (!data.data) {
       notFoundError("Quiz not found!");
     }
 
@@ -40,7 +40,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     const responseData = {
       success: true,
       message: "Get Quiz details successfully!",
-      data: data,
+      data: { ...data.data, duration_m: data.duration },
     };
 
     //send success response

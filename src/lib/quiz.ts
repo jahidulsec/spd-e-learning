@@ -100,11 +100,14 @@ const getMultiByTeamId = async (
               },
             },
             {
-              quater: {
+              team: {
                 title: {
                   startsWith: queries.search,
                 },
               },
+            },
+            {
+              team_id: queries.search,
             },
           ],
         }),
@@ -133,11 +136,14 @@ const getMultiByTeamId = async (
               },
             },
             {
-              quater: {
+              team: {
                 title: {
                   startsWith: queries.search,
                 },
               },
+            },
+            {
+              team_id: queries.search,
             },
           ],
         }),
@@ -153,14 +159,21 @@ const getSingle = async (idObj: requiredIdTypes) => {
   const { id } = idObj;
 
   //extract id from validated id by zod
-  const data = await db.quiz.findUnique({
-    where: { id },
-    include: {
-      quater: true,
-    },
-  });
+  const [data, duration] = await Promise.all([
+    db.quiz.findUnique({
+      where: { id },
+      include: {
+        quater: true,
+      },
+    }),
+    db.question.count({
+      where: {
+        quiz_id: id,
+      },
+    }),
+  ]);
 
-  return data;
+  return { data, duration };
 };
 
 const createNew = async (info: createQuizInputTypes) => {
