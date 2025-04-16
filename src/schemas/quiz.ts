@@ -5,6 +5,8 @@ export const createQuizDTOSchema = z.object({
   quater_id: z.string().min(3),
   team_id: z.string().min(3),
   description: z.string().min(3).optional(),
+  start_date: z.coerce.date(),
+  end_date: z.coerce.date(),
 });
 
 export const quizQuerySchema = z.object({

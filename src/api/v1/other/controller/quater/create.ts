@@ -31,10 +31,14 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
       sort: "desc",
     });
 
-    console.log(existingQuaters)
-
     if (existingQuaters.count > 0 || existingQuaters2.count > 0) {
-      badRequestError(`No of ${existingQuaters.count || existingQuaters2.count} quater is exist in this date range`);
+      badRequestError(
+        `No of ${
+          existingQuaters.count || existingQuaters2.count
+        } quater is exist${
+          existingQuaters.count > 1 || existingQuaters2.count > 1 ? "s" : ""
+        } in this date range`
+      );
     }
 
     //create new with validated data

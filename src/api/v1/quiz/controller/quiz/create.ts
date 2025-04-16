@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express-serve-static-core";
 import { createQuizDTOSchema } from "../../../../../schemas/quiz";
 import userService from "../../../../../lib/user";
 import quizSerive from "../../../../../lib/quiz";
+import { badRequestError } from "../../../../../utils/errors";
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -22,6 +23,11 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
     //Validate incoming body data with defined schema
     const validatedData = createQuizDTOSchema.parse(formData);
+
+    // check start date and end date validation
+    if (validatedData.start_date > validatedData.end_date) {
+      badRequestError("Start date must be less than end date");
+    }
 
     //create new with validated data
     const created = await quizSerive.createNew(validatedData);

@@ -25,7 +25,7 @@ const getMulti = async (queries: quizQueryInputTypes) => {
               },
             },
             {
-              quater: {
+              team: {
                 title: {
                   startsWith: queries.search,
                 },
@@ -60,7 +60,7 @@ const getMulti = async (queries: quizQueryInputTypes) => {
               },
             },
             {
-              quater: {
+              team: {
                 title: {
                   startsWith: queries.search,
                 },
