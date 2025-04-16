@@ -17,21 +17,18 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     // check for end date
-    const existingQuaters2 = await db.quater.count({
-      where: {
-        start_date: {
-          gte: validatedData.start_date,
-        },
-        end_date: {
-          lte: validatedData.end_date,
-        },
-      },
+    const existingQuaters = await quizService.getMulti({
+      size: 1,
+      page: 1,
+      start_date: validatedData.start_date,
+      end_date: validatedData.end_date,
+      sort: "desc",
     });
 
-    if (existingQuaters2 > 0) {
+    if (existingQuaters.count > 0) {
       badRequestError(
-        `No of ${existingQuaters2} quater is exist${
-          existingQuaters2 > 1 ? "s" : ""
+        `No of ${existingQuaters} quater is exist${
+          existingQuaters.count > 1 ? "s" : ""
         } in this date range`
       );
     }

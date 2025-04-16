@@ -37,6 +37,9 @@ const getMulti = async (queries: quizQueryInputTypes) => {
           ],
         }),
       },
+      include: {
+        quater: true,
+      },
       take: queries.size,
       skip: queries.size * (queries.page - 1),
       orderBy: {
@@ -112,6 +115,9 @@ const getMultiByTeamId = async (
           ],
         }),
         team_id: teamId || "",
+      },
+      include: {
+        quater: true,
       },
       take: queries.size,
       skip: queries.size * (queries.page - 1),
