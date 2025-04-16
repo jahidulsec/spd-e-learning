@@ -16,15 +16,6 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
       badRequestError("Start date should be less than end date");
     }
 
-    // check existing quater by start date to avoid duplication
-    const existingQuaters = await db.quater.count({
-      where: {
-        start_date: {
-          gte: validatedData.start_date,
-        },
-      },
-    });
-
     // check for end date
     const existingQuaters2 = await db.quater.count({
       where: {
@@ -37,10 +28,10 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
       },
     });
 
-    if (existingQuaters > 0 || existingQuaters2 > 0) {
+    if (existingQuaters2 > 0) {
       badRequestError(
-        `No of ${existingQuaters || existingQuaters2} quater is exist${
-          existingQuaters > 1 || existingQuaters2 > 1 ? "s" : ""
+        `No of ${existingQuaters2} quater is exist${
+          existingQuaters2 > 1 ? "s" : ""
         } in this date range`
       );
     }
