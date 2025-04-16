@@ -41,7 +41,7 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
       user as User,
       "quiz",
       "update",
-      existingQuiz as any
+      existingQuiz.data as any
     );
 
     if (!isPermitted) {

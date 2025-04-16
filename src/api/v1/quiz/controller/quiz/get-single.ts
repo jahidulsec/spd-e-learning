@@ -30,7 +30,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
       user as User,
       "quiz",
       "view",
-      data as any
+      data.data as any
     );
 
     if (!isPermitted) {
