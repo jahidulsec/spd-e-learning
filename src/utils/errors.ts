@@ -26,6 +26,10 @@ export const forbiddenError = (message: string): never => {
   throw createError(false, "Forbidden!", message, 403, 40301);
 };
 
+export const conflictError = (message: string): never => {
+  throw createError(false, "Conflct!", message, 409, 40901);
+};
+
 export const serverError = (message: string): never => {
   throw createError(false, "Internal Server Error", message, 500, 50001);
 };

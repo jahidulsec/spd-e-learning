@@ -175,6 +175,15 @@ const getSingle = async (idObj: requiredIdTypes) => {
           team: true,
         },
       },
+      answer: {
+        include: {
+          question: {
+            include: {
+              quiz: true,
+            },
+          },
+        },
+      },
     },
   });
 

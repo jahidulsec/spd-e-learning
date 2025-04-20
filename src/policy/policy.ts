@@ -24,13 +24,9 @@ type Question = Prisma.questionGetPayload<{ include: { quiz: true } }>;
 type Option = Prisma.quiz_optionGetPayload<{}>;
 type Result = Prisma.resultGetPayload<{
   include: {
-    answer: {
+    team_member: {
       include: {
-        question: {
-          include: {
-            quiz: true;
-          };
-        };
+        team: true;
       };
     };
   };
@@ -128,10 +124,10 @@ const ROLES = {
       delete: true,
     },
     result: {
-      create: true,
+      create: false,
       view: true,
-      update: true,
-      delete: true,
+      update: false,
+      delete: false,
     },
   },
   team_lead: {
@@ -189,10 +185,11 @@ const ROLES = {
       delete: true,
     },
     result: {
-      create: true,
-      view: true,
-      update: true,
-      delete: true,
+      create: false,
+      view: (user, result) =>
+        user.team_members?.team_id === result.team_member.team_id,
+      update: false,
+      delete: false,
     },
   },
   mios: {
@@ -246,8 +243,7 @@ const ROLES = {
       delete: false,
     },
     result: {
-      create: (user, result) =>
-        user.team_members?.team_id === result.answer.question.quiz.team_id,
+      create: true,
       view: (user, result) => user.team_members?.id === result.team_member_id,
       update: (user, result) => user.team_members?.id === result.team_member_id,
       delete: (user, result) => user.team_members?.id === result.team_member_id,

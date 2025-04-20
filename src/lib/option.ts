@@ -105,6 +105,7 @@ const getSingleWithTeamInfo = async (idObj: requiredIdTypes) => {
           quiz: true,
         },
       },
+      result: true,
     },
   });
 

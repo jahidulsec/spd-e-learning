@@ -25,6 +25,7 @@
     },
     "409": {
       "Conflict": {
+        "40901": "Duplicate entry error",
         "40902": "Prisma - Duplicate entry error"
       }
     },
