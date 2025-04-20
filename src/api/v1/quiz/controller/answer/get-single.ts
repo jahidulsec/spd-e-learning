@@ -2,9 +2,9 @@ import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
 import userService from "../../../../../lib/user";
 import questionService from "../../../../../lib/question";
-import resultService from "../../../../../lib/result";
 import { forbiddenError, notFoundError } from "../../../../../utils/errors";
 import { hasPermission, User } from "../../../../../policy/policy";
+import db from "../../../../../db/db";
 import { result } from "@prisma/client";
 
 const get = async (req: Request, res: Response, next: NextFunction) => {
@@ -44,10 +44,14 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
 
     // get mio submitted answer
     if (authUser?.role === "mios") {
-      quizResult = await resultService.getSingleByTeamMemberQuestion(
-        authUser.teamMemberId as string,
-        data.id as string
-      );
+      quizResult = await db.result.findMany({
+        where: {
+          answer: {
+            question_id: validatedData.id,
+          },
+          team_member_id: authUser.teamMemberId,
+        },
+      });
     }
 
     const { quiz, ...rest } = data;
@@ -71,4 +75,4 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { get as getQuestion };
+export { get as getAnswer };

@@ -24,6 +24,13 @@ const getMulti = async (queries: questionQueryInputTypes) => {
                 },
               },
             },
+            {
+              quiz: {
+                id: {
+                  startsWith: queries.search || undefined,
+                },
+              },
+            },
           ],
         }),
       },
@@ -48,6 +55,13 @@ const getMulti = async (queries: questionQueryInputTypes) => {
             {
               quiz: {
                 title: {
+                  startsWith: queries.search || undefined,
+                },
+              },
+            },
+            {
+              quiz: {
+                id: {
                   startsWith: queries.search || undefined,
                 },
               },
@@ -85,6 +99,13 @@ const getMultiByTeamId = async (
                 },
               },
             },
+            {
+              quiz: {
+                id: {
+                  startsWith: queries.search || undefined,
+                },
+              },
+            },
           ],
         }),
       },
@@ -112,6 +133,13 @@ const getMultiByTeamId = async (
             {
               quiz: {
                 title: {
+                  startsWith: queries.search || undefined,
+                },
+              },
+            },
+            {
+              quiz: {
+                id: {
                   startsWith: queries.search || undefined,
                 },
               },

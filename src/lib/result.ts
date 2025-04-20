@@ -190,6 +190,22 @@ const getSingle = async (idObj: requiredIdTypes) => {
   return data;
 };
 
+const getSingleByTeamMemberQuestion = async (
+  teamMemberId: string,
+  questionId: string
+) => {
+  const data = await db.result.findMany({
+    where: {
+      answer: {
+        question_id: questionId,
+      },
+      team_member_id: teamMemberId,
+    },
+  });
+
+  return data;
+};
+
 const createNew = async (info: createResultInputTypes) => {
   const data = await db.result.create({
     data: {
@@ -232,4 +248,5 @@ export = {
   updateOne,
   deleteOne,
   getMultiByTeamId,
+  getSingleByTeamMemberQuestion,
 };
