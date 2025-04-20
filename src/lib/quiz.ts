@@ -161,6 +161,92 @@ const getMultiByTeamId = async (
   return { data, count };
 };
 
+const getMultiByTeamIdWithTeamMember = async (
+  teamId: string,
+  teamMemberId: string,
+  queries: quizQueryInputTypes
+) => {
+  const [data, count] = await Promise.all([
+    db.quiz.findMany({
+      where: {
+        ...(queries.search && {
+          OR: [
+            {
+              title: {
+                startsWith: queries.search,
+              },
+            },
+            {
+              quater: {
+                title: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              team: {
+                title: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              team_id: queries.search,
+            },
+          ],
+        }),
+        team_id: teamId || "",
+      },
+      include: {
+        quater: true,
+        quiz_member: {
+          where: {
+            team_member_id: teamMemberId,
+          },
+        },
+      },
+      take: queries.size,
+      skip: queries.size * (queries.page - 1),
+      orderBy: {
+        created_at: queries.sort,
+      },
+    }),
+    db.quiz.count({
+      where: {
+        ...(queries.search && {
+          OR: [
+            {
+              title: {
+                startsWith: queries.search,
+              },
+            },
+            {
+              quater: {
+                title: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              team: {
+                title: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              team_id: queries.search,
+            },
+          ],
+        }),
+        team_id: teamId || "",
+      },
+    }),
+  ]);
+
+  return { data, count };
+};
+
 const getSingle = async (idObj: requiredIdTypes) => {
   const { id } = idObj;
 
@@ -224,4 +310,5 @@ export = {
   updateOne,
   deleteOne,
   getMultiByTeamId,
+  getMultiByTeamIdWithTeamMember,
 };
