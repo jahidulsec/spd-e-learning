@@ -16,6 +16,11 @@ router
   .patch(controller.updateQuiz)
   .delete(controller.delQuiz);
 
+// quiz member
+router
+  .route("/quiz-member")
+  .post(authorize("quiz_member", "create"), controller.createQuizMember);
+
 // question
 router
   .route("/question")

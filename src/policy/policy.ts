@@ -20,6 +20,7 @@ type File = Prisma.fileGetPayload<{
 
 type Quater = Prisma.quaterGetPayload<{}>;
 type Quiz = Prisma.quizGetPayload<{}>;
+type QuizMember = Prisma.quiz_memberGetPayload<{}>;
 type Question = Prisma.questionGetPayload<{ include: { quiz: true } }>;
 type Option = Prisma.quiz_optionGetPayload<{}>;
 type Result = Prisma.resultGetPayload<{
@@ -64,6 +65,10 @@ export type Permissions = {
   quiz: {
     dataType: Quiz;
     action: "view" | "create" | "update" | "delete";
+  };
+  quiz_member: {
+    dataType: QuizMember;
+    action: "create";
   };
   question: {
     dataType: Question;
@@ -110,6 +115,9 @@ const ROLES = {
       view: true,
       update: true,
       delete: true,
+    },
+    quiz_member: {
+      create: false,
     },
     question: {
       create: true,
@@ -168,6 +176,9 @@ const ROLES = {
       view: (user, quiz) => user.team_members?.team_id === quiz.team_id,
       update: (user, quiz) => user.team_members?.team_id === quiz.team_id,
       delete: (user, quiz) => user.team_members?.team_id === quiz.team_id,
+    },
+    quiz_member: {
+      create: false,
     },
     question: {
       create: true,
@@ -229,6 +240,9 @@ const ROLES = {
       update: false,
       delete: false,
     },
+    quiz_member: {
+      create: true,
+    },
     question: {
       create: false,
       view: (user, question) =>
@@ -280,6 +294,9 @@ const ROLES = {
       view: true,
       update: false,
       delete: false,
+    },
+    quiz_member: {
+      create: false,
     },
     question: {
       create: false,

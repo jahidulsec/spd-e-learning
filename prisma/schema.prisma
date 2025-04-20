@@ -67,6 +67,7 @@ model team_members {
   result            result[]
   e_detailing_video e_detailing_video[]
   e_detailing_score e_detailing_score[]
+  quiz_member       quiz_member[]
 }
 
 // content
@@ -125,6 +126,7 @@ model quiz {
   quater_id   String   @db.VarChar(100)
   title       String   @db.VarChar(150)
   team_id     String   @db.VarChar(100)
+  // team_member_id String?  @db.VarChar(100)
   description String?  @db.VarChar(255)
   start_date  DateTime
   end_date    DateTime
@@ -134,7 +136,21 @@ model quiz {
   quater quater @relation(fields: [quater_id], references: [id], onDelete: Cascade)
   team   teams  @relation(fields: [team_id], references: [id], onDelete: Cascade)
 
-  question question[]
+  question    question[]
+  quiz_member quiz_member[]
+}
+
+model quiz_member {
+  id             String   @id @default(uuid())
+  quiz_id        String   @db.VarChar(100)
+  team_member_id String   @db.VarChar(100)
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  quiz        quiz         @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
+  team_member team_members @relation(fields: [team_member_id], references: [id], onDelete: Cascade)
+
+  @@unique([quiz_id, team_member_id])
 }
 
 model question {
@@ -164,7 +180,7 @@ model result {
   id             String   @id @default(uuid())
   team_member_id String   @db.VarChar(100)
   answer_id      String   @db.VarChar(100)
-  score          Int?      @default(0)
+  score          Int?     @default(0)
   created_at     DateTime @default(now())
   updated_at     DateTime @updatedAt
 
