@@ -93,6 +93,24 @@ const getMultiByTeamId = async (
   return { data, count };
 };
 
+const getSingleWithTeamInfo = async (idObj: requiredIdTypes) => {
+  const { id } = idObj;
+
+  //extract id from validated id by zod
+  const data = await db.quiz_option.findUnique({
+    where: { id },
+    include: {
+      question: {
+        include: {
+          quiz: true,
+        },
+      },
+    },
+  });
+
+  return data;
+};
+
 const getSingle = async (idObj: requiredIdTypes) => {
   const { id } = idObj;
 
@@ -146,4 +164,5 @@ export = {
   updateOne,
   deleteOne,
   getMultiByTeamId,
+  getSingleWithTeamInfo,
 };

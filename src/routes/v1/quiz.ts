@@ -40,4 +40,16 @@ router
   .patch(authorize("option", "update"), controller.updateOption)
   .delete(authorize("option", "delete"), controller.delOption);
 
+// result
+router
+  .route("/result")
+  .get(controller.getResults)
+  .post(authorize("result", "create"), controller.createResult);
+
+router
+  .route("/result/:id")
+  .get(controller.getResult)
+  .patch(controller.updateResult)
+  .delete(controller.delResult);
+
 export { router as quizRouter };

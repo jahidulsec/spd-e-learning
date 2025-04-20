@@ -18,6 +18,13 @@ import { getOptions } from "./option/get-multi";
 import { getOption } from "./option/get-single";
 import { updateOption } from "./option/update";
 
+// result
+import { createResult } from "./result/create";
+import { delResult } from "./result/delete";
+import { getResults } from "./result/get-multi";
+import { getResult } from "./result/get-single";
+import { updateResult } from "./result/update";
+
 export = {
   createQuiz,
   getQuiz,
@@ -34,4 +41,9 @@ export = {
   getOptions,
   updateOption,
   delOption,
+  updateResult,
+  getResult,
+  getResults,
+  createResult,
+  delResult,
 };

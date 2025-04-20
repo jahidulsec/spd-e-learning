@@ -22,6 +22,19 @@ type Quater = Prisma.quaterGetPayload<{}>;
 type Quiz = Prisma.quizGetPayload<{}>;
 type Question = Prisma.questionGetPayload<{ include: { quiz: true } }>;
 type Option = Prisma.quiz_optionGetPayload<{}>;
+type Result = Prisma.resultGetPayload<{
+  include: {
+    answer: {
+      include: {
+        question: {
+          include: {
+            quiz: true;
+          };
+        };
+      };
+    };
+  };
+}>;
 
 type PermissionCheck<Key extends keyof Permissions> =
   | boolean
@@ -62,6 +75,10 @@ export type Permissions = {
   };
   option: {
     dataType: Option;
+    action: "view" | "create" | "update" | "delete";
+  };
+  result: {
+    dataType: Result;
     action: "view" | "create" | "update" | "delete";
   };
 };
@@ -105,6 +122,12 @@ const ROLES = {
       delete: true,
     },
     option: {
+      create: true,
+      view: true,
+      update: true,
+      delete: true,
+    },
+    result: {
       create: true,
       view: true,
       update: true,
@@ -165,6 +188,12 @@ const ROLES = {
       update: true,
       delete: true,
     },
+    result: {
+      create: true,
+      view: true,
+      update: true,
+      delete: true,
+    },
   },
   mios: {
     categories: {
@@ -216,6 +245,13 @@ const ROLES = {
       update: false,
       delete: false,
     },
+    result: {
+      create: (user, result) =>
+        user.team_members?.team_id === result.answer.question.quiz.team_id,
+      view: (user, result) => user.team_members?.id === result.team_member_id,
+      update: (user, result) => user.team_members?.id === result.team_member_id,
+      delete: (user, result) => user.team_members?.id === result.team_member_id,
+    },
   },
 
   director: {
@@ -256,6 +292,12 @@ const ROLES = {
       delete: false,
     },
     option: {
+      create: false,
+      view: true,
+      update: false,
+      delete: false,
+    },
+    result: {
       create: false,
       view: true,
       update: false,

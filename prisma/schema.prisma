@@ -164,7 +164,7 @@ model result {
   id             String   @id @default(uuid())
   team_member_id String   @db.VarChar(100)
   answer_id      String   @db.VarChar(100)
-  score          Int      @default(0)
+  score          Int?      @default(0)
   created_at     DateTime @default(now())
   updated_at     DateTime @updatedAt
 
