@@ -28,6 +28,9 @@ import { updateResult } from "./result/update";
 // quiz member
 import { createQuizMember } from "./quiz-member/create";
 
+// quiz answer
+import { getQuestionAnswer } from "./answer/get-single";
+
 export = {
   createQuiz,
   getQuiz,
@@ -50,4 +53,5 @@ export = {
   createResult,
   delResult,
   createQuizMember,
+  getQuestionAnswer,
 };

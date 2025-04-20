@@ -1,11 +1,13 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
-import { requiredIdSchema } from "../../../../../schemas/required-id";
 import userService from "../../../../../lib/user";
 import questionService from "../../../../../lib/question";
-import { forbiddenError, notFoundError } from "../../../../../utils/errors";
+import resultService from "../../../../../lib/result";
+import {
+  badRequestError,
+  forbiddenError,
+  notFoundError,
+} from "../../../../../utils/errors";
 import { hasPermission, User } from "../../../../../policy/policy";
-import db from "../../../../../db/db";
-import { result } from "@prisma/client";
 
 const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -18,10 +20,14 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     );
 
     //Validate incoming body data with defined schema
-    const validatedData = requiredIdSchema.parse(req.params);
+    const { question_id, team_member_id } = req.params;
+
+    if (!question_id || !team_member_id) {
+      badRequestError("Please enter question and team member id");
+    }
 
     //get single item with validated id
-    const data = await questionService.getSingle(validatedData);
+    const data = await questionService.getSingle({ id: question_id });
 
     if (!data) {
       notFoundError("question not found!");
@@ -40,19 +46,11 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
       forbiddenError(`You are unauthorized for this action`);
     }
 
-    let quizResult: result[] = [];
-
     // get mio submitted answer
-    if (authUser?.role === "mios") {
-      quizResult = await db.result.findMany({
-        where: {
-          answer: {
-            question_id: validatedData.id,
-          },
-          team_member_id: authUser.teamMemberId,
-        },
-      });
-    }
+    const quizResult = await resultService.getSingleByTeamMemberQuestion(
+      team_member_id as string,
+      data.id as string
+    );
 
     const { quiz, ...rest } = data;
 
@@ -75,4 +73,4 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { get as getAnswer };
+export { get as getQuestionAnswer };

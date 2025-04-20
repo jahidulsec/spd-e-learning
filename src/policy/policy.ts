@@ -82,6 +82,10 @@ export type Permissions = {
     dataType: Result;
     action: "view" | "create" | "update" | "delete";
   };
+  question_answer: {
+    dataType: Question;
+    action: "view";
+  };
 };
 
 const ROLES = {
@@ -136,6 +140,9 @@ const ROLES = {
       view: true,
       update: false,
       delete: false,
+    },
+    question_answer: {
+      view: true,
     },
   },
   team_lead: {
@@ -202,6 +209,10 @@ const ROLES = {
       update: false,
       delete: false,
     },
+    question_answer: {
+      view: (user, question) =>
+        user.team_members?.team_id === question.quiz.team_id,
+    },
   },
   mios: {
     categories: {
@@ -262,6 +273,10 @@ const ROLES = {
       update: (user, result) => user.team_members?.id === result.team_member_id,
       delete: (user, result) => user.team_members?.id === result.team_member_id,
     },
+    question_answer: {
+      view: (user, question) =>
+        user.team_members?.team_id === question.quiz.team_id,
+    },
   },
 
   director: {
@@ -315,6 +330,9 @@ const ROLES = {
       view: true,
       update: false,
       delete: false,
+    },
+    question_answer: {
+      view: true,
     },
   },
 } as const satisfies RolesWithPermissions;

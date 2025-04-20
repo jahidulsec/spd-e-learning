@@ -57,4 +57,9 @@ router
   .patch(controller.updateResult)
   .delete(controller.delResult);
 
+// quiz answer
+router
+  .route("/question/:question_id/team-member/:team_member_id")
+  .get(controller.getQuestionAnswer);
+
 export { router as quizRouter };
