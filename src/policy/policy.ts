@@ -33,6 +33,20 @@ type Result = Prisma.resultGetPayload<{
   };
 }>;
 
+type QuestionAnswers = Prisma.quizGetPayload<{
+  include: {
+    question: {
+      include: {
+        quiz_option: {
+          include: {
+            result: true;
+          };
+        };
+      };
+    };
+  };
+}>;
+
 type PermissionCheck<Key extends keyof Permissions> =
   | boolean
   | ((user: User, data: Permissions[Key]["dataType"]) => boolean);
@@ -84,6 +98,10 @@ export type Permissions = {
   };
   question_answer: {
     dataType: Question;
+    action: "view";
+  };
+  question_answers: {
+    dataType: QuestionAnswers;
     action: "view";
   };
 };
@@ -143,6 +161,9 @@ const ROLES = {
     },
     question_answer: {
       view: true,
+    },
+    question_answers: {
+      view: false,
     },
   },
   team_lead: {
@@ -213,6 +234,9 @@ const ROLES = {
       view: (user, question) =>
         user.team_members?.team_id === question.quiz.team_id,
     },
+    question_answers: {
+      view: false,
+    },
   },
   mios: {
     categories: {
@@ -277,6 +301,9 @@ const ROLES = {
       view: (user, question) =>
         user.team_members?.team_id === question.quiz.team_id,
     },
+    question_answers: {
+      view: true,
+    },
   },
 
   director: {
@@ -333,6 +360,9 @@ const ROLES = {
     },
     question_answer: {
       view: true,
+    },
+    question_answers: {
+      view: false,
     },
   },
 } as const satisfies RolesWithPermissions;
