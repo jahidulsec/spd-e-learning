@@ -2,7 +2,7 @@ import z from "zod";
 
 export const createOptionDTOSchema = z.object({
   title: z.string().min(1),
-  question_id: z.string().min(3),
+  question_id: z.string().min(1),
   is_correct: z.boolean().optional(),
 });
 

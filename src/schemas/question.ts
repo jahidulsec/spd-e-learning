@@ -1,13 +1,13 @@
 import z from "zod";
 
 const optionSchema = z.object({
-  title: z.string().min(3),
+  title: z.string().min(1),
   is_correct: z.boolean().optional(),
 });
 
 export const createQuestionDTOSchema = z.object({
-  title: z.string().min(3),
-  quiz_id: z.string().min(3),
+  title: z.string().min(1),
+  quiz_id: z.string().min(1),
   options: z.array(optionSchema),
 });
 
