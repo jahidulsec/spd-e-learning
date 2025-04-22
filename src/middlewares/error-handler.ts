@@ -49,7 +49,7 @@ const errorHandler = (
     if (err.code === "P2002") {
       statusCode = 409;
       code = 40902; // Conflict due to unique constraint
-      error = "Bad Request";
+      error = "Conflict";
       message = err.message.split("\n").pop() || "Unique data requied";
     } else if (err.code === "P2003") {
       statusCode = 404;

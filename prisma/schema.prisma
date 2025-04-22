@@ -162,6 +162,7 @@ model question {
 
   quiz        quiz          @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
   quiz_option quiz_option[]
+  result      result?
 }
 
 model quiz_option {
@@ -173,19 +174,21 @@ model quiz_option {
   updated_at  DateTime @updatedAt
 
   question question @relation(fields: [question_id], references: [id], onDelete: Cascade)
-  result   result[]
+  result   result?
 }
 
 model result {
   id             String   @id @default(uuid())
   team_member_id String   @db.VarChar(100)
-  answer_id      String   @db.VarChar(100)
+  answer_id      String   @unique @db.VarChar(100)
+  question_id    String   @unique @db.VarChar(100)
   score          Int?     @default(0)
   created_at     DateTime @default(now())
   updated_at     DateTime @updatedAt
 
   team_member team_members @relation(fields: [team_member_id], references: [id], onDelete: Cascade)
   answer      quiz_option  @relation(fields: [answer_id], references: [id], onDelete: Cascade)
+  question    question     @relation(fields: [question_id], references: [id], onDelete: Cascade)
 }
 
 // e-detailing

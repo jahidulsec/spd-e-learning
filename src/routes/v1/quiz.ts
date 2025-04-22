@@ -62,4 +62,6 @@ router
   .route("/question/:question_id/team-member/:team_member_id")
   .get(controller.getQuestionAnswer);
 
+router.route("/quiz/:id/question").get(controller.getQuestionAnswers);
+
 export { router as quizRouter };

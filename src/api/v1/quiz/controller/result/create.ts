@@ -3,7 +3,11 @@ import userService from "../../../../../lib/user";
 import { createResultDTOSchema } from "../../../../../schemas/result";
 import cmsService from "../../../../../lib/result";
 import optionService from "../../../../../lib/option";
-import { badRequestError, conflictError, notFoundError } from "../../../../../utils/errors";
+import {
+  badRequestError,
+  conflictError,
+  notFoundError,
+} from "../../../../../utils/errors";
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -33,8 +37,11 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
       notFoundError("Quiz does not exist");
     }
 
-    if(quiz?.result && quiz.result.length > 0) {
-      conflictError("You already submitted an answer")
+    // set question id
+    validatedData.question_id = quiz?.question_id;
+
+    if (quiz?.result) {
+      conflictError("You already submitted an answer");
     }
 
     // get score

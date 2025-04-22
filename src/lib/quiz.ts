@@ -268,6 +268,43 @@ const getSingle = async (idObj: requiredIdTypes) => {
   return { data, duration };
 };
 
+const getSingleWithQuestionByTeamMemberId = async (
+  quizId: string,
+  teamMemberId: string
+) => {
+  //extract id from validated id by zod
+  const [data, duration] = await Promise.all([
+    db.quiz.findUnique({
+      where: {
+        id: quizId,
+      },
+      include: {
+        quater: true,
+        question: {
+          include: {
+            quiz_option: {
+              include: {
+                result: {
+                  where: {
+                    team_member_id: teamMemberId,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    }),
+    db.quiz.count({
+      where: {
+        id: quizId,
+      },
+    }),
+  ]);
+
+  return data;
+};
+
 const createNew = async (info: createQuizInputTypes) => {
   const data = await db.quiz.create({
     data: {
@@ -311,4 +348,5 @@ export = {
   deleteOne,
   getMultiByTeamId,
   getMultiByTeamIdWithTeamMember,
+  getSingleWithQuestionByTeamMemberId,
 };

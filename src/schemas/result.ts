@@ -3,6 +3,7 @@ import z from "zod";
 export const createResultDTOSchema = z.object({
   answer_id: z.string().min(3),
   team_member_id: z.string().min(1),
+  question_id: z.string().min(1).optional(),
   score: z.coerce.number().optional(),
 });
 

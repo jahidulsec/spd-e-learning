@@ -62,6 +62,9 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
       } else {
         validatedData.score = 0;
       }
+
+      // set question id
+      validatedData.question_id = quiz?.question_id;
     }
 
     //update with validated data

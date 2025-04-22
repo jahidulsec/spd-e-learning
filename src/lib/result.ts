@@ -207,9 +207,12 @@ const getSingleByTeamMemberQuestion = async (
 };
 
 const createNew = async (info: createResultInputTypes) => {
+  const { question_id, ...rest } = info;
+
   const data = await db.result.create({
     data: {
-      ...info,
+      ...rest,
+      question_id: question_id ?? "",
     },
   });
 
