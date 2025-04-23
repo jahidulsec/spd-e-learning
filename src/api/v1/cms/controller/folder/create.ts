@@ -18,20 +18,20 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     const formData = req.body;
 
     // check parent folder id
-    if (formData["parent_folder_id"]) {
-      const parentFolder = await cmsService.getSingleWithTeamInfo({
-        id: formData["parent_folder_id"],
-      });
+    // if (formData["parent_folder_id"]) {
+    //   const parentFolder = await cmsService.getSingleWithTeamInfo({
+    //     id: formData["parent_folder_id"],
+    //   });
 
-      // if not superuser, add team id from user info
-      if (user?.role !== "superadmin") {
-        if (parentFolder?.category?.team_id !== user?.team_members?.team_id) {
-          notFoundError("Category does not exist");
-        }
-      }
+    //   // if not superuser, add team id from user info
+    //   if (user?.role !== "superadmin") {
+    //     if (parentFolder?.category?.team_id !== user?.team_members?.team_id) {
+    //       notFoundError("Category does not exist");
+    //     }
+    //   }
 
-      formData["category_id"] = parentFolder?.category_id
-    }
+    //   formData["category_id"] = parentFolder?.category_id
+    // }
 
     //Validate incoming body data with defined schema
     const validatedData = createFolderDTOSchema.parse(formData);

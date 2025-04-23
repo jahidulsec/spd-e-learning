@@ -172,7 +172,15 @@ const getSingle = async (idObj: requiredIdTypes) => {
     include: {
       team_member: {
         include: {
-          team: true,
+          team: {
+            include: {
+              team_members: {
+                select: {
+                  user_id: true,
+                },
+              },
+            },
+          },
         },
       },
       answer: {

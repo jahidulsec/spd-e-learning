@@ -22,7 +22,7 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     const formData = req.body;
 
     // set team member id
-    formData["team_member_id"] = user?.team_members?.id ?? "";
+    // formData["team_member_id"] = user?.team_members?.id ?? "";
 
     //Validate incoming body data with defined schema
     const validatedData = createResultDTOSchema.parse(formData);
@@ -33,9 +33,9 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     });
 
     // check team permission
-    if (quiz?.question.quiz.team_id !== user?.team_members?.team_id) {
-      notFoundError("Quiz does not exist");
-    }
+    // if (quiz?.question.quiz.team_id !== user?.team_members?.team_id) {
+    //   notFoundError("Quiz does not exist");
+    // }
 
     // set question id
     validatedData.question_id = quiz?.question_id;

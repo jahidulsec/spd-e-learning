@@ -80,7 +80,15 @@ const getSingle = async (idObj: requiredIdTypes) => {
     include: {
       folder: {
         include: {
-          category: true,
+          category: {
+            include: {
+              team: {
+                include: {
+                  team_members: true,
+                },
+              },
+            },
+          },
         },
       },
     },

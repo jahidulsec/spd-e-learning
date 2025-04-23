@@ -27,17 +27,17 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     // if team member - then get only team member info
     const permittedRole: $Enums.role[] = ["superadmin", "director"];
 
-    if (permittedRole.includes(authUser?.role as $Enums.role)) {
-      //get single item with validated id
-      data = await teamService.getSingleByTeamId(
-        validatedData.id,
-        userTeamInfo?.team_members?.team_id ?? "0"
-      );
-    } else {
+    // if (permittedRole.includes(authUser?.role as $Enums.role)) {
+    //   //get single item with validated id
+    //   data = await teamService.getSingleByTeamId(
+    //     validatedData.id,
+    //     userTeamInfo?.team_members?.team_id ?? "0"
+    //   );
+    // } else {
       // super admin can get all team member
       //get single item with validated id
       data = await teamService.getSingle(validatedData);
-    }
+    // }
 
     if (!data) {
       notFoundError("User not found!");

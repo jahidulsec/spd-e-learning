@@ -32,15 +32,16 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
 
       data = result.data;
       count = result.count;
-    } else {
-      const result = await cmsService.getMultiByTeamId(
-        user?.team_members?.team_id as string,
-        validatedData
-      );
+    } 
+    // else {
+    //   const result = await cmsService.getMultiByTeamId(
+    //     user?.team_members?.team_id as string,
+    //     validatedData
+    //   );
 
-      data = result.data;
-      count = result.count;
-    }
+    //   data = result.data;
+    //   count = result.count;
+    // }
 
     // adding file_path in every file
     const modifiedData = data.map((file) => {

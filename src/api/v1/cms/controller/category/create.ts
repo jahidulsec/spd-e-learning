@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express-serve-static-core";
 import { createCategoryDTOSchema } from "../../../../../schemas/category";
 import userService from "../../../../../lib/user";
 import cmsService from "../../../../../lib/category";
+import teamService from "../../../../../lib/team";
+import { forbiddenError } from "../../../../../utils/errors";
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -17,6 +19,17 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
     //Validate incoming body data with defined schema
     const validatedData = createCategoryDTOSchema.parse(formData);
+
+    // if not superuser, add team id from user info
+    if (user?.role !== "superadmin") {
+      if (
+        user?.team_members.filter(
+          (item) => item.team_id === validatedData.team_id
+        ).length === 0
+      ) {
+        forbiddenError("You do not have access for this team");
+      }
+    }
 
     //create new with validated data
     const created = await cmsService.createNew(validatedData);

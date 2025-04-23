@@ -27,14 +27,14 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
     );
 
     // check authorization
-    if (
-      authUser?.role !== "superadmin" &&
-      userTeamInfo?.team_members?.team_id !== validatedId.id
-    ) {
-      unauthorizedError(
-        "Your are not a member of this team to perform this action"
-      );
-    }
+    // if (
+    //   authUser?.role !== "superadmin" &&
+    //   userTeamInfo?.team_members?.team_id !== validatedId.id
+    // ) {
+    //   unauthorizedError(
+    //     "Your are not a member of this team to perform this action"
+    //   );
+    // }
 
     // Validate incoming body data with defined schema
     const formData = req.body;

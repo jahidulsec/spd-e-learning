@@ -22,25 +22,25 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     let data: any[] = [];
     let count: number = 0;
 
-    if (
-      (["superadmin", "director"] as $Enums.role[]).includes(
-        user?.role as $Enums.role
-      )
-    ) {
+    // if (
+    //   (["superadmin", "director"] as $Enums.role[]).includes(
+    //     user?.role as $Enums.role
+    //   )
+    // ) {
       //get all items with validated queries
       const result = await questionService.getMulti(validatedData);
 
       data = result.data;
       count = result.count;
-    } else {
-      const result = await questionService.getMultiByTeamId(
-        user?.team_members?.team_id as string,
-        validatedData
-      );
+    // } else {
+    //   const result = await questionService.getMultiByTeamId(
+    //     user?.team_members?.team_id as string,
+    //     validatedData
+    //   );
 
-      data = result.data;
-      count = result.count;
-    }
+    //   data = result.data;
+    //   count = result.count;
+    // }
 
     const responseData = {
       success: true,

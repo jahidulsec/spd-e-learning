@@ -6,7 +6,42 @@ export type User = Prisma.usersGetPayload<{
   include: { team_members: { select: { team_id: true; id: true } } };
 }>;
 
-type Category = Prisma.categoryGetPayload<{
+type Category = Prisma.categoryGetPayload<{}>;
+
+type Folder = Prisma.folderGetPayload<{
+  include: {
+    category: {
+      include: {
+        team: {
+          include: {
+            team_members: true;
+          };
+        };
+      };
+    };
+  };
+}>;
+
+type File = Prisma.fileGetPayload<{
+  include: {
+    folder: {
+      include: {
+        category: {
+          include: {
+            team: {
+              include: {
+                team_members: true;
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+}>;
+
+type Quater = Prisma.quaterGetPayload<{}>;
+type Quiz = Prisma.quizGetPayload<{
   include: {
     team: {
       include: {
@@ -15,29 +50,30 @@ type Category = Prisma.categoryGetPayload<{
     };
   };
 }>;
-
-type Folder = Prisma.folderGetPayload<{
-  include: { category: true };
-}>;
-
-type File = Prisma.fileGetPayload<{
+type QuizMember = Prisma.quiz_memberGetPayload<{}>;
+type Question = Prisma.questionGetPayload<{
   include: {
-    folder: {
-      include: { category: true };
+    quiz: {
+      include: {
+        team: {
+          include: {
+            team_members: true;
+          };
+        };
+      };
     };
   };
 }>;
-
-type Quater = Prisma.quaterGetPayload<{}>;
-type Quiz = Prisma.quizGetPayload<{}>;
-type QuizMember = Prisma.quiz_memberGetPayload<{}>;
-type Question = Prisma.questionGetPayload<{ include: { quiz: true } }>;
 type Option = Prisma.quiz_optionGetPayload<{}>;
 type Result = Prisma.resultGetPayload<{
   include: {
     team_member: {
       include: {
-        team: true;
+        team: {
+          include: {
+            team_members: true;
+          };
+        };
       };
     };
   };
@@ -180,24 +216,23 @@ const ROLES = {
     categories: {
       create: true,
       view: (user, category) => {
-        const userList = category.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
+        const userList = user.team_members.filter(
+          (item) => item.team_id === category.team_id
         );
-
         if (userList.length === 0) return false;
         return true;
       },
       update: (user, category) => {
-        const userList = category.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
+        const userList = user.team_members.filter(
+          (item) => item.team_id === category.team_id
         );
 
         if (userList.length === 0) return false;
         return true;
       },
       delete: (user, category) => {
-        const userList = category.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
+        const userList = user.team_members.filter(
+          (item) => item.team_id === category.team_id
         );
 
         if (userList.length === 0) return false;
@@ -206,21 +241,60 @@ const ROLES = {
     },
     folders: {
       create: true,
-      view: (user, folder) =>
-        user.team_members?.team_id === folder.category?.team_id,
-      update: (user, folder) =>
-        user.team_members?.team_id === folder.category?.team_id,
-      delete: (user, folder) =>
-        user.team_members?.team_id === folder.category?.team_id,
+      view: (user, folder) => {
+        const userList = folder.category?.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList?.length === 0) return false;
+        return true;
+      },
+      update: (user, folder) => {
+        const userList = folder.category?.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList?.length === 0) return false;
+        return true;
+      },
+      delete: (user, folder) => {
+        const userList = folder.category?.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList?.length === 0) return false;
+        return true;
+      },
     },
     files: {
       create: true,
-      view: (user, file) =>
-        user.team_members?.team_id === file.folder.category?.team_id,
-      update: (user, file) =>
-        user.team_members?.team_id === file.folder.category?.team_id,
-      delete: (user, file) =>
-        user.team_members?.team_id === file.folder.category?.team_id,
+      view: (user, file) => {
+        const userList = file.folder.category?.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList?.length === 0) return false;
+
+        return true;
+      },
+      update: (user, file) => {
+        const userList = file.folder.category?.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList?.length === 0) return false;
+
+        return true;
+      },
+      delete: (user, file) => {
+        const userList = file.folder.category?.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList?.length === 0) return false;
+
+        return true;
+      },
     },
     quater: {
       create: true,
@@ -230,21 +304,63 @@ const ROLES = {
     },
     quiz: {
       create: true,
-      view: (user, quiz) => user.team_members?.team_id === quiz.team_id,
-      update: (user, quiz) => user.team_members?.team_id === quiz.team_id,
-      delete: (user, quiz) => user.team_members?.team_id === quiz.team_id,
+      view: (user, quiz) => {
+        const userList = quiz.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList.length === 0) return false;
+
+        return true;
+      },
+      update: (user, quiz) => {
+        const userList = quiz.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList.length === 0) return false;
+
+        return true;
+      },
+      delete: (user, quiz) => {
+        const userList = quiz.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList.length === 0) return false;
+
+        return true;
+      },
     },
     quiz_member: {
       create: false,
     },
     question: {
       create: true,
-      view: (user, question) =>
-        user.team_members?.team_id === question.quiz.team_id,
-      update: (user, question) =>
-        user.team_members?.team_id === question.quiz.team_id,
-      delete: (user, question) =>
-        user.team_members?.team_id === question.quiz.team_id,
+      view: (user, question) => {
+        const userList = question.quiz.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList.length === 0) return false;
+        return true;
+      },
+      update: (user, question) => {
+        const userList = question.quiz.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList.length === 0) return false;
+        return true;
+      },
+      delete: (user, question) => {
+        const userList = question.quiz.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList.length === 0) return false;
+        return true;
+      },
     },
     option: {
       create: true,
@@ -254,14 +370,27 @@ const ROLES = {
     },
     result: {
       create: false,
-      view: (user, result) =>
-        user.team_members?.team_id === result.team_member.team_id,
+      view: (user, result) => {
+        const userList = result.team_member.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList.length === 0) return false;
+
+        return true;
+      },
       update: false,
       delete: false,
     },
     question_answer: {
-      view: (user, question) =>
-        user.team_members?.team_id === question.quiz.team_id,
+      view: (user, question) => {
+        const userList = question.quiz.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList.length === 0) return false;
+        return true;
+      },
     },
     question_answers: {
       view: false,
@@ -271,8 +400,8 @@ const ROLES = {
     categories: {
       create: false,
       view: (user, category) => {
-        const userList = category.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
+        const userList = user.team_members.filter(
+          (item) => item.team_id === category.team_id
         );
 
         if (userList.length === 0) return false;
@@ -283,15 +412,28 @@ const ROLES = {
     },
     folders: {
       create: false,
-      view: (user, folder) =>
-        user.team_members?.team_id === folder.category?.team_id,
+      view: (user, folder) => {
+        const userList = folder.category?.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList?.length === 0) return false;
+        return true;
+      },
       update: false,
       delete: false,
     },
     files: {
       create: false,
-      view: (user, file) =>
-        user.team_members?.team_id === file.folder.category?.team_id,
+      view: (user, file) => {
+        const userList = file.folder.category?.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList?.length === 0) return false;
+
+        return true;
+      },
       update: false,
       delete: false,
     },
@@ -303,7 +445,15 @@ const ROLES = {
     },
     quiz: {
       create: false,
-      view: (user, quiz) => user.team_members?.team_id === quiz.team_id,
+      view: (user, quiz) => {
+        const userList = quiz.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList.length === 0) return false;
+
+        return true;
+      },
       update: false,
       delete: false,
     },
@@ -312,8 +462,14 @@ const ROLES = {
     },
     question: {
       create: false,
-      view: (user, question) =>
-        user.team_members?.team_id === question.quiz.team_id,
+      view: (user, question) => {
+        const userList = question.quiz.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList.length === 0) return false;
+        return true;
+      },
       update: false,
       delete: false,
     },
@@ -325,13 +481,19 @@ const ROLES = {
     },
     result: {
       create: true,
-      view: (user, result) => user.team_members?.id === result.team_member_id,
-      update: (user, result) => user.team_members?.id === result.team_member_id,
-      delete: (user, result) => user.team_members?.id === result.team_member_id,
+      view: (user, result) => result.team_member.user_id === user.sap_id,
+      update: (user, result) => result.team_member.user_id === user.sap_id,
+      delete: (user, result) => result.team_member.user_id === user.sap_id,
     },
     question_answer: {
-      view: (user, question) =>
-        user.team_members?.team_id === question.quiz.team_id,
+      view: (user, question) => {
+        const userList = question.quiz.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList.length === 0) return false;
+        return true;
+      },
     },
     question_answers: {
       view: true,

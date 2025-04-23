@@ -31,21 +31,21 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
 
     const permittedRole: $Enums.role[] = ["superadmin", "director"];
 
-    if (permittedRole.includes(authUser?.role as $Enums.role)) {
-      const { data, count } = await teamMemberService.getMultiByTeamId(
-        userTeamInfo?.team_members?.team_id as string,
-        validatedData
-      );
+    // if (permittedRole.includes(authUser?.role as $Enums.role)) {
+    //   const { data, count } = await teamMemberService.getMultiByTeamId(
+    //     userTeamInfo?.team_members?.team_id as string,
+    //     validatedData
+    //   );
 
-      responseData = {
-        success: true,
-        message: "All teams get successfully!",
-        data: data,
-        pagination: {
-          ...paginate(validatedData.page, validatedData.size, count),
-        },
-      };
-    } else {
+    //   responseData = {
+    //     success: true,
+    //     message: "All teams get successfully!",
+    //     data: data,
+    //     pagination: {
+    //       ...paginate(validatedData.page, validatedData.size, count),
+    //     },
+    //   };
+    // } else {
       //get all items with validated queries
       const { data, count } = await teamMemberService.getMulti(validatedData);
 
@@ -57,7 +57,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
           ...paginate(validatedData.page, validatedData.size, count),
         },
       };
-    }
+    // }
 
     //send success response
     res.status(200).json(responseData);

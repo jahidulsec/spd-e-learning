@@ -112,13 +112,6 @@ const getSingle = async (idObj: requiredIdTypes) => {
   //extract id from validated id by zod
   const data = await db.category.findUnique({
     where: { id },
-    include: {
-      team: {
-        include: {
-          team_members: true,
-        },
-      },
-    },
   });
 
   return data;

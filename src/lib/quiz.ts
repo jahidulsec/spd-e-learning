@@ -256,6 +256,11 @@ const getSingle = async (idObj: requiredIdTypes) => {
       where: { id },
       include: {
         quater: true,
+        team: {
+          include: {
+            team_members: true,
+          },
+        },
       },
     }),
     db.question.count({
@@ -273,7 +278,7 @@ const getSingleWithQuestionByTeamMemberId = async (
   teamMemberId: string
 ) => {
   //extract id from validated id by zod
-  const [data, duration] = await Promise.all([
+  const [data] = await Promise.all([
     db.quiz.findUnique({
       where: {
         id: quizId,
@@ -293,11 +298,6 @@ const getSingleWithQuestionByTeamMemberId = async (
             },
           },
         },
-      },
-    }),
-    db.quiz.count({
-      where: {
-        id: quizId,
       },
     }),
   ]);

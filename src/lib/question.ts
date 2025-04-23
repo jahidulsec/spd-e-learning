@@ -177,7 +177,11 @@ const getSingleWithTeamInfo = async (idObj: requiredIdTypes) => {
     include: {
       quiz: {
         include: {
-          team: true,
+          team: {
+            include: {
+              team_members: true,
+            },
+          },
         },
       },
       quiz_option: true,

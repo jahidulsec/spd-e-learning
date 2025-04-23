@@ -94,7 +94,11 @@ const getSingleWithTeamInfo = async (idObj: requiredIdTypes) => {
     include: {
       category: {
         include: {
-          team: true,
+          team: {
+            include: {
+              team_members: true,
+            },
+          },
         },
       },
       sub_folder: true,

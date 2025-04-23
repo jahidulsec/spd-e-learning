@@ -20,14 +20,14 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
 
     const permittedRole: $Enums.role[] = ["superadmin", "director"];
 
-    if (
-      !permittedRole.includes(authUser?.role as $Enums.role) &&
-      userTeamInfo?.team_members?.team_id !== validatedData.id
-    ) {
-      forbiddenError(
-        "Your are not a member of this team to perform this action"
-      );
-    }
+    // if (
+    //   !permittedRole.includes(authUser?.role as $Enums.role) &&
+    //   userTeamInfo?.team_members?.team_id !== validatedData.id
+    // ) {
+    //   forbiddenError(
+    //     "Your are not a member of this team to perform this action"
+    //   );
+    // }
 
     //get single item with validated id
     const data = await teamService.getSingle(validatedData);

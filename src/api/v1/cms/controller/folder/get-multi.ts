@@ -37,19 +37,18 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
         },
       };
     } else {
-      const { data, count } = await cmsService.getMultiByTeamId(
-        user?.team_members?.team_id as string,
-        validatedData
-      );
+      // const { data, count } = await cmsService.getMultiByTeamId(
+      //   user?.team_members?.team_id as string,
+      //   validatedData
+      // );
 
-      console.log(user?.team_members?.team_id )
 
       responseData = {
         success: true,
         message: "All folders get successfully!",
-        data: data,
+        data: "data",
         pagination: {
-          ...paginate(validatedData.page, validatedData.size, count),
+          ...paginate(validatedData.page, validatedData.size, 0),
         },
       };
     }
