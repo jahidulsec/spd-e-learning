@@ -71,6 +71,55 @@ const getMultiByTeamId = async (
   return { data, count };
 };
 
+const getMultiByUserId = async (
+  userId: string,
+  queries: folderQueryInputTypes
+) => {
+  const [data, count] = await Promise.all([
+    db.folder.findMany({
+      where: {
+        category: {
+          team: {
+            team_members: {
+              some: {
+                user_id: userId || "",
+              },
+            },
+          },
+        },
+        parent_folder_id: null,
+        title: {
+          startsWith: queries.search || undefined,
+        },
+      },
+      take: queries.size,
+      skip: queries.size * (queries.page - 1),
+      orderBy: {
+        title: queries.sort,
+      },
+    }),
+    db.folder.count({
+      where: {
+        category: {
+          team: {
+            team_members: {
+              some: {
+                user_id: userId || "",
+              },
+            },
+          },
+        },
+        parent_folder_id: null,
+        title: {
+          startsWith: queries.search || undefined,
+        },
+      },
+    }),
+  ]);
+
+  return { data, count };
+};
+
 const getSingle = async (idObj: requiredIdTypes) => {
   const { id } = idObj;
 
@@ -92,15 +141,7 @@ const getSingleWithTeamInfo = async (idObj: requiredIdTypes) => {
   const data = await db.folder.findUnique({
     where: { id },
     include: {
-      category: {
-        include: {
-          team: {
-            include: {
-              team_members: true,
-            },
-          },
-        },
-      },
+      category: true,
       sub_folder: true,
       file: true,
     },
@@ -152,4 +193,5 @@ export = {
   deleteOne,
   getSingleWithTeamInfo,
   getMultiByTeamId,
+  getMultiByUserId,
 };

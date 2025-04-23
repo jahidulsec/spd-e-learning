@@ -73,7 +73,7 @@ const getMultiByUserId = async (
         team: {
           team_members: {
             some: {
-              user_id: userId,
+              user_id: userId || "",
             },
           },
         },
@@ -92,7 +92,7 @@ const getMultiByUserId = async (
         team: {
           team_members: {
             some: {
-              user_id: userId,
+              user_id: userId || "",
             },
           },
         },

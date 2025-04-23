@@ -10,15 +10,7 @@ type Category = Prisma.categoryGetPayload<{}>;
 
 type Folder = Prisma.folderGetPayload<{
   include: {
-    category: {
-      include: {
-        team: {
-          include: {
-            team_members: true;
-          };
-        };
-      };
-    };
+    category: true;
   };
 }>;
 
@@ -26,15 +18,7 @@ type File = Prisma.fileGetPayload<{
   include: {
     folder: {
       include: {
-        category: {
-          include: {
-            team: {
-              include: {
-                team_members: true;
-              };
-            };
-          };
-        };
+        category: true;
       };
     };
   };
@@ -242,24 +226,24 @@ const ROLES = {
     folders: {
       create: true,
       view: (user, folder) => {
-        const userList = folder.category?.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
+        const userList = user.team_members.filter(
+          (item) => item.team_id === folder.category?.team_id
         );
 
         if (userList?.length === 0) return false;
         return true;
       },
       update: (user, folder) => {
-        const userList = folder.category?.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
+        const userList = user.team_members.filter(
+          (item) => item.team_id === folder.category?.team_id
         );
 
         if (userList?.length === 0) return false;
         return true;
       },
       delete: (user, folder) => {
-        const userList = folder.category?.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
+        const userList = user.team_members.filter(
+          (item) => item.team_id === folder.category?.team_id
         );
 
         if (userList?.length === 0) return false;
@@ -269,27 +253,21 @@ const ROLES = {
     files: {
       create: true,
       view: (user, file) => {
-        const userList = file.folder.category?.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
-        );
+        const userList = user.team_members.filter(item => item.team_id === file.folder.category?.team_id)
 
         if (userList?.length === 0) return false;
 
         return true;
       },
       update: (user, file) => {
-        const userList = file.folder.category?.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
-        );
+        const userList = user.team_members.filter(item => item.team_id === file.folder.category?.team_id)
 
         if (userList?.length === 0) return false;
 
         return true;
       },
       delete: (user, file) => {
-        const userList = file.folder.category?.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
-        );
+        const userList = user.team_members.filter(item => item.team_id === file.folder.category?.team_id)
 
         if (userList?.length === 0) return false;
 
@@ -413,8 +391,8 @@ const ROLES = {
     folders: {
       create: false,
       view: (user, folder) => {
-        const userList = folder.category?.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
+        const userList = user.team_members.filter(
+          (item) => item.team_id === folder.category?.team_id
         );
 
         if (userList?.length === 0) return false;
@@ -426,9 +404,7 @@ const ROLES = {
     files: {
       create: false,
       view: (user, file) => {
-        const userList = file.folder.category?.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
-        );
+        const userList = user.team_members.filter(item => item.team_id === file.folder.category?.team_id)
 
         if (userList?.length === 0) return false;
 

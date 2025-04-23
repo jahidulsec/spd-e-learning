@@ -3,7 +3,7 @@ import userService from "../../../../../lib/user";
 import { createFolderDTOSchema } from "../../../../../schemas/folder";
 import cmsService from "../../../../../lib/folder";
 import categoryService from "../../../../../lib/category";
-import { badRequestError, notFoundError } from "../../../../../utils/errors";
+import { notFoundError } from "../../../../../utils/errors";
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -18,23 +18,39 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     const formData = req.body;
 
     // check parent folder id
-    // if (formData["parent_folder_id"]) {
-    //   const parentFolder = await cmsService.getSingleWithTeamInfo({
-    //     id: formData["parent_folder_id"],
-    //   });
+    if (formData["parent_folder_id"]) {
+      const parentFolder = await cmsService.getSingleWithTeamInfo({
+        id: formData["parent_folder_id"],
+      });
 
-    //   // if not superuser, add team id from user info
-    //   if (user?.role !== "superadmin") {
-    //     if (parentFolder?.category?.team_id !== user?.team_members?.team_id) {
-    //       notFoundError("Category does not exist");
-    //     }
-    //   }
+      // if not superuser, add team id from user info
+      if (user?.role !== "superadmin") {
+        if (
+          user?.team_members.filter(
+            (item) => item.team_id === parentFolder?.category?.team_id
+          )
+        ) {
+          notFoundError("Category does not exist");
+        }
+      }
 
-    //   formData["category_id"] = parentFolder?.category_id
-    // }
+      formData["category_id"] = parentFolder?.category_id;
+    }
 
     //Validate incoming body data with defined schema
     const validatedData = createFolderDTOSchema.parse(formData);
+
+    // team permission check
+    const category = await categoryService.getSingle({
+      id: validatedData.category_id,
+    });
+
+    if (
+      user?.team_members.filter((item) => item.team_id === category?.team_id)
+        .length === 0
+    ) {
+      notFoundError("Category not found");
+    }
 
     //create new with validated data
     const created = await cmsService.createNew(validatedData);
