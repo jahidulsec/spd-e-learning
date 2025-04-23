@@ -4,14 +4,14 @@ import { forbiddenError } from "./errors";
 const generateAccessToken = (
   userId: string,
   role: string,
-  teamMemberId?: string
+  // teamMemberId?: string
 ) => {
   return jwt.sign(
     {
       id: userId,
       role: role,
       type: "access",
-      ...(teamMemberId && { teamMemberId: teamMemberId }),
+      // ...(teamMemberId && { teamMemberId: teamMemberId }),
     },
     process.env.ACCESS_TOKEN_SECRET as string,
     {

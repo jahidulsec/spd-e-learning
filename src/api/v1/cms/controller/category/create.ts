@@ -15,11 +15,6 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
     const formData = req.body;
 
-    // if not superuser, add team id from user info
-    if (user?.role !== "superadmin") {
-      formData["team_id"] = user?.team_members?.team_id;
-    }
-
     //Validate incoming body data with defined schema
     const validatedData = createCategoryDTOSchema.parse(formData);
 

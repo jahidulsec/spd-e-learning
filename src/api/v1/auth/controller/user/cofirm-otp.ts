@@ -41,7 +41,7 @@ const confirmOtp = async (req: Request, res: Response, next: NextFunction) => {
     const accessToken = generateAccessToken(
       user?.sap_id as string,
       user?.role as string,
-      user?.team_members?.id
+      // user?.team_members?.id
     );
 
     // delete Otp

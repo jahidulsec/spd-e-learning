@@ -32,7 +32,6 @@ const initialLogin = async (
     const accessToken = generateAccessToken(
       user?.sap_id as string,
       user?.role as string,
-      user?.team_members?.id
     );
 
     const responseData = {

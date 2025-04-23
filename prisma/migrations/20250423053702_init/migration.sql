@@ -1,7 +1,7 @@
 -- CreateTable
 CREATE TABLE `users` (
     `sap_id` VARCHAR(10) NOT NULL,
-    `password` VARCHAR(50) NULL,
+    `password` VARCHAR(255) NULL,
     `full_name` VARCHAR(100) NOT NULL,
     `mobile` VARCHAR(20) NOT NULL,
     `role` ENUM('superadmin', 'mios', 'team_lead', 'director') NOT NULL DEFAULT 'mios',
@@ -64,6 +64,7 @@ CREATE TABLE `folder` (
     `id` VARCHAR(191) NOT NULL,
     `title` VARCHAR(150) NOT NULL,
     `category_id` VARCHAR(100) NOT NULL,
+    `parent_folder_id` VARCHAR(191) NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
@@ -76,19 +77,20 @@ CREATE TABLE `file` (
     `title` VARCHAR(150) NOT NULL,
     `filename` VARCHAR(100) NOT NULL,
     `file_type` VARCHAR(100) NOT NULL,
-    `file_path` VARCHAR(255) NOT NULL,
     `folder_id` VARCHAR(100) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
+    UNIQUE INDEX `file_filename_key`(`filename`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `campaign` (
+CREATE TABLE `quater` (
     `id` VARCHAR(191) NOT NULL,
     `title` VARCHAR(150) NOT NULL,
-    `team_id` VARCHAR(100) NOT NULL,
+    `start_date` DATETIME(3) NOT NULL,
+    `end_date` DATETIME(3) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
@@ -98,9 +100,12 @@ CREATE TABLE `campaign` (
 -- CreateTable
 CREATE TABLE `quiz` (
     `id` VARCHAR(191) NOT NULL,
-    `campaign_id` VARCHAR(100) NOT NULL,
+    `quater_id` VARCHAR(100) NOT NULL,
     `title` VARCHAR(150) NOT NULL,
+    `team_id` VARCHAR(100) NOT NULL,
     `description` VARCHAR(255) NULL,
+    `start_date` DATETIME(3) NOT NULL,
+    `end_date` DATETIME(3) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
@@ -108,10 +113,22 @@ CREATE TABLE `quiz` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `quiz_member` (
+    `id` VARCHAR(191) NOT NULL,
+    `quiz_id` VARCHAR(100) NOT NULL,
+    `team_member_id` VARCHAR(100) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `quiz_member_quiz_id_team_member_id_key`(`quiz_id`, `team_member_id`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `question` (
     `id` VARCHAR(191) NOT NULL,
     `quiz_id` VARCHAR(100) NOT NULL,
-    `question` VARCHAR(255) NOT NULL,
+    `title` VARCHAR(255) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
@@ -122,7 +139,7 @@ CREATE TABLE `question` (
 CREATE TABLE `quiz_option` (
     `id` VARCHAR(191) NOT NULL,
     `question_id` VARCHAR(100) NOT NULL,
-    `option` VARCHAR(100) NOT NULL,
+    `title` VARCHAR(100) NOT NULL,
     `is_correct` BOOLEAN NULL DEFAULT false,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
@@ -135,18 +152,22 @@ CREATE TABLE `result` (
     `id` VARCHAR(191) NOT NULL,
     `team_member_id` VARCHAR(100) NOT NULL,
     `answer_id` VARCHAR(100) NOT NULL,
-    `score` INTEGER NOT NULL DEFAULT 0,
+    `question_id` VARCHAR(100) NOT NULL,
+    `score` INTEGER NULL DEFAULT 0,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
+    UNIQUE INDEX `result_answer_id_key`(`answer_id`),
+    UNIQUE INDEX `result_question_id_key`(`question_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `e_detailing` (
     `id` VARCHAR(191) NOT NULL,
-    `campaign_id` VARCHAR(100) NOT NULL,
+    `quater_id` VARCHAR(100) NOT NULL,
     `title` VARCHAR(150) NOT NULL,
+    `team_id` VARCHAR(100) NOT NULL,
     `description` VARCHAR(255) NULL,
     `deadline` TIMESTAMP(6) NOT NULL,
     `score_starting` DECIMAL NOT NULL,
@@ -201,16 +222,25 @@ ALTER TABLE `team_members` ADD CONSTRAINT `team_members_team_id_fkey` FOREIGN KE
 ALTER TABLE `category` ADD CONSTRAINT `category_team_id_fkey` FOREIGN KEY (`team_id`) REFERENCES `teams`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `folder` ADD CONSTRAINT `folder_parent_folder_id_fkey` FOREIGN KEY (`parent_folder_id`) REFERENCES `folder`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `folder` ADD CONSTRAINT `folder_category_id_fkey` FOREIGN KEY (`category_id`) REFERENCES `category`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `file` ADD CONSTRAINT `file_folder_id_fkey` FOREIGN KEY (`folder_id`) REFERENCES `folder`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `campaign` ADD CONSTRAINT `campaign_team_id_fkey` FOREIGN KEY (`team_id`) REFERENCES `teams`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `quiz` ADD CONSTRAINT `quiz_quater_id_fkey` FOREIGN KEY (`quater_id`) REFERENCES `quater`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `quiz` ADD CONSTRAINT `quiz_campaign_id_fkey` FOREIGN KEY (`campaign_id`) REFERENCES `campaign`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `quiz` ADD CONSTRAINT `quiz_team_id_fkey` FOREIGN KEY (`team_id`) REFERENCES `teams`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `quiz_member` ADD CONSTRAINT `quiz_member_quiz_id_fkey` FOREIGN KEY (`quiz_id`) REFERENCES `quiz`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `quiz_member` ADD CONSTRAINT `quiz_member_team_member_id_fkey` FOREIGN KEY (`team_member_id`) REFERENCES `team_members`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `question` ADD CONSTRAINT `question_quiz_id_fkey` FOREIGN KEY (`quiz_id`) REFERENCES `quiz`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -225,7 +255,13 @@ ALTER TABLE `result` ADD CONSTRAINT `result_team_member_id_fkey` FOREIGN KEY (`t
 ALTER TABLE `result` ADD CONSTRAINT `result_answer_id_fkey` FOREIGN KEY (`answer_id`) REFERENCES `quiz_option`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `e_detailing` ADD CONSTRAINT `e_detailing_campaign_id_fkey` FOREIGN KEY (`campaign_id`) REFERENCES `campaign`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `result` ADD CONSTRAINT `result_question_id_fkey` FOREIGN KEY (`question_id`) REFERENCES `question`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `e_detailing` ADD CONSTRAINT `e_detailing_quater_id_fkey` FOREIGN KEY (`quater_id`) REFERENCES `quater`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `e_detailing` ADD CONSTRAINT `e_detailing_team_id_fkey` FOREIGN KEY (`team_id`) REFERENCES `teams`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `e_detailing_video` ADD CONSTRAINT `e_detailing_video_e_detailing_id_fkey` FOREIGN KEY (`e_detailing_id`) REFERENCES `e_detailing`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

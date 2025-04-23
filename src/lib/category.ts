@@ -63,12 +63,62 @@ const getMultiByTeamId = async (
   return { data, count };
 };
 
+const getMultiByUserId = async (
+  userId: string,
+  queries: categoryQueryInputTypes
+) => {
+  const [data, count] = await Promise.all([
+    db.category.findMany({
+      where: {
+        team: {
+          team_members: {
+            some: {
+              user_id: userId,
+            },
+          },
+        },
+        title: {
+          startsWith: queries.search || undefined,
+        },
+      },
+      take: queries.size,
+      skip: queries.size * (queries.page - 1),
+      orderBy: {
+        created_at: queries.sort,
+      },
+    }),
+    db.category.count({
+      where: {
+        team: {
+          team_members: {
+            some: {
+              user_id: userId,
+            },
+          },
+        },
+        title: {
+          startsWith: queries.search || undefined,
+        },
+      },
+    }),
+  ]);
+
+  return { data, count };
+};
+
 const getSingle = async (idObj: requiredIdTypes) => {
   const { id } = idObj;
 
   //extract id from validated id by zod
   const data = await db.category.findUnique({
     where: { id },
+    include: {
+      team: {
+        include: {
+          team_members: true,
+        },
+      },
+    },
   });
 
   return data;
@@ -116,4 +166,5 @@ export = {
   updateOne,
   deleteOne,
   getMultiByTeamId,
+  getMultiByUserId,
 };

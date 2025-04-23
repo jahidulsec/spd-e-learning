@@ -7,7 +7,7 @@ import {
   generateRefreshToken,
 } from "../../../../../utils/token";
 import { isValidPassword } from "../../../../../utils/password";
-import { addMinutesToDate } from "../../../../../utils/otp";
+
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -36,7 +36,6 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     const accessToken = generateAccessToken(
       user?.sap_id as string,
       user?.role as string,
-      user?.team_members?.id
     );
 
     const refreshToken = generateRefreshToken(user?.sap_id as string);

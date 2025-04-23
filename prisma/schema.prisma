@@ -17,7 +17,7 @@ model users {
   created_at   DateTime      @default(now())
   updated_at   DateTime      @updatedAt
   otp          otp[]
-  team_members team_members?
+  team_members team_members[]
 }
 
 enum role {
@@ -58,16 +58,18 @@ model teams {
 model team_members {
   id         String   @id @default(uuid())
   team_id    String   @db.VarChar(100)
-  user_id    String   @unique @db.VarChar(100)
+  user_id    String   @db.VarChar(100)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  user              users?              @relation(fields: [user_id], references: [sap_id], onDelete: Cascade)
+  user              users              @relation(fields: [user_id], references: [sap_id], onDelete: Cascade)
   team              teams               @relation(fields: [team_id], references: [id], onDelete: Cascade)
   result            result[]
   e_detailing_video e_detailing_video[]
   e_detailing_score e_detailing_score[]
   quiz_member       quiz_member[]
+
+  @@unique([team_id, user_id])
 }
 
 // content

@@ -6,6 +6,16 @@ export type User = Prisma.usersGetPayload<{
   include: { team_members: { select: { team_id: true; id: true } } };
 }>;
 
+type Category = Prisma.categoryGetPayload<{
+  include: {
+    team: {
+      include: {
+        team_members: true;
+      };
+    };
+  };
+}>;
+
 type Folder = Prisma.folderGetPayload<{
   include: { category: true };
 }>;
@@ -61,7 +71,7 @@ type RolesWithPermissions = {
 
 export type Permissions = {
   categories: {
-    dataType: category;
+    dataType: Category;
     action: "view" | "create" | "update" | "delete";
   };
   folders: {
@@ -169,11 +179,30 @@ const ROLES = {
   team_lead: {
     categories: {
       create: true,
-      view: (user, category) => user.team_members?.team_id === category.team_id,
-      update: (user, category) =>
-        user.team_members?.team_id === category.team_id,
-      delete: (user, category) =>
-        user.team_members?.team_id === category.team_id,
+      view: (user, category) => {
+        const userList = category.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList.length === 0) return false;
+        return true;
+      },
+      update: (user, category) => {
+        const userList = category.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList.length === 0) return false;
+        return true;
+      },
+      delete: (user, category) => {
+        const userList = category.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList.length === 0) return false;
+        return true;
+      },
     },
     folders: {
       create: true,
@@ -242,9 +271,12 @@ const ROLES = {
     categories: {
       create: false,
       view: (user, category) => {
-        console.log(category);
-        console.log(user);
-        return user.team_members?.team_id === category.team_id;
+        const userList = category.team.team_members.filter(
+          (item) => item.user_id === user.sap_id
+        );
+
+        if (userList.length === 0) return false;
+        return true;
       },
       update: false,
       delete: false,
