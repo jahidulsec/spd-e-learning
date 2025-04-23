@@ -40,11 +40,11 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     });
 
     // if not superuser, add team id from user info
-    // if (user?.role !== "superadmin") {
-    //   if (folder?.category?.team_id !== user?.team_members?.team_id) {
-    //     notFoundError("Folder does not exist");
-    //   }
-    // }
+    if (user?.role !== "superadmin") {
+      if (user?.team_members.filter(item => item.team_id === folder?.category?.team_id).length === 0) {
+        notFoundError("Folder does not exist");
+      }
+    }
 
     //create new with validated data
     const created = await cmsService.createNew(validatedData);

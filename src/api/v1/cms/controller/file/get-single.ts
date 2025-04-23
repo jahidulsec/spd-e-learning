@@ -26,7 +26,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
       return;
     }
 
-    // const {sub_folder, ...newData} = data
+    const {folder, ...newData} = data
 
     // check permission
     const isPermitted = hasPermission(
@@ -44,9 +44,9 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
       success: true,
       message: "Get file details successfully!",
       data: {
-        data,
+        ...newData,
         file_path: `${req.protocol}://${req.get("host")}/uploads/files/${
-          data?.filename
+          newData?.filename
         }`,
       },
     };

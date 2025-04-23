@@ -71,6 +71,57 @@ const getMultiByTeamId = async (
   return { data, count };
 };
 
+const getMultiByUserId = async (
+  userId: string,
+  queries: fileQueryInputTypes
+) => {
+  const [data, count] = await Promise.all([
+    db.file.findMany({
+      where: {
+        folder: {
+          category: {
+            team: {
+              team_members: {
+                some: {
+                  user_id: userId || "",
+                },
+              },
+            },
+          },
+        },
+        title: {
+          startsWith: queries.search || undefined,
+        },
+      },
+      take: queries.size,
+      skip: queries.size * (queries.page - 1),
+      orderBy: {
+        created_at: queries.sort,
+      },
+    }),
+    db.file.count({
+      where: {
+        folder: {
+          category: {
+            team: {
+              team_members: {
+                some: {
+                  user_id: userId || "",
+                },
+              },
+            },
+          },
+        },
+        title: {
+          startsWith: queries.search || undefined,
+        },
+      },
+    }),
+  ]);
+
+  return { data, count };
+};
+
 const getSingle = async (idObj: requiredIdTypes) => {
   const { id } = idObj;
 
@@ -80,15 +131,7 @@ const getSingle = async (idObj: requiredIdTypes) => {
     include: {
       folder: {
         include: {
-          category: {
-            include: {
-              team: {
-                include: {
-                  team_members: true,
-                },
-              },
-            },
-          },
+          category: true,
         },
       },
     },
@@ -139,4 +182,5 @@ export = {
   updateOne,
   deleteOne,
   getMultiByTeamId,
+  getMultiByUserId,
 };

@@ -12,9 +12,7 @@ const storage = multer.diskStorage({
     cb(null, "uploads/files"); // Set the destination directory
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = `${crypto.randomUUID()}-${
-      file.originalname
-    }${path.extname(file.originalname)}`;
+    const uniqueSuffix = `${crypto.randomUUID()}-${file.originalname}`;
     cb(null, uniqueSuffix); // Generate a unique filename
   },
 });

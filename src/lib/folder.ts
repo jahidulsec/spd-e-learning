@@ -88,6 +88,7 @@ const getMultiByUserId = async (
           },
         },
         parent_folder_id: null,
+        category_id: queries.category_id,
         title: {
           startsWith: queries.search || undefined,
         },

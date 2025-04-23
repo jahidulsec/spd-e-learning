@@ -10,11 +10,6 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     // get auth user
     const authUser = req.user;
 
-    // get user info
-    const user = await userService.getSingleWithTeamInfo(
-      authUser?.id as string
-    );
-
     // validate incoming body data with defined schema
     const validatedData = fileQuerySchema.parse(req.query);
 
@@ -24,7 +19,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
 
     if (
       (["superadmin", "director"] as $Enums.role[]).includes(
-        user?.role as $Enums.role
+        authUser?.role as $Enums.role
       )
     ) {
       //get all items with validated queries
@@ -33,15 +28,15 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
       data = result.data;
       count = result.count;
     } 
-    // else {
-    //   const result = await cmsService.getMultiByTeamId(
-    //     user?.team_members?.team_id as string,
-    //     validatedData
-    //   );
+    else {
+      const result = await cmsService.getMultiByUserId(
+        authUser?.id as string,
+        validatedData
+      );
 
-    //   data = result.data;
-    //   count = result.count;
-    // }
+      data = result.data;
+      count = result.count;
+    }
 
     // adding file_path in every file
     const modifiedData = data.map((file) => {
