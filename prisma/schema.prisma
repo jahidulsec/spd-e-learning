@@ -128,7 +128,6 @@ model quiz {
   quater_id   String   @db.VarChar(100)
   title       String   @db.VarChar(150)
   team_id     String   @db.VarChar(100)
-  // team_member_id String?  @db.VarChar(100)
   description String?  @db.VarChar(255)
   start_date  DateTime
   end_date    DateTime

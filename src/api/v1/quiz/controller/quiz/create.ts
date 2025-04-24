@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express-serve-static-core";
 import { createQuizDTOSchema } from "../../../../../schemas/quiz";
 import userService from "../../../../../lib/user";
 import quizSerive from "../../../../../lib/quiz";
-import { badRequestError } from "../../../../../utils/errors";
+import { badRequestError, forbiddenError } from "../../../../../utils/errors";
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -16,13 +16,19 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
     const formData = req.body;
 
-    // if not superuser, add team id from user info
-    // if (user?.role !== "superadmin") {
-    //   formData["team_id"] = user?.team_members?.team_id;
-    // }
-
     //Validate incoming body data with defined schema
     const validatedData = createQuizDTOSchema.parse(formData);
+
+    // if not superuser, add team id from user info
+    if (user?.role !== "superadmin") {
+      if (
+        user?.team_members.filter(
+          (item) => item.team_id === validatedData.team_id
+        ).length === 0
+      ) {
+        forbiddenError("You do not have access for this team");
+      }
+    }
 
     // check start date and end date validation
     if (validatedData.start_date > validatedData.end_date) {

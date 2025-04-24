@@ -25,15 +25,7 @@ type File = Prisma.fileGetPayload<{
 }>;
 
 type Quater = Prisma.quaterGetPayload<{}>;
-type Quiz = Prisma.quizGetPayload<{
-  include: {
-    team: {
-      include: {
-        team_members: true;
-      };
-    };
-  };
-}>;
+type Quiz = Prisma.quizGetPayload<{}>;
 type QuizMember = Prisma.quiz_memberGetPayload<{}>;
 type Question = Prisma.questionGetPayload<{
   include: {
@@ -253,21 +245,27 @@ const ROLES = {
     files: {
       create: true,
       view: (user, file) => {
-        const userList = user.team_members.filter(item => item.team_id === file.folder.category?.team_id)
+        const userList = user.team_members.filter(
+          (item) => item.team_id === file.folder.category?.team_id
+        );
 
         if (userList?.length === 0) return false;
 
         return true;
       },
       update: (user, file) => {
-        const userList = user.team_members.filter(item => item.team_id === file.folder.category?.team_id)
+        const userList = user.team_members.filter(
+          (item) => item.team_id === file.folder.category?.team_id
+        );
 
         if (userList?.length === 0) return false;
 
         return true;
       },
       delete: (user, file) => {
-        const userList = user.team_members.filter(item => item.team_id === file.folder.category?.team_id)
+        const userList = user.team_members.filter(
+          (item) => item.team_id === file.folder.category?.team_id
+        );
 
         if (userList?.length === 0) return false;
 
@@ -283,8 +281,8 @@ const ROLES = {
     quiz: {
       create: true,
       view: (user, quiz) => {
-        const userList = quiz.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
+        const userList = user.team_members.filter(
+          (item) => item.team_id === quiz.team_id
         );
 
         if (userList.length === 0) return false;
@@ -292,8 +290,8 @@ const ROLES = {
         return true;
       },
       update: (user, quiz) => {
-        const userList = quiz.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
+        const userList = user.team_members.filter(
+          (item) => item.team_id === quiz.team_id
         );
 
         if (userList.length === 0) return false;
@@ -301,10 +299,10 @@ const ROLES = {
         return true;
       },
       delete: (user, quiz) => {
-        const userList = quiz.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
+        const userList = user.team_members.filter(
+          (item) => item.team_id === quiz.team_id
         );
-
+        
         if (userList.length === 0) return false;
 
         return true;
@@ -404,7 +402,9 @@ const ROLES = {
     files: {
       create: false,
       view: (user, file) => {
-        const userList = user.team_members.filter(item => item.team_id === file.folder.category?.team_id)
+        const userList = user.team_members.filter(
+          (item) => item.team_id === file.folder.category?.team_id
+        );
 
         if (userList?.length === 0) return false;
 
@@ -422,8 +422,8 @@ const ROLES = {
     quiz: {
       create: false,
       view: (user, quiz) => {
-        const userList = quiz.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
+        const userList = user.team_members.filter(
+          (item) => item.team_id === quiz.team_id
         );
 
         if (userList.length === 0) return false;
@@ -475,7 +475,6 @@ const ROLES = {
       view: true,
     },
   },
-
   director: {
     categories: {
       create: false,

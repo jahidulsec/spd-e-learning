@@ -161,6 +161,98 @@ const getMultiByTeamId = async (
   return { data, count };
 };
 
+const getMultiByUserId = async (
+  userId: string,
+  queries: quizQueryInputTypes
+) => {
+  const [data, count] = await Promise.all([
+    db.quiz.findMany({
+      where: {
+        ...(queries.search && {
+          OR: [
+            {
+              title: {
+                startsWith: queries.search,
+              },
+            },
+            {
+              quater: {
+                title: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              team: {
+                title: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              team_id: queries.search,
+            },
+          ],
+        }),
+        team: {
+          team_members: {
+            some: {
+              user_id: userId || "",
+            },
+          },
+        },
+      },
+      include: {
+        quater: true,
+      },
+      take: queries.size,
+      skip: queries.size * (queries.page - 1),
+      orderBy: {
+        created_at: queries.sort,
+      },
+    }),
+    db.quiz.count({
+      where: {
+        ...(queries.search && {
+          OR: [
+            {
+              title: {
+                startsWith: queries.search,
+              },
+            },
+            {
+              quater: {
+                title: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              team: {
+                title: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              team_id: queries.search,
+            },
+          ],
+        }),
+        team: {
+          team_members: {
+            some: {
+              user_id: userId || "",
+            },
+          },
+        },
+      },
+    }),
+  ]);
+
+  return { data, count };
+};
+
 const getMultiByTeamIdWithTeamMember = async (
   teamId: string,
   teamMemberId: string,
@@ -247,6 +339,105 @@ const getMultiByTeamIdWithTeamMember = async (
   return { data, count };
 };
 
+const getMultiByUserIdWithTeamMember = async (
+  userId: string,
+  queries: quizQueryInputTypes
+) => {
+  const [data, count] = await Promise.all([
+    db.quiz.findMany({
+      where: {
+        ...(queries.search && {
+          OR: [
+            {
+              title: {
+                startsWith: queries.search,
+              },
+            },
+            {
+              quater: {
+                title: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              team: {
+                title: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              team_id: queries.search,
+            },
+          ],
+        }),
+        team: {
+          team_members: {
+            some: {
+              user_id: userId || "",
+            },
+          },
+        },
+      },
+      include: {
+        quater: true,
+        quiz_member: {
+          where: {
+            team_member: {
+              user_id: userId || "",
+            },
+          },
+        },
+      },
+      take: queries.size,
+      skip: queries.size * (queries.page - 1),
+      orderBy: {
+        created_at: queries.sort,
+      },
+    }),
+    db.quiz.count({
+      where: {
+        ...(queries.search && {
+          OR: [
+            {
+              title: {
+                startsWith: queries.search,
+              },
+            },
+            {
+              quater: {
+                title: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              team: {
+                title: {
+                  startsWith: queries.search,
+                },
+              },
+            },
+            {
+              team_id: queries.search,
+            },
+          ],
+        }),
+        team: {
+          team_members: {
+            some: {
+              user_id: userId || "",
+            },
+          },
+        },
+      },
+    }),
+  ]);
+
+  return { data, count };
+};
+
 const getSingle = async (idObj: requiredIdTypes) => {
   const { id } = idObj;
 
@@ -256,11 +447,6 @@ const getSingle = async (idObj: requiredIdTypes) => {
       where: { id },
       include: {
         quater: true,
-        team: {
-          include: {
-            team_members: true,
-          },
-        },
       },
     }),
     db.question.count({
@@ -349,4 +535,6 @@ export = {
   getMultiByTeamId,
   getMultiByTeamIdWithTeamMember,
   getSingleWithQuestionByTeamMemberId,
+  getMultiByUserId,
+  getMultiByUserIdWithTeamMember,
 };
