@@ -214,6 +214,21 @@ const getSingleByTeamMemberQuestion = async (
   return data;
 };
 
+const getSingleByUserId = async (userId: string, questionId: string) => {
+  const data = await db.result.findMany({
+    where: {
+      answer: {
+        question_id: questionId,
+      },
+      team_member: {
+        user_id: userId || "",
+      },
+    },
+  });
+
+  return data;
+};
+
 const createNew = async (info: createResultInputTypes) => {
   const { question_id, ...rest } = info;
 
@@ -260,4 +275,5 @@ export = {
   deleteOne,
   getMultiByTeamId,
   getSingleByTeamMemberQuestion,
+  getSingleByUserId
 };

@@ -29,15 +29,7 @@ type Quiz = Prisma.quizGetPayload<{}>;
 type QuizMember = Prisma.quiz_memberGetPayload<{}>;
 type Question = Prisma.questionGetPayload<{
   include: {
-    quiz: {
-      include: {
-        team: {
-          include: {
-            team_members: true;
-          };
-        };
-      };
-    };
+    quiz: true;
   };
 }>;
 type Option = Prisma.quiz_optionGetPayload<{}>;
@@ -302,7 +294,7 @@ const ROLES = {
         const userList = user.team_members.filter(
           (item) => item.team_id === quiz.team_id
         );
-        
+
         if (userList.length === 0) return false;
 
         return true;
@@ -314,24 +306,24 @@ const ROLES = {
     question: {
       create: true,
       view: (user, question) => {
-        const userList = question.quiz.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
+        const userList = user.team_members.filter(
+          (item) => item.team_id === question.quiz.team_id
         );
 
         if (userList.length === 0) return false;
         return true;
       },
       update: (user, question) => {
-        const userList = question.quiz.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
+        const userList = user.team_members.filter(
+          (item) => item.team_id === question.quiz.team_id
         );
 
         if (userList.length === 0) return false;
         return true;
       },
       delete: (user, question) => {
-        const userList = question.quiz.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
+        const userList = user.team_members.filter(
+          (item) => item.team_id === question.quiz.team_id
         );
 
         if (userList.length === 0) return false;
@@ -360,8 +352,8 @@ const ROLES = {
     },
     question_answer: {
       view: (user, question) => {
-        const userList = question.quiz.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
+        const userList = user.team_members.filter(
+          (item) => item.team_id === question.quiz.team_id
         );
 
         if (userList.length === 0) return false;
@@ -439,8 +431,8 @@ const ROLES = {
     question: {
       create: false,
       view: (user, question) => {
-        const userList = question.quiz.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
+        const userList = user.team_members.filter(
+          (item) => item.team_id === question.quiz.team_id
         );
 
         if (userList.length === 0) return false;
@@ -463,8 +455,8 @@ const ROLES = {
     },
     question_answer: {
       view: (user, question) => {
-        const userList = question.quiz.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
+        const userList = user.team_members.filter(
+          (item) => item.team_id === question.quiz.team_id
         );
 
         if (userList.length === 0) return false;

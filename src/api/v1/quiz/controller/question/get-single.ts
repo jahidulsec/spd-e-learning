@@ -44,8 +44,8 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
 
     // get mio submitted answer
     if (authUser?.role === "mios") {
-      quizResult = await resultService.getSingleByTeamMemberQuestion(
-        authUser.teamMemberId as string,
+      quizResult = await resultService.getSingleByUserId(
+        authUser?.id as string,
         data.id as string
       );
     }

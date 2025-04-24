@@ -39,7 +39,7 @@ const revoke = async (req: Request, res: Response, next: NextFunction) => {
       user?.role as string,
     );
 
-    const newRefreshToken = generateRefreshToken(user?.sap_id as string);
+    // const newRefreshToken = generateRefreshToken(user?.sap_id as string);
 
     const responseData = {
       success: true,

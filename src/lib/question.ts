@@ -153,6 +153,96 @@ const getMultiByTeamId = async (
   return { data, count };
 };
 
+const getMultiByUserId = async (
+  userId: string,
+  queries: questionQueryInputTypes
+) => {
+  const [data, count] = await Promise.all([
+    db.question.findMany({
+      where: {
+        quiz: {
+          team: {
+            team_members: {
+              some: {
+                user_id: userId || "",
+              },
+            },
+          },
+        },
+        ...(queries.search && {
+          OR: [
+            {
+              title: {
+                startsWith: queries.search || undefined,
+              },
+            },
+            {
+              quiz: {
+                title: {
+                  startsWith: queries.search || undefined,
+                },
+              },
+            },
+            {
+              quiz: {
+                id: {
+                  startsWith: queries.search || undefined,
+                },
+              },
+            },
+          ],
+        }),
+      },
+      include: {
+        quiz_option: true,
+      },
+      take: queries.size,
+      skip: queries.size * (queries.page - 1),
+      orderBy: {
+        title: queries.sort,
+      },
+    }),
+    db.question.count({
+      where: {
+        quiz: {
+          team: {
+            team_members: {
+              some: {
+                user_id: userId || "",
+              },
+            },
+          },
+        },
+        ...(queries.search && {
+          OR: [
+            {
+              title: {
+                startsWith: queries.search || undefined,
+              },
+            },
+            {
+              quiz: {
+                title: {
+                  startsWith: queries.search || undefined,
+                },
+              },
+            },
+            {
+              quiz: {
+                id: {
+                  startsWith: queries.search || undefined,
+                },
+              },
+            },
+          ],
+        }),
+      },
+    }),
+  ]);
+
+  return { data, count };
+};
+
 const getSingle = async (idObj: requiredIdTypes) => {
   const { id } = idObj;
 
@@ -245,4 +335,5 @@ export = {
   deleteOne,
   getSingleWithTeamInfo,
   getMultiByTeamId,
+  getMultiByUserId
 };

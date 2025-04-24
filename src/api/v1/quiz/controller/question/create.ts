@@ -3,7 +3,7 @@ import userService from "../../../../../lib/user";
 import { createQuestionDTOSchema } from "../../../../../schemas/question";
 import questionService from "../../../../../lib/question";
 import quizService from "../../../../../lib/quiz";
-import { notFoundError } from "../../../../../utils/errors";
+import { forbiddenError, notFoundError } from "../../../../../utils/errors";
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -25,12 +25,19 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
       id: validatedData.quiz_id,
     });
 
+    if (!quiz.data) {
+      notFoundError("Quiz not found");
+    }
+
     // if not superuser, add team id from user info
-    // if (user?.role !== "superadmin") {
-    //   if (quiz.data?.team_id !== user?.team_members?.team_id) {
-    //     notFoundError("Quiz does not exist");
-    //   }
-    // }
+    if (user?.role !== "superadmin") {
+      if (
+        user?.team_members.filter((item) => item.team_id === quiz.data?.team_id)
+          .length === 0
+      ) {
+        forbiddenError("You do not have access for this team");
+      }
+    }
 
     //create new with validated data
     const created = await questionService.createNew(validatedData);
