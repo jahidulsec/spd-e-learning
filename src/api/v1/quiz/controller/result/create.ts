@@ -21,31 +21,37 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
     const formData = req.body;
 
-    // set team member id
-    // formData["team_member_id"] = user?.team_members?.id ?? "";
-
     //Validate incoming body data with defined schema
     const validatedData = createResultDTOSchema.parse(formData);
 
-    // get quiz
-    const quiz = await optionService.getSingleWithTeamInfo({
+    // get option
+    const option = await optionService.getSingleWithTeamInfo({
       id: validatedData.answer_id,
     });
 
     // check team permission
-    // if (quiz?.question.quiz.team_id !== user?.team_members?.team_id) {
-    //   notFoundError("Quiz does not exist");
-    // }
+    if (
+      user?.team_members.filter(
+        (item) => item.team_id === option?.question.quiz.team_id
+      ).length === 0
+    ) {
+      notFoundError("Quiz does not exist");
+    }
+
+    // set team member id
+    validatedData.team_member_id = user?.team_members.filter(
+      (item) => item.team_id === option?.question.quiz.team_id
+    )?.[0].id;
 
     // set question id
-    validatedData.question_id = quiz?.question_id;
+    validatedData.question_id = option?.question_id;
 
-    if (quiz?.result) {
+    if (option?.result) {
       conflictError("You already submitted an answer");
     }
 
     // get score
-    if (quiz?.is_correct) {
+    if (option?.is_correct) {
       validatedData.score = 1;
     }
 

@@ -35,15 +35,7 @@ type Question = Prisma.questionGetPayload<{
 type Option = Prisma.quiz_optionGetPayload<{}>;
 type Result = Prisma.resultGetPayload<{
   include: {
-    team_member: {
-      include: {
-        team: {
-          include: {
-            team_members: true;
-          };
-        };
-      };
-    };
+    team_member: true;
   };
 }>;
 
@@ -339,8 +331,8 @@ const ROLES = {
     result: {
       create: false,
       view: (user, result) => {
-        const userList = result.team_member.team.team_members.filter(
-          (item) => item.user_id === user.sap_id
+        const userList = user.team_members.filter(
+          (item) => item.team_id === result.team_member.team_id
         );
 
         if (userList.length === 0) return false;

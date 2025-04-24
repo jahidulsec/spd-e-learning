@@ -230,11 +230,12 @@ const getSingleByUserId = async (userId: string, questionId: string) => {
 };
 
 const createNew = async (info: createResultInputTypes) => {
-  const { question_id, ...rest } = info;
+  const { question_id, team_member_id, ...rest } = info;
 
   const data = await db.result.create({
     data: {
       ...rest,
+      team_member_id: team_member_id ?? '',
       question_id: question_id ?? "",
     },
   });
