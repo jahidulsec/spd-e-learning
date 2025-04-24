@@ -51,7 +51,6 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
         validatedData
       );
 
-
       responseData = {
         success: true,
         message: "All Quizzes get successfully!",
@@ -59,9 +58,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
           const { quiz_member, ...modifiedData } = item;
           return {
             ...modifiedData,
-            quiz_member
-            // participated:
-            //   quiz_member[0]?. === user?.team_members?.id,
+            participated: quiz_member.length > 0,
           };
         }),
         pagination: {
