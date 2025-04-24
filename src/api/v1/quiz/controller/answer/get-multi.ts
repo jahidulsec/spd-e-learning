@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import { paginate } from "../../../../../utils/pagination";
-import userService from "../../../../../lib/user";
 import { quizQuerySchema } from "../../../../../schemas/quiz";
 import quizService from "../../../../../lib/quiz";
 
@@ -12,17 +11,12 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     // get quiz id
     const { id } = req.params;
 
-    // get user info
-    const user = await userService.getSingleWithTeamInfo(
-      authUser?.id as string
-    );
-
     // validate incoming body data with defined schema
     const validatedData = quizQuerySchema.parse(req.query);
 
-    const data = await quizService.getSingleWithQuestionByTeamMemberId(
+    const data = await quizService.getSingleWithQuestionByUserId(
       id,
-      authUser?.teamMemberId as string
+      authUser?.id as string
     );
 
     const responseData = {

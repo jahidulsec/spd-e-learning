@@ -59,7 +59,7 @@ router
 
 // quiz answer
 router
-  .route("/question/:question_id/team-member/:team_member_id")
+  .route("/question/:question_id/member/:userId")
   .get(controller.getQuestionAnswer);
 
 router

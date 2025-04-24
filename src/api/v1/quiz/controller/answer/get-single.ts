@@ -20,9 +20,9 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     );
 
     //Validate incoming body data with defined schema
-    const { question_id, team_member_id } = req.params;
+    const { question_id, userId } = req.params;
 
-    if (!question_id || !team_member_id) {
+    if (!question_id || !userId) {
       badRequestError("Please enter question and team member id");
     }
 
@@ -47,8 +47,8 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     // get mio submitted answer
-    const quizResult = await resultService.getSingleByTeamMemberQuestion(
-      team_member_id as string,
+    const quizResult = await resultService.getSingleByUserId(
+      userId as string,
       data.id as string
     );
 
