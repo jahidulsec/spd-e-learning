@@ -38,10 +38,12 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
       forbiddenError(`You are unauthorized for this action`);
     }
 
+    const { team_member, ...rest } = data;
+
     const responseData = {
       success: true,
       message: "Get quiz answer details successfully!",
-      data: data,
+      data: rest,
     };
 
     //send success response

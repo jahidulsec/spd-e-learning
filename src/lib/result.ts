@@ -170,19 +170,7 @@ const getSingle = async (idObj: requiredIdTypes) => {
   const data = await db.result.findUnique({
     where: { id },
     include: {
-      team_member: {
-        include: {
-          team: {
-            include: {
-              team_members: {
-                select: {
-                  user_id: true,
-                },
-              },
-            },
-          },
-        },
-      },
+      team_member: true,
       answer: {
         include: {
           question: {
