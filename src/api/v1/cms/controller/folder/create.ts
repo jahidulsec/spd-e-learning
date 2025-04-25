@@ -46,7 +46,7 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     });
 
     if (
-      user?.team_members.filter((item) => item.team_id === category?.team_id)
+      authUser?.role !== 'superadmin' && user?.team_members.filter((item) => item.team_id === category?.team_id)
         .length === 0
     ) {
       notFoundError("Category not found");
