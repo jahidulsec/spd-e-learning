@@ -24,13 +24,16 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     const quiz = await quizSerive.getSingle({ id: validatedData.quiz_id });
 
     // get team id from team member id
-    const teamId = user?.team_members.filter(
-      (item) => item.id === validatedData.team_member_id
+    const teamInfo = user?.team_members.filter(
+      (item) => item.team_id === validatedData.team_id
     );
 
-    if (teamId?.[0].team_id !== quiz.data?.team_id) {
+    if (validatedData.team_id !== quiz.data?.team_id) {
       badRequestError("Your are not permitted to perticipate this quiz");
     }
+
+    // set team member id
+    validatedData.team_member_id = teamInfo?.[0].id ?? ""
 
     //create new with validated data
     const created = await quizMemberSerive.createNew(validatedData);

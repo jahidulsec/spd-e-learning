@@ -82,7 +82,8 @@ const getSingle = async (idObj: requiredIdTypes) => {
 const createNew = async (info: createQuizMemberInputTypes) => {
   const data = await db.quiz_member.create({
     data: {
-      ...info,
+      quiz_id: info.quiz_id,
+      team_member_id: info.team_member_id ?? ""
     },
   });
 
