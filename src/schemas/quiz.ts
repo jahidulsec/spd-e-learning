@@ -7,6 +7,7 @@ export const createQuizDTOSchema = z.object({
   description: z.string().min(3).optional(),
   start_date: z.coerce.date(),
   end_date: z.coerce.date(),
+  status: z.enum(["active", "inactive"]).optional(),
 });
 
 export const quizQuerySchema = z.object({

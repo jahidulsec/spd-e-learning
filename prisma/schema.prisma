@@ -8,14 +8,14 @@ datasource db {
 }
 
 model users {
-  sap_id       String        @id @unique @db.VarChar(10)
-  password     String?       @db.VarChar(255)
-  full_name    String        @db.VarChar(100)
-  mobile       String        @unique @db.VarChar(20)
-  role         role          @default(mios)
-  status       status?       @default(active)
-  created_at   DateTime      @default(now())
-  updated_at   DateTime      @updatedAt
+  sap_id       String         @id @unique @db.VarChar(10)
+  password     String?        @db.VarChar(255)
+  full_name    String         @db.VarChar(100)
+  mobile       String         @unique @db.VarChar(20)
+  role         role           @default(mios)
+  status       status?        @default(active)
+  created_at   DateTime       @default(now())
+  updated_at   DateTime       @updatedAt
   otp          otp[]
   team_members team_members[]
 }
@@ -62,7 +62,7 @@ model team_members {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  user              users              @relation(fields: [user_id], references: [sap_id], onDelete: Cascade)
+  user              users               @relation(fields: [user_id], references: [sap_id], onDelete: Cascade)
   team              teams               @relation(fields: [team_id], references: [id], onDelete: Cascade)
   result            result[]
   e_detailing_video e_detailing_video[]
@@ -131,6 +131,7 @@ model quiz {
   description String?  @db.VarChar(255)
   start_date  DateTime
   end_date    DateTime
+  status      status?   @default(active)
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
