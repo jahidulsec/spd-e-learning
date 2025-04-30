@@ -34,7 +34,15 @@ const getMulti = async (queries: quizMemberQueryInputTypes) => {
       take: queries.size,
       skip: queries.size * (queries.page - 1),
       orderBy: {
-        created_at: queries.sort,
+        ...(queries.sort_type === "title"
+          ? {
+              team_member: {
+                user: {
+                  full_name: queries.sort,
+                },
+              },
+            }
+          : { created_at: queries.sort }),
       },
     }),
     db.quiz_member.count({
@@ -83,7 +91,7 @@ const createNew = async (info: createQuizMemberInputTypes) => {
   const data = await db.quiz_member.create({
     data: {
       quiz_id: info.quiz_id,
-      team_member_id: info.team_member_id ?? ""
+      team_member_id: info.team_member_id ?? "",
     },
   });
 

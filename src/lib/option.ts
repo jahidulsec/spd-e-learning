@@ -28,7 +28,7 @@ const getMulti = async (queries: optionQueryInputTypes) => {
       take: queries.size,
       skip: queries.size * (queries.page - 1),
       orderBy: {
-        created_at: queries.sort,
+        [queries.sort_type]: queries.sort,
       },
     }),
     db.quiz_option.count({
@@ -73,7 +73,7 @@ const getMultiByTeamId = async (
       take: queries.size,
       skip: queries.size * (queries.page - 1),
       orderBy: {
-        created_at: queries.sort,
+        [queries.sort_type]: queries.sort,
       },
     }),
     db.quiz_option.count({

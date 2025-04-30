@@ -40,7 +40,7 @@ const getMulti = async (queries: questionQueryInputTypes) => {
       take: queries.size,
       skip: queries.size * (queries.page - 1),
       orderBy: {
-        title: queries.sort,
+        [queries.sort_type]: queries.sort,
       },
     }),
     db.question.count({
@@ -115,7 +115,7 @@ const getMultiByTeamId = async (
       take: queries.size,
       skip: queries.size * (queries.page - 1),
       orderBy: {
-        title: queries.sort,
+        [queries.sort_type]: queries.sort,
       },
     }),
     db.question.count({
@@ -199,7 +199,7 @@ const getMultiByUserId = async (
       take: queries.size,
       skip: queries.size * (queries.page - 1),
       orderBy: {
-        title: queries.sort,
+        [queries.sort_type]: queries.sort,
       },
     }),
     db.question.count({
@@ -335,5 +335,5 @@ export = {
   deleteOne,
   getSingleWithTeamInfo,
   getMultiByTeamId,
-  getMultiByUserId
+  getMultiByUserId,
 };
