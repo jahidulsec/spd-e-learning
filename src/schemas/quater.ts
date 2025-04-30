@@ -13,6 +13,7 @@ export const quaterQuerySchema = z.object({
   search: z.string().optional(),
   start_date: z.coerce.date().optional(),
   end_date: z.coerce.date().optional(),
+  sort_type: z.enum(["created_at", "title"]).default("created_at"),
 });
 
 export const updateQuaterDTOSchema = createQuaterDTOSchema.omit({}).partial();

@@ -26,7 +26,7 @@ const getMulti = async (queries: quaterQueryInputTypes) => {
       take: size,
       skip: size * (page - 1),
       orderBy: {
-        created_at: queries.sort ?? "desc",
+        [queries.sort_type]: queries.sort ?? "desc",
       },
     }),
     db.quater.count({

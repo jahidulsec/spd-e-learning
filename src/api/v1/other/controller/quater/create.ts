@@ -23,6 +23,7 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
       start_date: validatedData.start_date,
       end_date: validatedData.end_date,
       sort: "desc",
+      sort_type: "created_at",
     });
 
     if (existingQuaters.count > 0) {

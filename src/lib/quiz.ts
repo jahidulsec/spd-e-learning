@@ -43,7 +43,7 @@ const getMulti = async (queries: quizQueryInputTypes) => {
       take: queries.size,
       skip: queries.size * (queries.page - 1),
       orderBy: {
-        created_at: queries.sort,
+        [queries.sort_type]: queries.sort,
       },
     }),
     db.quiz.count({
@@ -122,7 +122,7 @@ const getMultiByTeamId = async (
       take: queries.size,
       skip: queries.size * (queries.page - 1),
       orderBy: {
-        created_at: queries.sort,
+        [queries.sort_type]: queries.sort,
       },
     }),
     db.quiz.count({
@@ -208,7 +208,7 @@ const getMultiByUserId = async (
       take: queries.size,
       skip: queries.size * (queries.page - 1),
       orderBy: {
-        created_at: queries.sort,
+        [queries.sort_type]: queries.sort,
       },
     }),
     db.quiz.count({
@@ -300,7 +300,7 @@ const getMultiByTeamIdWithTeamMember = async (
       take: queries.size,
       skip: queries.size * (queries.page - 1),
       orderBy: {
-        created_at: queries.sort,
+        [queries.sort_type]: queries.sort,
       },
     }),
     db.quiz.count({
@@ -393,7 +393,7 @@ const getMultiByUserIdWithTeamMember = async (
       take: queries.size,
       skip: queries.size * (queries.page - 1),
       orderBy: {
-        created_at: queries.sort,
+        [queries.sort_type]: queries.sort,
       },
     }),
     db.quiz.count({
