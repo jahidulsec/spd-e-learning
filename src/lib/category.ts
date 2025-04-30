@@ -17,7 +17,7 @@ const getMulti = async (queries: categoryQueryInputTypes) => {
       take: queries.size,
       skip: queries.size * (queries.page - 1),
       orderBy: {
-        created_at: queries.sort,
+        [queries.sort_type]: queries.sort,
       },
     }),
     db.category.count({
@@ -47,7 +47,7 @@ const getMultiByTeamId = async (
       take: queries.size,
       skip: queries.size * (queries.page - 1),
       orderBy: {
-        created_at: queries.sort,
+        [queries.sort_type]: queries.sort,
       },
     }),
     db.category.count({
@@ -84,7 +84,7 @@ const getMultiByUserId = async (
       take: queries.size,
       skip: queries.size * (queries.page - 1),
       orderBy: {
-        created_at: queries.sort,
+        [queries.sort_type]: queries.sort,
       },
     }),
     db.category.count({

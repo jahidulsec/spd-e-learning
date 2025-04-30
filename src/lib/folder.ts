@@ -18,7 +18,7 @@ const getMulti = async (queries: folderQueryInputTypes) => {
       take: queries.size,
       skip: queries.size * (queries.page - 1),
       orderBy: {
-        title: queries.sort,
+        [queries.sort_type]: queries.sort,
       },
     }),
     db.folder.count({
@@ -52,7 +52,7 @@ const getMultiByTeamId = async (
       take: queries.size,
       skip: queries.size * (queries.page - 1),
       orderBy: {
-        title: queries.sort,
+        [queries.sort_type]: queries.sort,
       },
     }),
     db.folder.count({
@@ -96,7 +96,7 @@ const getMultiByUserId = async (
       take: queries.size,
       skip: queries.size * (queries.page - 1),
       orderBy: {
-        title: queries.sort,
+        [queries.sort_type]: queries.sort,
       },
     }),
     db.folder.count({
