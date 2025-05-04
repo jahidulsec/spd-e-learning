@@ -39,7 +39,7 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
     // check permission
     const isPermitted = hasPermission(
       user as User,
-      'e_detailing',
+      "e_detailing",
       "update",
       existingEDetailingTopic as any
     );

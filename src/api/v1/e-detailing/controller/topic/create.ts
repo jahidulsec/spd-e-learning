@@ -2,7 +2,8 @@ import { Request, Response, NextFunction } from "express-serve-static-core";
 import { createEDetailingDTOSchema } from "../../../../../schemas/e-detailing";
 import userService from "../../../../../lib/user";
 import topicService from "../../../../../lib/e-detailing";
-import { forbiddenError } from "../../../../../utils/errors";
+import quaterService from "../../../../../lib/quater";
+import { badRequestError, forbiddenError, notFoundError } from "../../../../../utils/errors";
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -28,6 +29,18 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
       ) {
         forbiddenError("You do not have access for this team");
       }
+    }
+
+    // get quater and check validate time range by quater time range
+    const quater = await quaterService.getSingle({id: validatedData.quater_id})
+
+    if(!quater) {
+      notFoundError("Quater does not exist")
+      return
+    }
+
+    if(validatedData.start_date < quater?.start_date || validatedData.end_date > quater?.end_date) {
+      badRequestError("Given date range is not in quater date range")
     }
 
     //create new with validated data
