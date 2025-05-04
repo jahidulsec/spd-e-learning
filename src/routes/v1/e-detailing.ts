@@ -16,17 +16,17 @@ router
   .patch(controller.updateTopic)
   .delete(controller.delTopic);
 
-// folder
-// router
-//   .route("/folder")
-//   .get(controller.getFolders)
-//   .post(authorize("folders", "create"), controller.createFolder);
+// video
+router
+  .route("/video")
+  .get(controller.getVideos)
+  .post(controller.createVideo);
 
-// router
-//   .route("/folder/:id")
-//   .get(controller.getFolder)
-//   .patch(controller.updateFolder)
-//   .delete(controller.delFolder);
+router
+  .route("/video/:id")
+  .get(controller.getVideo)
+  .patch(controller.updateVideo)
+  .delete(controller.delVideo);
 
 // file
 // router

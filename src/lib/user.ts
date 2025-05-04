@@ -51,10 +51,10 @@ const getSingle = async (idObj: requiredIdTypes) => {
     include: {
       team_members: {
         include: {
-          team: true
-        }
-      }
-    }
+          team: true,
+        },
+      },
+    },
   });
 
   return data;
@@ -69,6 +69,7 @@ const getSingleWithTeamInfo = async (id: string) => {
         select: {
           team_id: true,
           id: true,
+          user_id: true,
         },
       },
     },

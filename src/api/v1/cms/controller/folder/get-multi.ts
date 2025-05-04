@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import { folderQuerySchema } from "../../../../../schemas/folder";
 import cmsService from "../../../../../lib/folder";
-import userService from "../../../../../lib/user";
 import { paginate } from "../../../../../utils/pagination";
 import { $Enums } from "@prisma/client";
 

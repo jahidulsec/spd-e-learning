@@ -219,6 +219,7 @@ model e_detailing_video {
   e_detailing_id String   @db.VarChar(100)
   team_member_id String   @db.VarChar(100)
   title          String   @db.VarChar(150)
+  filename       String   @db.VarChar(150)
   description    String?  @db.Text
   created_at     DateTime @default(now())
   updated_at     DateTime @updatedAt

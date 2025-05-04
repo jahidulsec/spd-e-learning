@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import { paginate } from "../../../../../utils/pagination";
-import { fileQuerySchema } from "../../../../../schemas/file";
-import cmsService from "../../../../../lib/file";
-import { $Enums, file } from "@prisma/client";
+import { eVdieoQuerySchema } from "../../../../../schemas/e-video";
+import cmsService from "../../../../../lib/e-video";
+import { $Enums } from "@prisma/client";
 
 const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -10,10 +10,10 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     const authUser = req.user;
 
     // validate incoming body data with defined schema
-    const validatedData = fileQuerySchema.parse(req.query);
+    const validatedData = eVdieoQuerySchema.parse(req.query);
 
     // authorization section
-    let data: file[] = [];
+    let data: any[] = [];
     let count: number = 0;
 
     if (
@@ -26,8 +26,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
 
       data = result.data;
       count = result.count;
-    } 
-    else {
+    } else {
       const result = await cmsService.getMultiByUserId(
         authUser?.id as string,
         validatedData
@@ -37,20 +36,17 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
       count = result.count;
     }
 
-    // adding file_path in every file
-    const modifiedData = data.map((file) => {
-      return {
-        ...file,
-        file_path: `${req.protocol}://${req.get("host")}/uploads/files/${
-          file.filename
-        }`,
-      };
-    });
-
     const responseData = {
       success: true,
-      message: "All files get successfully!",
-      data: modifiedData,
+      message: "All e-detailing video get successfully!",
+      data: data.map((item) => {
+        return {
+          ...item,
+          file_url: `${req.protocol}://${req.get("host")}/uploads/files/${
+            item?.filename
+          }`,
+        };
+      }),
       pagination: {
         ...paginate(validatedData.page, validatedData.size, count),
       },
@@ -66,4 +62,4 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { get as getFiles };
+export { get as getVideos };

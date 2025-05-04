@@ -3,7 +3,7 @@ import { $Enums, category, Prisma } from "@prisma/client";
 type Role = $Enums.role;
 
 export type User = Prisma.usersGetPayload<{
-  include: { team_members: { select: { team_id: true; id: true } } };
+  include: { team_members: { select: { team_id: true; id: true, user_id: true } } };
 }>;
 
 type Category = Prisma.categoryGetPayload<{}>;
@@ -54,6 +54,12 @@ type QuestionAnswers = Prisma.quizGetPayload<{
 }>;
 
 type EDetailing = Prisma.e_detailingGetPayload<{}>;
+type EDetailingVideo = Prisma.e_detailing_videoGetPayload<{
+  include: {
+    team_member: true;
+    e_detailing: true;
+  };
+}>;
 
 type PermissionCheck<Key extends keyof Permissions> =
   | boolean
@@ -114,6 +120,10 @@ export type Permissions = {
   };
   e_detailing: {
     dataType: EDetailing;
+    action: "view" | "create" | "update" | "delete";
+  };
+  e_detailing_video: {
+    dataType: EDetailingVideo;
     action: "view" | "create" | "update" | "delete";
   };
 };
@@ -182,6 +192,12 @@ const ROLES = {
       view: true,
       update: true,
       delete: true,
+    },
+    e_detailing_video: {
+      create: false,
+      view: true,
+      update: false,
+      delete: false,
     },
   },
   team_lead: {
@@ -393,6 +409,19 @@ const ROLES = {
         return true;
       },
     },
+    e_detailing_video: {
+      create: false,
+      view: (user, video) => {
+        const userList = user.team_members.filter(
+          (item) => item.team_id === video.e_detailing.team_id
+        );
+
+        if (userList.length === 0) return false;
+        return true;
+      },
+      update: false,
+      delete: false,
+    },
   },
   mios: {
     categories: {
@@ -509,6 +538,33 @@ const ROLES = {
       update: false,
       delete: false,
     },
+    e_detailing_video: {
+      create: false,
+      view: (user, video) => {
+        const userList = user.team_members.filter(
+          (item) => item.user_id === video.team_member.user_id
+        );
+
+        if (userList.length === 0) return false;
+        return true;
+      },
+      update: (user, video) => {
+        const userList = user.team_members.filter(
+          (item) => item.user_id === video.team_member.user_id
+        );
+
+        if (userList.length === 0) return false;
+        return true;
+      },
+      delete: (user, video) => {
+        const userList = user.team_members.filter(
+          (item) => item.user_id === video.team_member.user_id
+        );
+
+        if (userList.length === 0) return false;
+        return true;
+      },
+    },
   },
   director: {
     categories: {
@@ -569,6 +625,12 @@ const ROLES = {
       view: false,
     },
     e_detailing: {
+      create: false,
+      view: true,
+      update: false,
+      delete: false,
+    },
+    e_detailing_video: {
       create: false,
       view: true,
       update: false,

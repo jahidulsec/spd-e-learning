@@ -80,15 +80,15 @@ const getMulti = async (queries: resultQueryInputTypes) => {
   return { data, count };
 };
 
-const getMultiByTeamId = async (
-  teamId: string,
+const getMultiByUserId = async (
+  userId: string,
   queries: resultQueryInputTypes
 ) => {
   const [data, count] = await Promise.all([
     db.result.findMany({
       where: {
         team_member: {
-          team_id: teamId || "",
+          user_id: userId || "",
         },
         ...(queries.search && {
           OR: [
@@ -127,7 +127,7 @@ const getMultiByTeamId = async (
     db.result.count({
       where: {
         team_member: {
-          team_id: teamId || "",
+          user_id: userId || "",
         },
         ...(queries.search && {
           OR: [
@@ -223,7 +223,7 @@ const createNew = async (info: createResultInputTypes) => {
   const data = await db.result.create({
     data: {
       ...rest,
-      team_member_id: team_member_id ?? '',
+      team_member_id: team_member_id ?? "",
       question_id: question_id ?? "",
     },
   });
@@ -262,7 +262,7 @@ export = {
   createNew,
   updateOne,
   deleteOne,
-  getMultiByTeamId,
+  getMultiByUserId,
   getSingleByTeamMemberQuestion,
-  getSingleByUserId
+  getSingleByUserId,
 };

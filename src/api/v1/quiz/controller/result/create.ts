@@ -4,7 +4,6 @@ import { createResultDTOSchema } from "../../../../../schemas/result";
 import cmsService from "../../../../../lib/result";
 import optionService from "../../../../../lib/option";
 import {
-  badRequestError,
   conflictError,
   notFoundError,
 } from "../../../../../utils/errors";
