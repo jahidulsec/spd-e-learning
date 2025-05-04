@@ -1,6 +1,5 @@
 import { Request, Response } from "express-serve-static-core";
 import multer from "multer";
-import path from "path";
 
 interface MulterRequest extends Request {
   file?: Express.Multer.File;

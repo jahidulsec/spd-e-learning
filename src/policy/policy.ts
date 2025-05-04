@@ -53,6 +53,8 @@ type QuestionAnswers = Prisma.quizGetPayload<{
   };
 }>;
 
+type EDetailing = Prisma.e_detailingGetPayload<{}>;
+
 type PermissionCheck<Key extends keyof Permissions> =
   | boolean
   | ((user: User, data: Permissions[Key]["dataType"]) => boolean);
@@ -109,6 +111,10 @@ export type Permissions = {
   question_answers: {
     dataType: QuestionAnswers;
     action: "view";
+  };
+  e_detailing: {
+    dataType: EDetailing;
+    action: "view" | "create" | "update" | "delete";
   };
 };
 
@@ -170,6 +176,12 @@ const ROLES = {
     },
     question_answers: {
       view: false,
+    },
+    e_detailing: {
+      create: true,
+      view: true,
+      update: true,
+      delete: true,
     },
   },
   team_lead: {
@@ -355,6 +367,32 @@ const ROLES = {
     question_answers: {
       view: false,
     },
+    e_detailing: {
+      create: true,
+      view: (user, topic) => {
+        const userList = user.team_members.filter(
+          (item) => item.team_id === topic.team_id
+        );
+        if (userList.length === 0) return false;
+        return true;
+      },
+      update: (user, topic) => {
+        const userList = user.team_members.filter(
+          (item) => item.team_id === topic.team_id
+        );
+
+        if (userList.length === 0) return false;
+        return true;
+      },
+      delete: (user, topic) => {
+        const userList = user.team_members.filter(
+          (item) => item.team_id === topic.team_id
+        );
+
+        if (userList.length === 0) return false;
+        return true;
+      },
+    },
   },
   mios: {
     categories: {
@@ -458,6 +496,19 @@ const ROLES = {
     question_answers: {
       view: true,
     },
+    e_detailing: {
+      create: false,
+      view: (user, topic) => {
+        const userList = user.team_members.filter(
+          (item) => item.team_id === topic.team_id
+        );
+
+        if (userList.length === 0) return false;
+        return true;
+      },
+      update: false,
+      delete: false,
+    },
   },
   director: {
     categories: {
@@ -516,6 +567,12 @@ const ROLES = {
     },
     question_answers: {
       view: false,
+    },
+    e_detailing: {
+      create: false,
+      view: true,
+      update: false,
+      delete: false,
     },
   },
 } as const satisfies RolesWithPermissions;

@@ -131,7 +131,7 @@ model quiz {
   description String?  @db.VarChar(255)
   start_date  DateTime
   end_date    DateTime
-  status      status?   @default(active)
+  status      status?  @default(active)
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
@@ -200,7 +200,8 @@ model e_detailing {
   title              String   @db.VarChar(150)
   team_id            String   @db.VarChar(100)
   description        String?  @db.VarChar(255)
-  deadline           DateTime @db.Timestamp(6)
+  start_date         DateTime @db.Timestamp(6)
+  end_date           DateTime @db.Timestamp(6)
   score_starting     Decimal  @db.Decimal
   score_content      Decimal  @db.Decimal
   score_presentation Decimal  @db.Decimal
