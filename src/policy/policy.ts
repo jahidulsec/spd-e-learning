@@ -3,7 +3,9 @@ import { $Enums, category, Prisma } from "@prisma/client";
 type Role = $Enums.role;
 
 export type User = Prisma.usersGetPayload<{
-  include: { team_members: { select: { team_id: true; id: true, user_id: true } } };
+  include: {
+    team_members: { select: { team_id: true; id: true; user_id: true } };
+  };
 }>;
 
 type Category = Prisma.categoryGetPayload<{}>;
@@ -58,6 +60,16 @@ type EDetailingVideo = Prisma.e_detailing_videoGetPayload<{
   include: {
     team_member: true;
     e_detailing: true;
+  };
+}>;
+
+type EDetailingScore = Prisma.e_detailing_scoreGetPayload<{
+  include: {
+    e_detailing_video: {
+      include: {
+        team_member: true;
+      };
+    };
   };
 }>;
 
@@ -124,6 +136,10 @@ export type Permissions = {
   };
   e_detailing_video: {
     dataType: EDetailingVideo;
+    action: "view" | "create" | "update" | "delete";
+  };
+  e_detailing_score: {
+    dataType: EDetailingScore;
     action: "view" | "create" | "update" | "delete";
   };
 };
@@ -198,6 +214,12 @@ const ROLES = {
       view: true,
       update: false,
       delete: false,
+    },
+    e_detailing_score: {
+      create: true,
+      view: true,
+      update: true,
+      delete: true,
     },
   },
   team_lead: {
@@ -422,6 +444,30 @@ const ROLES = {
       update: false,
       delete: false,
     },
+    e_detailing_score: {
+      create: true,
+      view: (user, video) => {
+        const userList = user.team_members.filter(
+          (item) => item.team_id === video.e_detailing_video.team_member.team_id
+        );
+        if (userList.length === 0) return false;
+        return true;
+      },
+      update: (user, video) => {
+        const userList = user.team_members.filter(
+          (item) => item.team_id === video.e_detailing_video.team_member.team_id
+        );
+        if (userList.length === 0) return false;
+        return true;
+      },
+      delete: (user, video) => {
+        const userList = user.team_members.filter(
+          (item) => item.team_id === video.e_detailing_video.team_member.team_id
+        );
+        if (userList.length === 0) return false;
+        return true;
+      },
+    },
   },
   mios: {
     categories: {
@@ -565,6 +611,18 @@ const ROLES = {
         return true;
       },
     },
+    e_detailing_score: {
+      create: false,
+      view: (user, video) => {
+        const userList = user.team_members.filter(
+          (item) => item.team_id === video.e_detailing_video.team_member.team_id
+        );
+        if (userList.length === 0) return false;
+        return true;
+      },
+      update: false,
+      delete: false,
+    },
   },
   director: {
     categories: {
@@ -636,6 +694,12 @@ const ROLES = {
       update: false,
       delete: false,
     },
+    e_detailing_score: {
+      create: false,
+      view: true,
+      delete:false,
+      update: false
+    }
   },
 } as const satisfies RolesWithPermissions;
 

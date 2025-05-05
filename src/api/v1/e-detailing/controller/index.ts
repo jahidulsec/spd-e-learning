@@ -11,6 +11,13 @@ import { getVideo } from "./video/get-single";
 import { delVideo } from "./video/delete";
 import { updateVideo } from "./video/update";
 
+// score
+import { createScore } from "./score/create";
+import { getScores } from "./score/get-multi";
+import { getScore } from "./score/get-single";
+import { delScore } from "./score/delete";
+import { updateScore } from "./score/update";
+
 export = {
   createTopic,
   getTopic,
@@ -22,4 +29,9 @@ export = {
   getVideo,
   getVideos,
   delVideo,
+  createScore,
+  getScore,
+  getScores,
+  updateScore,
+  delScore,
 };

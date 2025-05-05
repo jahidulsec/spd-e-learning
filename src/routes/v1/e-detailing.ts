@@ -17,10 +17,7 @@ router
   .delete(controller.delTopic);
 
 // video
-router
-  .route("/video")
-  .get(controller.getVideos)
-  .post(controller.createVideo);
+router.route("/video").get(controller.getVideos).post(controller.createVideo);
 
 router
   .route("/video/:id")
@@ -28,16 +25,13 @@ router
   .patch(controller.updateVideo)
   .delete(controller.delVideo);
 
-// file
-// router
-//   .route("/file")
-//   .get(controller.getFiles)
-//   .post(authorize("files", "create"), controller.createFile);
+// score
+router.route("/score").get(controller.getScores).post(controller.createScore);
 
-// router
-//   .route("/file/:id")
-//   .get(controller.getFile)
-//   .patch(controller.updateFile)
-//   .delete(controller.delFile);
+router
+  .route("/score/:id")
+  .get(controller.getScore)
+  .patch(controller.updateScore)
+  .delete(controller.delScore);
 
 export { router as eDetailingRoutes };
