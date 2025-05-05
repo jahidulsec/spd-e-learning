@@ -14,6 +14,9 @@ const getMulti = async (queries: eDetailingQueryInputTypes) => {
           startsWith: queries.search || undefined,
         },
       },
+      include: {
+        quater: true,
+      },
       take: queries.size,
       skip: queries.size * (queries.page - 1),
       orderBy: {
@@ -43,6 +46,9 @@ const getMultiByTeamId = async (
         title: {
           startsWith: queries.search || undefined,
         },
+      },
+      include: {
+        quater: true,
       },
       take: queries.size,
       skip: queries.size * (queries.page - 1),
@@ -80,6 +86,9 @@ const getMultiByUserId = async (
         title: {
           startsWith: queries.search || undefined,
         },
+      },
+      include: {
+        quater: true,
       },
       take: queries.size,
       skip: queries.size * (queries.page - 1),

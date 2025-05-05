@@ -5,7 +5,6 @@ export const createEVdieoDTOSchema = z.object({
   filename: z.string().min(3),
   e_detailing_id: z.string().min(1),
   team_member_id: z.string().min(1).optional(),
-  description: z.string().min(3).optional(),
 });
 
 export const eVdieoQuerySchema = z.object({
