@@ -26,6 +26,14 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
 
       data = result.data;
       count = result.count;
+    } else if (authUser?.role === "team_lead") {
+      const result = await cmsService.getMultiByTeamId(
+        validatedData.team_id as string,
+        validatedData
+      );
+
+      data = result.data;
+      count = result.count;
     } else {
       const result = await cmsService.getMultiByUserId(
         authUser?.id as string,

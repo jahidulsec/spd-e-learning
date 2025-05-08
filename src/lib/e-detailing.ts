@@ -89,6 +89,16 @@ const getMultiByUserId = async (
       },
       include: {
         quater: true,
+        e_detailing_video: {
+          where: {
+            team_member: {
+              user_id: userId || "",
+            },
+          },
+          select: {
+            id: true
+          }
+        },
       },
       take: queries.size,
       skip: queries.size * (queries.page - 1),

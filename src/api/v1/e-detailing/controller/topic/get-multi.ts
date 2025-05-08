@@ -8,7 +8,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // get auth user
     const authUser = req.user;
-    
+
     // validate incoming body data with defined schema
     const validatedData = eDetailingQuerySchema.parse(req.query);
 
@@ -35,11 +35,20 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
         authUser?.id as string,
         validatedData
       );
-      
+
       responseData = {
         success: true,
         message: "All e-detailing topics get successfully!",
-        data: data,
+        data: data.map((item) => {
+          const { e_detailing_video, ...modifiedData } = item;
+
+          return {
+            ...modifiedData,
+            ...(authUser?.role === "mios" && {
+              participated: e_detailing_video.length > 0,
+            }),
+          };
+        }),
         pagination: {
           ...paginate(validatedData.page, validatedData.size, count),
         },
