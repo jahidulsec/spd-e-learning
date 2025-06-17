@@ -13,6 +13,12 @@ const getMulti = async (queries: eVdieoQueryInputTypes) => {
         title: {
           startsWith: queries.search || undefined,
         },
+        team_member: {
+          team_id: queries.team_id,
+        },
+        e_detailing: {
+          quater_id: queries.quater_id,
+        },
       },
       take: queries.size,
       skip: queries.size * (queries.page - 1),
@@ -24,6 +30,12 @@ const getMulti = async (queries: eVdieoQueryInputTypes) => {
       where: {
         title: {
           startsWith: queries.search || undefined,
+        },
+        team_member: {
+          team_id: queries.team_id,
+        },
+        e_detailing: {
+          quater_id: queries.quater_id,
         },
       },
     }),

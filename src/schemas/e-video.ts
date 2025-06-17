@@ -14,6 +14,7 @@ export const eVdieoQuerySchema = z.object({
   search: z.string().optional(),
   e_detailing_id: z.string().optional(),
   team_id: z.string().optional(),
+  quater_id: z.string().optional(),
   sort_type: z.enum(["created_at", "title"]).default("created_at"),
 });
 

@@ -30,6 +30,9 @@ const getMulti = async (queries: quizMemberQueryInputTypes) => {
             },
           ],
         }),
+        team_member: {
+          team_id: queries.team_id,
+        },
         quiz: {
           quater_id: queries.quater_id,
         },
@@ -40,7 +43,7 @@ const getMulti = async (queries: quizMemberQueryInputTypes) => {
             user: {
               select: {
                 full_name: true,
-                mobile: true
+                mobile: true,
               },
             },
           },
@@ -82,6 +85,9 @@ const getMulti = async (queries: quizMemberQueryInputTypes) => {
             },
           ],
         }),
+        team_member: {
+          team_id: queries.team_id,
+        },
         quiz: {
           quater_id: queries.quater_id,
         },
