@@ -11,6 +11,7 @@ export const quizMemberQuerySchema = z.object({
   page: z.coerce.number().int().default(1),
   size: z.coerce.number().default(20),
   search: z.string().optional(),
+  quater_id: z.string().optional(),
   sort_type: z.enum(["created_at", "title"]).default("created_at"),
 });
 

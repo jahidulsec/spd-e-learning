@@ -108,7 +108,7 @@ export type Permissions = {
   };
   quiz_member: {
     dataType: QuizMember;
-    action: "create";
+    action: "create" | "view";
   };
   question: {
     dataType: Question;
@@ -178,6 +178,7 @@ const ROLES = {
     },
     quiz_member: {
       create: false,
+      view: true,
     },
     question: {
       create: true,
@@ -344,6 +345,7 @@ const ROLES = {
     },
     quiz_member: {
       create: false,
+      view: true,
     },
     question: {
       create: true,
@@ -532,6 +534,7 @@ const ROLES = {
     },
     quiz_member: {
       create: true,
+      view: false,
     },
     question: {
       create: false,
@@ -657,6 +660,7 @@ const ROLES = {
     },
     quiz_member: {
       create: false,
+      view: true,
     },
     question: {
       create: false,
@@ -697,9 +701,9 @@ const ROLES = {
     e_detailing_score: {
       create: false,
       view: true,
-      delete:false,
-      update: false
-    }
+      delete: false,
+      update: false,
+    },
   },
 } as const satisfies RolesWithPermissions;
 

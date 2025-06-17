@@ -30,6 +30,21 @@ const getMulti = async (queries: quizMemberQueryInputTypes) => {
             },
           ],
         }),
+        quiz: {
+          quater_id: queries.quater_id,
+        },
+      },
+      include: {
+        team_member: {
+          include: {
+            user: {
+              select: {
+                full_name: true,
+                mobile: true
+              },
+            },
+          },
+        },
       },
       take: queries.size,
       skip: queries.size * (queries.page - 1),
@@ -67,6 +82,9 @@ const getMulti = async (queries: quizMemberQueryInputTypes) => {
             },
           ],
         }),
+        quiz: {
+          quater_id: queries.quater_id,
+        },
       },
     }),
   ]);

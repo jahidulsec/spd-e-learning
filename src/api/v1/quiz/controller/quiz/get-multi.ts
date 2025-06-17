@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from "express-serve-static-core";
 import { quizQuerySchema } from "../../../../../schemas/quiz";
 import quizService from "../../../../../lib/quiz";
 import { paginate } from "../../../../../utils/pagination";
-import userService from "../../../../../lib/user";
 import { $Enums } from "@prisma/client";
 
 const get = async (req: Request, res: Response, next: NextFunction) => {

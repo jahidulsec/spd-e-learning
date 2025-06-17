@@ -19,7 +19,8 @@ router
 // quiz member
 router
   .route("/quiz-member")
-  .post(authorize("quiz_member", "create"), controller.createQuizMember);
+  .post(authorize("quiz_member", "create"), controller.createQuizMember)
+  .get(authorize("quiz_member", "view"), controller.getQuizMembers);
 
 // question
 router
