@@ -42,6 +42,19 @@ const getMulti = async (queries: usersQueryInputTypes) => {
   return { data, count, page, size };
 };
 
+const getUserStats = async () => {
+  const [data] = await Promise.all([
+    db.users.groupBy({
+      by: ["role"],
+      _count: {
+        sap_id: true,
+      },
+    }),
+  ]);
+
+  return { data };
+};
+
 const getSingle = async (idObj: requiredIdTypes) => {
   const { id } = idObj;
 
@@ -129,4 +142,5 @@ export = {
   deleteOne,
   getSingleByMobile,
   getSingleWithTeamInfo,
+  getUserStats,
 };

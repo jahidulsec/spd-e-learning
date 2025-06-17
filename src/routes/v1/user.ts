@@ -7,7 +7,7 @@ const router = Router();
 // user
 router
   .route("/user")
-  .get(verifyRoles("superadmin", 'director'), controller.getUsers)
+  .get(verifyRoles("superadmin", "director"), controller.getUsers)
   .post(verifyRoles("superadmin"), controller.createUser);
 
 router
@@ -16,10 +16,16 @@ router
   .patch(controller.updateUser)
   .delete(verifyRoles("superadmin"), controller.delUser);
 
+router.get(
+  "/stats",
+  verifyRoles("director", "superadmin", "team_lead"),
+  controller.getUserStats
+);
+
 // team
 router
   .route("/team")
-  .get(verifyRoles("superadmin", 'director'), controller.getTeams)
+  .get(verifyRoles("superadmin", "director"), controller.getTeams)
   .post(verifyRoles("superadmin"), controller.createTeam);
 
 router
