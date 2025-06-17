@@ -6,6 +6,7 @@ import { verifyToken } from "../middlewares/verify-token";
 import { quizRouter } from "./v1/quiz";
 import { otherRouter } from "./v1/other";
 import { eDetailingRoutes } from "./v1/e-detailing";
+import { analysisRoutes } from "./v1/analysis";
 
 const router = Router();
 
@@ -15,5 +16,6 @@ router.use("/user/v1", verifyToken, userRoutes);
 router.use("/other/v1", verifyToken, otherRouter);
 router.use("/quiz/v1", verifyToken, quizRouter);
 router.use("/e-detailing/v1", verifyToken, eDetailingRoutes);
+router.use("/analysis/v1", verifyToken, analysisRoutes);
 
 export default router;
