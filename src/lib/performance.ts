@@ -1,41 +1,82 @@
 import db from "../db/db";
-import { requiredIdTypes } from "../schemas/required-id";
-import { usersQueryInputTypes } from "../schemas/user";
+import { performanceMioQueryInputTypes } from "../schemas/performance";
 
-const getMulti = async (queries: usersQueryInputTypes) => {
+const getMultiMioPerformance = async (
+  queries: performanceMioQueryInputTypes
+) => {
   const size = queries?.size ?? 20;
   const page = queries?.page ?? 1;
-  const sort = queries?.sort ?? "desc";
 
-  const [data, count] = await Promise.all([
-    db.users.findMany({
-      where: {
-        full_name: {
-          startsWith: queries.search || undefined,
-        },
-        mobile: {
-          startsWith: queries.search || undefined,
-        },
-      },
-      take: size,
-      skip: size * (page - 1),
-      orderBy: {
-        created_at: sort,
-      },
-    }),
-    db.users.count({
-      where: {
-        full_name: {
-          startsWith: queries.search || undefined,
-        },
-        mobile: {
-          startsWith: queries.search || undefined,
-        },
-      },
-    }),
+  const year = new Date().getFullYear();
+
+  const [data]: any = await Promise.all([
+    db.$queryRaw`
+      SELECT
+          u.sap_id,
+          u.full_name,
+          t.title AS team_title,
+          COALESCE(
+              SUM(DISTINCT vs.score_closing),
+              0
+          ) + COALESCE(
+              SUM(DISTINCT vs.score_content),
+              0
+          ) + COALESCE(
+              SUM(DISTINCT vs.score_starting),
+              0
+          ) + COALESCE(
+              SUM(
+                  DISTINCT vs.score_presentation
+              ),
+              0
+          ) + COALESCE(r.score, 0) total_score,
+          count(u.sap_id) over () total_count
+      FROM
+          users u
+          LEFT JOIN team_members tm ON tm.user_id = u.sap_id
+          LEFT JOIN teams t ON t.id = tm.team_id
+          LEFT JOIN (
+              select
+                  sum(score) score,
+                  team_member_id,
+                  created_at
+              from result
+              GROUP BY
+                  team_member_id
+          ) r ON r.team_member_id = tm.id
+          AND EXTRACT(
+              YEAR
+              FROM r.created_at
+          ) = 2025
+          LEFT JOIN e_detailing_video v ON v.team_member_id = tm.id
+          LEFT JOIN e_detailing_score vs ON vs.video_id = v.id
+          AND EXTRACT(
+              YEAR
+              FROM vs.created_at
+          ) = 2025
+      WHERE
+          u.role = 'mios'
+          AND (
+              EXTRACT(
+                  YEAR
+                  FROM v.created_at
+              ) = ${year}
+              OR EXTRACT(
+                  YEAR
+                  FROM r.created_at
+              ) = ${year}
+          )
+      GROUP BY
+          u.sap_id,
+          u.full_name,
+          t.title
+      ORDER BY total_score asc
+      limit ${(page - 1) * size},${size}
+      ;
+    `,
   ]);
 
-  return { data, count, page, size };
+  return { data, page, size };
 };
 
 const getUserStats = async () => {
@@ -78,26 +119,7 @@ const getUserStats = async () => {
   return { e_detailing_stats, quiz_stats };
 };
 
-const getSingle = async (idObj: requiredIdTypes) => {
-  const { id } = idObj;
-
-  //extract id from validated id by zod
-  const data = await db.users.findUnique({
-    where: { sap_id: id },
-    include: {
-      team_members: {
-        include: {
-          team: true,
-        },
-      },
-    },
-  });
-
-  return data;
-};
-
 export = {
-  getMulti,
-  getSingle,
+  getMultiMioPerformance,
   getUserStats,
 };
