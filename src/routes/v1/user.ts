@@ -34,6 +34,8 @@ router
   .patch(verifyRoles("superadmin", "team_lead"), controller.updateTeam)
   .delete(verifyRoles("superadmin"), controller.delTeam);
 
+router.get(`/stats/team`, controller.getTeamStats)
+
 // team
 router
   .route("/team-member")

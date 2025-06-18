@@ -9,6 +9,7 @@ import { getUserStats } from "./user/get-stats";
 import { createTeam } from "./team/create";
 import { delTeam } from "./team/delete";
 import { getTeams } from "./team/get-multi";
+import { getTeamStats } from "./team/get-stats";
 import { getTeam } from "./team/get-single";
 import { updateTeam } from "./team/update";
 
@@ -36,4 +37,5 @@ export = {
   delTeamMember,
   updateTeamMember,
   getUserStats,
+  getTeamStats,
 };
