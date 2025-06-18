@@ -47,6 +47,62 @@ const getMulti = async (queries: quaterQueryInputTypes) => {
   return { data, count };
 };
 
+const getMultiForTeams = async (
+  queries: quaterQueryInputTypes,
+  teamId: string
+) => {
+  const size = Number(queries.size) ?? 20;
+  const page = Number(queries.page) ?? 20;
+
+  const [data, count] = await Promise.all([
+    db.quater.findMany({
+      where: {
+        title: {
+          startsWith: queries.search || undefined,
+        },
+        start_date: {
+          gte: queries?.start_date ?? undefined,
+        },
+        end_date: {
+          lte: queries?.end_date ?? undefined,
+        },
+      },
+      include: {
+        e_detailing: {
+          where: {
+            team_id: teamId,
+          },
+        },
+        quiz: {
+          where: {
+            team_id: teamId,
+          },
+        },
+      },
+      take: size,
+      skip: size * (page - 1),
+      orderBy: {
+        [queries.sort_type]: queries.sort ?? "desc",
+      },
+    }),
+    db.quater.count({
+      where: {
+        title: {
+          startsWith: queries.search || undefined,
+        },
+        start_date: {
+          gte: queries?.start_date ?? undefined,
+        },
+        end_date: {
+          lte: queries?.end_date ?? undefined,
+        },
+      },
+    }),
+  ]);
+
+  return { data, count };
+};
+
 const getSingle = async (idObj: requiredIdTypes) => {
   const { id } = idObj;
 
@@ -99,4 +155,5 @@ export = {
   createNew,
   updateOne,
   deleteOne,
+  getMultiForTeams,
 };
