@@ -7,6 +7,7 @@ import {
 import { requiredIdTypes } from "../schemas/required-id";
 import { ResultMioQuizAll } from "../types/result";
 import { e_detailing_score } from "@prisma/client";
+import { getYearRange } from "../utils/helper";
 
 const getMulti = async (queries: resultQueryInputTypes) => {
   const [data, count] = await Promise.all([
@@ -194,6 +195,8 @@ const getSingleMioAllByUserId = async (
   quizData: ResultMioQuizAll[];
   eDetailingData: e_detailing_score[];
 }> => {
+  const year = new Date().getFullYear();
+
   //extract id from validated id by zod
   const [quizData, eDetailingData]: any = await Promise.all([
     db.$queryRaw`
@@ -219,7 +222,7 @@ const getSingleMioAllByUserId = async (
             EXTRACT(
                 YEAR
                 FROM r.created_at
-            ) = 2025
+            ) = ${year}
         )
       GROUP BY
         q.id
@@ -231,6 +234,7 @@ const getSingleMioAllByUserId = async (
           team_member: {
             user_id: userId,
           },
+          created_at: getYearRange(year),
         },
       },
     }),

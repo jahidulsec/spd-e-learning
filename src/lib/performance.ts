@@ -80,6 +80,8 @@ const getMultiMioPerformance = async (
 };
 
 const getUserStats = async () => {
+  const year = new Date().getFullYear();
+
   const [e_detailing_stats, quiz_stats]: any[] = await Promise.all([
     db.$queryRaw`
       select
@@ -95,6 +97,10 @@ const getUserStats = async () => {
       WHERE
           u.role = 'mios'
           and tm.team_id is not null
+          and EXTRACT(
+                YEAR
+                FROM ev.created_at
+            ) = ${year}
       GROUP BY
           tm.team_id;
     `,
@@ -111,6 +117,10 @@ const getUserStats = async () => {
       WHERE
           u.role = 'mios'
           and tm.team_id is not null
+           and EXTRACT(
+                YEAR
+                FROM r.created_at
+            ) = ${year}
       GROUP BY
           tm.team_id;
     `,
