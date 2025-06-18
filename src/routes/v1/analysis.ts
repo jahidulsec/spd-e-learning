@@ -16,4 +16,10 @@ router.get(
   controller.getMioPerformance
 );
 
+// result
+router.get(
+  `/result/:userId`,
+  controller.getSingleMioAllResult
+);
+
 export { router as analysisRoutes };

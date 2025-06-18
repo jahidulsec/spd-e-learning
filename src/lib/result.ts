@@ -5,6 +5,8 @@ import {
   updateResultInputTypes,
 } from "../schemas/result";
 import { requiredIdTypes } from "../schemas/required-id";
+import { ResultMioQuizAll } from "../types/result";
+import { e_detailing_score } from "@prisma/client";
 
 const getMulti = async (queries: resultQueryInputTypes) => {
   const [data, count] = await Promise.all([
@@ -186,6 +188,57 @@ const getSingle = async (idObj: requiredIdTypes) => {
   return data;
 };
 
+const getSingleMioAllByUserId = async (
+  userId: string
+): Promise<{
+  quizData: ResultMioQuizAll[];
+  eDetailingData: e_detailing_score[];
+}> => {
+  //extract id from validated id by zod
+  const [quizData, eDetailingData]: any = await Promise.all([
+    db.$queryRaw`
+      select
+        u.full_name,
+        u.sap_id,
+        tm.team_id team_id,
+        q.id quiz_id,
+        q.title quiz_title,
+        sum(r.score) quiz_score,
+        count(qu.id) total_question
+      from
+        users u
+        LEFT JOIN team_members tm on tm.user_id = u.sap_id
+        LEFT JOIN quiz q on q.team_id = tm.team_id
+        LEFT JOIN question qu on qu.quiz_id = q.id
+        LEFT JOIN result r on r.question_id = qu.id
+      WHERE
+        u.role = 'mios'
+        and tm.id is not null
+        and u.sap_id = ${userId}
+        AND (
+            EXTRACT(
+                YEAR
+                FROM r.created_at
+            ) = 2025
+        )
+      GROUP BY
+        q.id
+      ORDER BY q.title ASC
+    `,
+    db.e_detailing_score.findMany({
+      where: {
+        e_detailing_video: {
+          team_member: {
+            user_id: userId,
+          },
+        },
+      },
+    }),
+  ]);
+
+  return { quizData, eDetailingData };
+};
+
 const getSingleByTeamMemberQuestion = async (
   teamMemberId: string,
   questionId: string
@@ -265,4 +318,5 @@ export = {
   getMultiByUserId,
   getSingleByTeamMemberQuestion,
   getSingleByUserId,
+  getSingleMioAllByUserId,
 };
