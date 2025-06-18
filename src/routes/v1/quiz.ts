@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { authorize } from "../../middlewares/authorize";
 import controller from "../../api/v1/quiz";
+import { verifyRoles } from "../../middlewares/verify-roles";
 
 const router = Router();
 
@@ -15,6 +16,12 @@ router
   .get(controller.getQuiz)
   .patch(controller.updateQuiz)
   .delete(controller.delQuiz);
+
+router.get(
+  "/quiz/:quizId/leaderboard",
+  verifyRoles("director", "superadmin", "team_lead"),
+  controller.getQuizLeaderboard
+);
 
 // quiz member
 router

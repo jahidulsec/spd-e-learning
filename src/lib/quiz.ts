@@ -438,6 +438,53 @@ const getMultiByUserIdWithTeamMember = async (
   return { data, count };
 };
 
+const getQuizUserResult = async (quizId: string) => {
+  const [data, count] = await Promise.all([
+    db.quiz_member.findMany({
+      where: {
+        quiz_id: quizId,
+      },
+      include: {
+        team_member: {
+          include: {
+            user: {
+              select: {
+                full_name: true,
+                sap_id: true,
+              },
+            },
+          },
+        },
+        quiz: {
+          select: {
+            _count: {
+              select: {
+                question: true,
+              },
+            },
+            question: {
+              select: {
+                result: {
+                  select: {
+                    score: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    }),
+    db.quiz_member.count({
+      where: {
+        quiz_id: quizId,
+      },
+    }),
+  ]);
+
+  return { data, count };
+};
+
 const getSingle = async (idObj: requiredIdTypes) => {
   const { id } = idObj;
 
@@ -572,4 +619,5 @@ export = {
   getMultiByUserId,
   getMultiByUserIdWithTeamMember,
   getSingleWithQuestionByUserId,
+  getQuizUserResult,
 };

@@ -36,7 +36,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
 
     const responseData = {
       success: true,
-      message: "All quaters get successfully!",
+      message: "All quaters get with team information successfully!",
       data: data,
       pagination: {
         ...paginate(validatedData.page, validatedData.size, count),
