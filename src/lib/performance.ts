@@ -53,7 +53,7 @@ const getMultiMioPerformance = async (
           AND EXTRACT(
               YEAR
               FROM vs.created_at
-          ) = 2025
+          ) = ${year}
       WHERE
           u.role = 'mios'
           AND (
