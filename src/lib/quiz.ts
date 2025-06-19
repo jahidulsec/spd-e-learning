@@ -438,7 +438,10 @@ const getMultiByUserIdWithTeamMember = async (
   return { data, count };
 };
 
-const getQuizUserResult = async (quizId: string) => {
+const getQuizUserResult = async (
+  quizId: string,
+  queries: quizQueryInputTypes
+) => {
   const [data, count] = await Promise.all([
     db.quiz_member.findMany({
       where: {
@@ -473,6 +476,20 @@ const getQuizUserResult = async (quizId: string) => {
             },
           },
         },
+      },
+      take: queries.size,
+      skip: queries.size * (queries.page - 1),
+      orderBy: {
+        ...(queries.sort_type === "title" && {
+          team_member: {
+            user: {
+              full_name: queries.sort,
+            },
+          },
+        }),
+        ...(queries.sort_type === "created_at" && {
+          created_at: queries.sort,
+        }),
       },
     }),
     db.quiz_member.count({

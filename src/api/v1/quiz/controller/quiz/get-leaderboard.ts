@@ -39,7 +39,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     //get all items with validated queries
-    const { data, count } = await quizService.getQuizUserResult(quizId);
+    const { data, count } = await quizService.getQuizUserResult(quizId, validatedData);
 
     const responseData = {
       success: true,
