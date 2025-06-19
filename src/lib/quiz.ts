@@ -446,6 +446,24 @@ const getQuizUserResult = async (
     db.quiz_member.findMany({
       where: {
         quiz_id: quizId,
+        ...(queries.search && {
+          OR: [
+            {
+              team_member: {
+                user: {
+                  full_name: queries.search,
+                },
+              },
+            },
+            {
+              team_member: {
+                user: {
+                  sap_id: queries.search,
+                },
+              },
+            },
+          ],
+        }),
       },
       include: {
         team_member: {

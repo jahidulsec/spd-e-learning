@@ -3,6 +3,7 @@ import { getTopics } from "./topic/get-multi";
 import { getTopic } from "./topic/get-single";
 import { delTopic } from "./topic/delete";
 import { updateTopic } from "./topic/update";
+import { getEDetailingLeaderboard } from "./topic/get-leaderboard";
 
 // video
 import { createVideo } from "./video/create";
@@ -34,4 +35,5 @@ export = {
   getScores,
   updateScore,
   delScore,
+  getEDetailingLeaderboard,
 };

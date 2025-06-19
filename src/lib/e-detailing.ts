@@ -96,8 +96,8 @@ const getMultiByUserId = async (
             },
           },
           select: {
-            id: true
-          }
+            id: true,
+          },
         },
       },
       take: queries.size,
@@ -118,6 +118,100 @@ const getMultiByUserId = async (
         title: {
           startsWith: queries.search || undefined,
         },
+      },
+    }),
+  ]);
+
+  return { data, count };
+};
+
+const getUsersLeaderborad = async (
+  eDetailingId: string,
+  queries: eDetailingQueryInputTypes
+) => {
+  const [data, count] = await Promise.all([
+    db.e_detailing_score.findMany({
+      where: {
+        e_detailing_video: {
+          e_detailing_id: eDetailingId,
+        },
+        ...(queries.search && {
+          OR: [
+            {
+              e_detailing_video: {
+                team_member: {
+                  user: {
+                    full_name: queries.search,
+                  },
+                },
+              },
+            },
+            {
+              e_detailing_video: {
+                team_member: {
+                  user: {
+                    sap_id: queries.search,
+                  },
+                },
+              },
+            },
+            {
+              e_detailing_video: {
+                title: queries.search,
+              },
+            },
+          ],
+        }),
+      },
+      include: {
+        team_lead: {
+          select: {
+            user: {
+              select: {
+                sap_id: true,
+                full_name: true,
+              },
+            },
+          },
+        },
+        e_detailing_video: {
+          select: {
+            id: true,
+            title: true,
+            e_detailing: true,
+            team_member: {
+              select: {
+                user: {
+                  select: {
+                    sap_id: true,
+                    full_name: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      take: queries.size,
+      skip: queries.size * (queries.page - 1),
+      orderBy: {
+        ...(queries.sort_type === "title" && {
+          e_detailing_video: {
+            team_member: {
+              user: {
+                full_name: queries.sort,
+              },
+            },
+          },
+        }),
+        ...(queries.sort_type === "created_at" && {
+          created_at: queries.sort,
+        }),
+      },
+    }),
+    db.e_detailing.count({
+      where: {
+        id: eDetailingId,
       },
     }),
   ]);
@@ -179,4 +273,5 @@ export = {
   deleteOne,
   getMultiByTeamId,
   getMultiByUserId,
+  getUsersLeaderborad,
 };

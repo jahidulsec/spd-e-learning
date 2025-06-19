@@ -1,7 +1,5 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
-import quaterService from "../../../../../lib/quater";
 import { paginate } from "../../../../../utils/pagination";
-import { quaterQuerySchema } from "../../../../../schemas/quater";
 import { forbiddenError, notFoundError } from "../../../../../utils/errors";
 import userService from "../../../../../lib/user";
 import quizService from "../../../../../lib/quiz";

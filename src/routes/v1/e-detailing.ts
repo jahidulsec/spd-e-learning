@@ -1,6 +1,7 @@
 import { Router } from "express";
 import controller from "../../api/v1/e-detailing";
 import { authorize } from "../../middlewares/authorize";
+import { verifyRoles } from "../../middlewares/verify-roles";
 
 const router = Router();
 
@@ -15,6 +16,12 @@ router
   .get(controller.getTopic)
   .patch(controller.updateTopic)
   .delete(controller.delTopic);
+
+router.get(
+  "/topic/:id/leaderboard",
+  verifyRoles("director", "superadmin", "team_lead"),
+  controller.getEDetailingLeaderboard
+);
 
 // video
 router.route("/video").get(controller.getVideos).post(controller.createVideo);
