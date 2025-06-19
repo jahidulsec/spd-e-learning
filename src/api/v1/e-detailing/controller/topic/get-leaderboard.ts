@@ -46,7 +46,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
 
     const responseData = {
       success: true,
-      message: "All quiz member leaderboard get successfully!",
+      message: "All e detailing leaderboard of a team get successfully!",
       data: data.map((item) => {
         return {
           sap_id: item.e_detailing_video.team_member.user.sap_id,
