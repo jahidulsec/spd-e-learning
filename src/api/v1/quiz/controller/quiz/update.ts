@@ -48,6 +48,14 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
       forbiddenError(`You are unauthorized for this action`);
     }
 
+    // only superadmin can archived
+    if (
+      authUser?.role !== "superadmin" &&
+      validatedData.is_archived !== undefined
+    ) {
+      validatedData.is_archived = false;
+    }
+
     //update with validated data
     const updated = await quizService.updateOne(validatedId, validatedData);
 

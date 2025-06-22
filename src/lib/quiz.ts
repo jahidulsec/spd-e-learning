@@ -36,6 +36,32 @@ const getMulti = async (queries: quizQueryInputTypes) => {
             },
           ],
         }),
+        ...(queries.is_archived &&
+          (queries.is_archived === "0"
+            ? {
+                AND: [
+                  {
+                    is_archived: false,
+                  },
+                  {
+                    quater: {
+                      is_archived: false,
+                    },
+                  },
+                ],
+              }
+            : {
+                OR: [
+                  {
+                    is_archived: queries.is_archived === "1",
+                  },
+                  {
+                    quater: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                ],
+              })),
       },
       include: {
         quater: true,
@@ -74,6 +100,32 @@ const getMulti = async (queries: quizQueryInputTypes) => {
             },
           ],
         }),
+        ...(queries.is_archived &&
+          (queries.is_archived === "0"
+            ? {
+                AND: [
+                  {
+                    is_archived: false,
+                  },
+                  {
+                    quater: {
+                      is_archived: false,
+                    },
+                  },
+                ],
+              }
+            : {
+                OR: [
+                  {
+                    is_archived: queries.is_archived === "1",
+                  },
+                  {
+                    quater: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                ],
+              })),
       },
     }),
   ]);
@@ -114,6 +166,32 @@ const getMultiByTeamId = async (
             },
           ],
         }),
+        ...(queries.is_archived &&
+          (queries.is_archived === "0"
+            ? {
+                AND: [
+                  {
+                    is_archived: false,
+                  },
+                  {
+                    quater: {
+                      is_archived: false,
+                    },
+                  },
+                ],
+              }
+            : {
+                OR: [
+                  {
+                    is_archived: queries.is_archived === "1",
+                  },
+                  {
+                    quater: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                ],
+              })),
         team_id: teamId || "",
       },
       include: {
@@ -153,6 +231,32 @@ const getMultiByTeamId = async (
             },
           ],
         }),
+        ...(queries.is_archived &&
+          (queries.is_archived === "0"
+            ? {
+                AND: [
+                  {
+                    is_archived: false,
+                  },
+                  {
+                    quater: {
+                      is_archived: false,
+                    },
+                  },
+                ],
+              }
+            : {
+                OR: [
+                  {
+                    is_archived: queries.is_archived === "1",
+                  },
+                  {
+                    quater: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                ],
+              })),
         team_id: teamId || "",
       },
     }),
@@ -194,6 +298,32 @@ const getMultiByUserId = async (
             },
           ],
         }),
+        ...(queries.is_archived &&
+          (queries.is_archived === "0"
+            ? {
+                AND: [
+                  {
+                    is_archived: false,
+                  },
+                  {
+                    quater: {
+                      is_archived: false,
+                    },
+                  },
+                ],
+              }
+            : {
+                OR: [
+                  {
+                    is_archived: queries.is_archived === "1",
+                  },
+                  {
+                    quater: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                ],
+              })),
         team: {
           team_members: {
             some: {
@@ -239,6 +369,32 @@ const getMultiByUserId = async (
             },
           ],
         }),
+        ...(queries.is_archived &&
+          (queries.is_archived === "0"
+            ? {
+                AND: [
+                  {
+                    is_archived: false,
+                  },
+                  {
+                    quater: {
+                      is_archived: false,
+                    },
+                  },
+                ],
+              }
+            : {
+                OR: [
+                  {
+                    is_archived: queries.is_archived === "1",
+                  },
+                  {
+                    quater: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                ],
+              })),
         team: {
           team_members: {
             some: {
@@ -287,6 +443,32 @@ const getMultiByTeamIdWithTeamMember = async (
             },
           ],
         }),
+        ...(queries.is_archived &&
+          (queries.is_archived === "0"
+            ? {
+                AND: [
+                  {
+                    is_archived: false,
+                  },
+                  {
+                    quater: {
+                      is_archived: false,
+                    },
+                  },
+                ],
+              }
+            : {
+                OR: [
+                  {
+                    is_archived: queries.is_archived === "1",
+                  },
+                  {
+                    quater: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                ],
+              })),
         team_id: teamId || "",
       },
       include: {
@@ -331,6 +513,32 @@ const getMultiByTeamIdWithTeamMember = async (
             },
           ],
         }),
+        ...(queries.is_archived &&
+          (queries.is_archived === "0"
+            ? {
+                AND: [
+                  {
+                    is_archived: false,
+                  },
+                  {
+                    quater: {
+                      is_archived: false,
+                    },
+                  },
+                ],
+              }
+            : {
+                OR: [
+                  {
+                    is_archived: queries.is_archived === "1",
+                  },
+                  {
+                    quater: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                ],
+              })),
         team_id: teamId || "",
       },
     }),
@@ -372,6 +580,32 @@ const getMultiByUserIdWithTeamMember = async (
             },
           ],
         }),
+         ...(queries.is_archived &&
+          (queries.is_archived === "0"
+            ? {
+                AND: [
+                  {
+                    is_archived: false,
+                  },
+                  {
+                    quater: {
+                      is_archived: false,
+                    },
+                  },
+                ],
+              }
+            : {
+                OR: [
+                  {
+                    is_archived: queries.is_archived === "1",
+                  },
+                  {
+                    quater: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                ],
+              })),
         team: {
           team_members: {
             some: {
@@ -424,6 +658,32 @@ const getMultiByUserIdWithTeamMember = async (
             },
           ],
         }),
+         ...(queries.is_archived &&
+          (queries.is_archived === "0"
+            ? {
+                AND: [
+                  {
+                    is_archived: false,
+                  },
+                  {
+                    quater: {
+                      is_archived: false,
+                    },
+                  },
+                ],
+              }
+            : {
+                OR: [
+                  {
+                    is_archived: queries.is_archived === "1",
+                  },
+                  {
+                    quater: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                ],
+              })),
         team: {
           team_members: {
             some: {

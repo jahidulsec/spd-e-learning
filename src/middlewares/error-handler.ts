@@ -55,7 +55,7 @@ const errorHandler = (
       statusCode = 404;
       code = 40402; // foreign key conflict
       error = "Bad Request";
-      message = `${err?.meta?.field_name as string} does not exist`;
+      message = `${err?.meta?.constraint as string} does not exist`;
     } else {
       statusCode = 400;
       code = 40003; // General invalid input
