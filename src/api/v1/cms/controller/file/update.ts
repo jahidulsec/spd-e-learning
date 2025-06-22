@@ -54,6 +54,14 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
       forbiddenError(`You are unauthorized for this action`);
     }
 
+    // only superadmin can archived
+    if (
+      authUser?.role !== "superadmin" &&
+      validatedData.is_archived !== undefined
+    ) {
+      validatedData.is_archived = false;
+    }
+
     // if upload new file
     if (uploadedFile) {
       // get filename and file type

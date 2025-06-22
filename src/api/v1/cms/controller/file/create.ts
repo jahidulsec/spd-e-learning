@@ -41,7 +41,14 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
     // if not superuser, add team id from user info
     if (user?.role !== "superadmin") {
-      if (user?.team_members.filter(item => item.team_id === folder?.category?.team_id).length === 0) {
+      // only superadmin can archive
+      validatedData.is_archived = false;
+
+      if (
+        user?.team_members.filter(
+          (item) => item.team_id === folder?.category?.team_id
+        ).length === 0
+      ) {
         notFoundError("Folder does not exist");
       }
     }
