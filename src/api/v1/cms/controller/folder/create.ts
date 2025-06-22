@@ -25,6 +25,9 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
       // if not superuser, add team id from user info
       if (user?.role !== "superadmin") {
+        // only superadmin can archive
+        formData["is_archived"] = false;
+
         if (
           user?.team_members.filter(
             (item) => item.team_id === parentFolder?.category?.team_id
@@ -46,7 +49,8 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     });
 
     if (
-      authUser?.role !== 'superadmin' && user?.team_members.filter((item) => item.team_id === category?.team_id)
+      authUser?.role !== "superadmin" &&
+      user?.team_members.filter((item) => item.team_id === category?.team_id)
         .length === 0
     ) {
       notFoundError("Category not found");

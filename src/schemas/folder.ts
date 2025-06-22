@@ -14,6 +14,7 @@ export const folderQuerySchema = z.object({
   search: z.string().optional(),
   category_id: z.string().optional(),
   sort_type: z.enum(["created_at", "title"]).default("created_at"),
+  is_archived: z.enum(["0", "1"]).optional(),
 });
 
 export const updateFolderDTOSchema = createFolderDTOSchema

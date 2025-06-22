@@ -14,6 +14,53 @@ const getMulti = async (queries: folderQueryInputTypes) => {
           startsWith: queries.search || undefined,
         },
         parent_folder_id: null,
+        ...(queries.is_archived &&
+          (queries.is_archived === "1"
+            ? {
+                OR: [
+                  {
+                    is_archived: queries.is_archived === "1",
+                  },
+                  {
+                    category: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                  {
+                    category: {
+                      quater: {
+                        is_archived: queries.is_archived === "1",
+                      },
+                    },
+                  },
+                ],
+              }
+            : {
+                AND: [
+                  {
+                    is_archived: false,
+                  },
+                  {
+                    category: {
+                      is_archived: false,
+                    },
+                  },
+                  {
+                    category: {
+                      quater: {
+                        is_archived: false,
+                      },
+                    },
+                  },
+                ],
+              })),
+      },
+      include: {
+        category: {
+          include: {
+            quater: true,
+          },
+        },
       },
       take: queries.size,
       skip: queries.size * (queries.page - 1),
@@ -27,6 +74,46 @@ const getMulti = async (queries: folderQueryInputTypes) => {
           startsWith: queries.search || undefined,
         },
         parent_folder_id: null,
+        ...(queries.is_archived &&
+          (queries.is_archived === "1"
+            ? {
+                OR: [
+                  {
+                    is_archived: queries.is_archived === "1",
+                  },
+                  {
+                    category: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                  {
+                    category: {
+                      quater: {
+                        is_archived: queries.is_archived === "1",
+                      },
+                    },
+                  },
+                ],
+              }
+            : {
+                AND: [
+                  {
+                    is_archived: false,
+                  },
+                  {
+                    category: {
+                      is_archived: false,
+                    },
+                  },
+                  {
+                    category: {
+                      quater: {
+                        is_archived: false,
+                      },
+                    },
+                  },
+                ],
+              })),
       },
     }),
   ]);
@@ -48,6 +135,46 @@ const getMultiByTeamId = async (
         title: {
           startsWith: queries.search || undefined,
         },
+        ...(queries.is_archived &&
+          (queries.is_archived === "1"
+            ? {
+                OR: [
+                  {
+                    is_archived: queries.is_archived === "1",
+                  },
+                  {
+                    category: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                  {
+                    category: {
+                      quater: {
+                        is_archived: queries.is_archived === "1",
+                      },
+                    },
+                  },
+                ],
+              }
+            : {
+                AND: [
+                  {
+                    is_archived: false,
+                  },
+                  {
+                    category: {
+                      is_archived: false,
+                    },
+                  },
+                  {
+                    category: {
+                      quater: {
+                        is_archived: false,
+                      },
+                    },
+                  },
+                ],
+              })),
       },
       take: queries.size,
       skip: queries.size * (queries.page - 1),
@@ -64,6 +191,46 @@ const getMultiByTeamId = async (
         title: {
           startsWith: queries.search || undefined,
         },
+        ...(queries.is_archived &&
+          (queries.is_archived === "1"
+            ? {
+                OR: [
+                  {
+                    is_archived: queries.is_archived === "1",
+                  },
+                  {
+                    category: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                  {
+                    category: {
+                      quater: {
+                        is_archived: queries.is_archived === "1",
+                      },
+                    },
+                  },
+                ],
+              }
+            : {
+                AND: [
+                  {
+                    is_archived: false,
+                  },
+                  {
+                    category: {
+                      is_archived: false,
+                    },
+                  },
+                  {
+                    category: {
+                      quater: {
+                        is_archived: false,
+                      },
+                    },
+                  },
+                ],
+              })),
       },
     }),
   ]);
@@ -87,6 +254,46 @@ const getMultiByUserId = async (
             },
           },
         },
+        ...(queries.is_archived &&
+          (queries.is_archived === "1"
+            ? {
+                OR: [
+                  {
+                    is_archived: queries.is_archived === "1",
+                  },
+                  {
+                    category: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                  {
+                    category: {
+                      quater: {
+                        is_archived: queries.is_archived === "1",
+                      },
+                    },
+                  },
+                ],
+              }
+            : {
+                AND: [
+                  {
+                    is_archived: false,
+                  },
+                  {
+                    category: {
+                      is_archived: false,
+                    },
+                  },
+                  {
+                    category: {
+                      quater: {
+                        is_archived: false,
+                      },
+                    },
+                  },
+                ],
+              })),
         parent_folder_id: null,
         category_id: queries.category_id,
         title: {
@@ -110,6 +317,46 @@ const getMultiByUserId = async (
             },
           },
         },
+        ...(queries.is_archived &&
+          (queries.is_archived === "1"
+            ? {
+                OR: [
+                  {
+                    is_archived: queries.is_archived === "1",
+                  },
+                  {
+                    category: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                  {
+                    category: {
+                      quater: {
+                        is_archived: queries.is_archived === "1",
+                      },
+                    },
+                  },
+                ],
+              }
+            : {
+                AND: [
+                  {
+                    is_archived: false,
+                  },
+                  {
+                    category: {
+                      is_archived: false,
+                    },
+                  },
+                  {
+                    category: {
+                      quater: {
+                        is_archived: false,
+                      },
+                    },
+                  },
+                ],
+              })),
         parent_folder_id: null,
         title: {
           startsWith: queries.search || undefined,
