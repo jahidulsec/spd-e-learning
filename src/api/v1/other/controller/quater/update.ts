@@ -12,6 +12,8 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const formData = req.body;
 
+    const authUser = req.user;
+
     //validate incoming params id
     const validatedId = requiredIdSchema.parse(req.params);
 
@@ -33,6 +35,14 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
 
     if (startDate > endDate) {
       badRequestError("Start date should be less than end date");
+    }
+
+    // only superadmin can archived
+    if (
+      authUser?.role !== "superadmin" &&
+      validatedData.is_archived !== undefined
+    ) {
+      validatedData.is_archived = false;
     }
 
     //update with validated data

@@ -15,6 +15,7 @@ export const quaterQuerySchema = z.object({
   start_date: z.coerce.date().optional(),
   end_date: z.coerce.date().optional(),
   sort_type: z.enum(["created_at", "title"]).default("created_at"),
+  is_archived: z.enum(["0", "1"]).optional(),
 });
 
 export const updateQuaterDTOSchema = createQuaterDTOSchema.omit({}).partial();

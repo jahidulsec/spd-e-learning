@@ -22,6 +22,9 @@ const getMulti = async (queries: quaterQueryInputTypes) => {
         end_date: {
           lte: queries?.end_date ?? undefined,
         },
+        ...(queries.is_archived && {
+          is_archived: queries.is_archived === "1",
+        }),
       },
       take: size,
       skip: size * (page - 1),
@@ -40,6 +43,9 @@ const getMulti = async (queries: quaterQueryInputTypes) => {
         end_date: {
           lte: queries?.end_date ?? undefined,
         },
+        ...(queries.is_archived && {
+          is_archived: queries.is_archived === "1",
+        }),
       },
     }),
   ]);
@@ -66,6 +72,9 @@ const getMultiForTeams = async (
         end_date: {
           lte: queries?.end_date ?? undefined,
         },
+        ...(queries.is_archived && {
+          is_archived: queries.is_archived === "1",
+        }),
       },
       include: {
         e_detailing: {
@@ -96,6 +105,9 @@ const getMultiForTeams = async (
         end_date: {
           lte: queries?.end_date ?? undefined,
         },
+        ...(queries.is_archived && {
+          is_archived: queries.is_archived === "1",
+        }),
       },
     }),
   ]);

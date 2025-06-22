@@ -3,7 +3,11 @@ import { createEDetailingDTOSchema } from "../../../../../schemas/e-detailing";
 import userService from "../../../../../lib/user";
 import topicService from "../../../../../lib/e-detailing";
 import quaterService from "../../../../../lib/quater";
-import { badRequestError, forbiddenError, notFoundError } from "../../../../../utils/errors";
+import {
+  badRequestError,
+  forbiddenError,
+  notFoundError,
+} from "../../../../../utils/errors";
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -22,6 +26,9 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
     // if not superuser, add team id from user info
     if (user?.role !== "superadmin") {
+      // only superadmin can archive
+      validatedData.is_archived = false;
+
       if (
         user?.team_members.filter(
           (item) => item.team_id === validatedData.team_id
@@ -32,15 +39,20 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     // get quater and check validate time range by quater time range
-    const quater = await quaterService.getSingle({id: validatedData.quater_id})
+    const quater = await quaterService.getSingle({
+      id: validatedData.quater_id,
+    });
 
-    if(!quater) {
-      notFoundError("Quater does not exist")
-      return
+    if (!quater) {
+      notFoundError("Quater does not exist");
+      return;
     }
 
-    if(validatedData.start_date < quater?.start_date || validatedData.end_date > quater?.end_date) {
-      badRequestError("Given date range is not in quater date range")
+    if (
+      validatedData.start_date < quater?.start_date ||
+      validatedData.end_date > quater?.end_date
+    ) {
+      badRequestError("Given date range is not in quater date range");
     }
 
     //create new with validated data

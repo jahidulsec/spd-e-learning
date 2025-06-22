@@ -20,6 +20,7 @@ export const eDetailingQuerySchema = z.object({
   size: z.coerce.number().default(20),
   search: z.string().optional(),
   sort_type: z.enum(["created_at", "title"]).default("created_at"),
+  is_archived: z.enum(["0", "1"]).optional(),
 });
 
 export const updateEDetailingDTOSchema = createEDetailingDTOSchema

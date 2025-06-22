@@ -2,11 +2,13 @@ import { Request, Response, NextFunction } from "express-serve-static-core";
 import quizService from "../../../../../lib/quater";
 import { createQuaterDTOSchema } from "../../../../../schemas/quater";
 import { badRequestError } from "../../../../../utils/errors";
-import db from "../../../../../db/db";
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const formData = req.body;
+
+    // get auth user
+    const authUser = req.user;
 
     //Validate incoming body data with defined schema
     const validatedData = createQuaterDTOSchema.parse(formData);
@@ -32,6 +34,11 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
           existingQuaters.count > 1 ? "s" : ""
         } in this date range`
       );
+    }
+
+    // only superadmin can archive
+    if (authUser?.role !== "superadmin") {
+      validatedData.is_archived = false;
     }
 
     //create new with validated data

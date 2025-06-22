@@ -5,6 +5,7 @@ import {
   updateEDetailingInputTypes,
 } from "../schemas/e-detailing";
 import { requiredIdTypes } from "../schemas/required-id";
+import { getYearRange } from "../utils/helper";
 
 const getMulti = async (queries: eDetailingQueryInputTypes) => {
   const [data, count] = await Promise.all([
@@ -13,6 +14,32 @@ const getMulti = async (queries: eDetailingQueryInputTypes) => {
         title: {
           startsWith: queries.search || undefined,
         },
+        ...(queries.is_archived &&
+          (queries.is_archived === "0"
+            ? {
+                AND: [
+                  {
+                    is_archived: false,
+                  },
+                  {
+                    quater: {
+                      is_archived: false,
+                    },
+                  },
+                ],
+              }
+            : {
+                OR: [
+                  {
+                    is_archived: queries.is_archived === "1",
+                  },
+                  {
+                    quater: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                ],
+              })),
       },
       include: {
         quater: true,
@@ -28,6 +55,32 @@ const getMulti = async (queries: eDetailingQueryInputTypes) => {
         title: {
           startsWith: queries.search || undefined,
         },
+        ...(queries.is_archived &&
+          (queries.is_archived === "0"
+            ? {
+                AND: [
+                  {
+                    is_archived: false,
+                  },
+                  {
+                    quater: {
+                      is_archived: false,
+                    },
+                  },
+                ],
+              }
+            : {
+                OR: [
+                  {
+                    is_archived: queries.is_archived === "1",
+                  },
+                  {
+                    quater: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                ],
+              })),
       },
     }),
   ]);
@@ -46,6 +99,32 @@ const getMultiByTeamId = async (
         title: {
           startsWith: queries.search || undefined,
         },
+        ...(queries.is_archived &&
+          (queries.is_archived === "0"
+            ? {
+                AND: [
+                  {
+                    is_archived: false,
+                  },
+                  {
+                    quater: {
+                      is_archived: false,
+                    },
+                  },
+                ],
+              }
+            : {
+                OR: [
+                  {
+                    is_archived: queries.is_archived === "1",
+                  },
+                  {
+                    quater: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                ],
+              })),
       },
       include: {
         quater: true,
@@ -62,6 +141,32 @@ const getMultiByTeamId = async (
         title: {
           startsWith: queries.search || undefined,
         },
+        ...(queries.is_archived &&
+          (queries.is_archived === "0"
+            ? {
+                AND: [
+                  {
+                    is_archived: false,
+                  },
+                  {
+                    quater: {
+                      is_archived: false,
+                    },
+                  },
+                ],
+              }
+            : {
+                OR: [
+                  {
+                    is_archived: queries.is_archived === "1",
+                  },
+                  {
+                    quater: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                ],
+              })),
       },
     }),
   ]);
@@ -86,6 +191,32 @@ const getMultiByUserId = async (
         title: {
           startsWith: queries.search || undefined,
         },
+        ...(queries.is_archived &&
+          (queries.is_archived === "0"
+            ? {
+                AND: [
+                  {
+                    is_archived: false,
+                  },
+                  {
+                    quater: {
+                      is_archived: false,
+                    },
+                  },
+                ],
+              }
+            : {
+                OR: [
+                  {
+                    is_archived: queries.is_archived === "1",
+                  },
+                  {
+                    quater: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                ],
+              })),
       },
       include: {
         quater: true,
@@ -118,6 +249,32 @@ const getMultiByUserId = async (
         title: {
           startsWith: queries.search || undefined,
         },
+        ...(queries.is_archived &&
+          (queries.is_archived === "0"
+            ? {
+                AND: [
+                  {
+                    is_archived: false,
+                  },
+                  {
+                    quater: {
+                      is_archived: false,
+                    },
+                  },
+                ],
+              }
+            : {
+                OR: [
+                  {
+                    is_archived: queries.is_archived === "1",
+                  },
+                  {
+                    quater: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                ],
+              })),
       },
     }),
   ]);
@@ -129,11 +286,16 @@ const getUsersLeaderborad = async (
   eDetailingId: string,
   queries: eDetailingQueryInputTypes
 ) => {
+  const currentDate = new Date();
+
   const [data, count] = await Promise.all([
     db.e_detailing_score.findMany({
       where: {
         e_detailing_video: {
           e_detailing_id: eDetailingId,
+          e_detailing: {
+            created_at: getYearRange(currentDate.getFullYear()),
+          },
         },
         ...(queries.search && {
           OR: [
@@ -212,6 +374,7 @@ const getUsersLeaderborad = async (
     db.e_detailing.count({
       where: {
         id: eDetailingId,
+        created_at: getYearRange(currentDate.getFullYear()),
       },
     }),
   ]);
