@@ -11,6 +11,7 @@ export const createEDetailingDTOSchema = z.object({
   score_content: z.coerce.number(),
   score_presentation: z.coerce.number(),
   score_closing: z.coerce.number(),
+  is_archived: z.boolean().optional(),
 });
 
 export const eDetailingQuerySchema = z.object({

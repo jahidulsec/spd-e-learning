@@ -3,6 +3,8 @@ import z from "zod";
 export const createCategoryDTOSchema = z.object({
   title: z.string().min(3),
   team_id: z.string(),
+  quater_id: z.string(),
+  is_archived: z.boolean().optional(),
 });
 
 export const categoryQuerySchema = z.object({
@@ -11,6 +13,7 @@ export const categoryQuerySchema = z.object({
   size: z.coerce.number().default(20),
   search: z.string().optional(),
   sort_type: z.enum(["created_at", "title"]).default("created_at"),
+  is_archived: z.enum(["0", "1"]).optional(),
 });
 
 export const updateCategoryDTOSchema = createCategoryDTOSchema

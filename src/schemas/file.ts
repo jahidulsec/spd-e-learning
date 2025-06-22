@@ -5,6 +5,7 @@ export const createFileDTOSchema = z.object({
   folder_id: z.string().min(3),
   file_type: z.string().min(3),
   filename: z.string().min(3),
+  is_archived: z.boolean().optional(),
 });
 
 export const fileQuerySchema = z.object({

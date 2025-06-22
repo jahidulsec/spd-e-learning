@@ -4,6 +4,7 @@ export const createQuaterDTOSchema = z.object({
   title: z.string().min(3),
   start_date: z.coerce.date(),
   end_date: z.coerce.date(),
+  is_archived: z.boolean().optional(),
 });
 
 export const quaterQuerySchema = z.object({

@@ -4,6 +4,7 @@ export const createFolderDTOSchema = z.object({
   title: z.string().min(3),
   category_id: z.string().min(3),
   parent_folder_id: z.string().min(3).optional(),
+  is_archived: z.boolean().optional(),
 });
 
 export const folderQuerySchema = z.object({

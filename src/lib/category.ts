@@ -13,7 +13,11 @@ const getMulti = async (queries: categoryQueryInputTypes) => {
         title: {
           startsWith: queries.search || undefined,
         },
+        ...(queries.is_archived && {
+          is_archived: queries.is_archived === "1",
+        }),
       },
+
       take: queries.size,
       skip: queries.size * (queries.page - 1),
       orderBy: {
@@ -25,6 +29,9 @@ const getMulti = async (queries: categoryQueryInputTypes) => {
         title: {
           startsWith: queries.search || undefined,
         },
+        ...(queries.is_archived && {
+          is_archived: queries.is_archived === "1",
+        }),
       },
     }),
   ]);
@@ -43,6 +50,9 @@ const getMultiByTeamId = async (
         title: {
           startsWith: queries.search || undefined,
         },
+        ...(queries.is_archived && {
+          is_archived: queries.is_archived === "1",
+        }),
       },
       take: queries.size,
       skip: queries.size * (queries.page - 1),
@@ -56,6 +66,9 @@ const getMultiByTeamId = async (
         title: {
           startsWith: queries.search || undefined,
         },
+        ...(queries.is_archived && {
+          is_archived: queries.is_archived === "1",
+        }),
       },
     }),
   ]);
@@ -80,6 +93,9 @@ const getMultiByUserId = async (
         title: {
           startsWith: queries.search || undefined,
         },
+        ...(queries.is_archived && {
+          is_archived: queries.is_archived === "1",
+        }),
       },
       take: queries.size,
       skip: queries.size * (queries.page - 1),
@@ -99,6 +115,9 @@ const getMultiByUserId = async (
         title: {
           startsWith: queries.search || undefined,
         },
+        ...(queries.is_archived && {
+          is_archived: queries.is_archived === "1",
+        }),
       },
     }),
   ]);

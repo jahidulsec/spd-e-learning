@@ -67,6 +67,7 @@ model quater {
   end_date    DateTime
   created_at  DateTime      @default(now())
   updated_at  DateTime      @updatedAt
+  is_archived Boolean?      @default(false)
   category    category[]
   e_detailing e_detailing[]
   quiz        quiz[]
