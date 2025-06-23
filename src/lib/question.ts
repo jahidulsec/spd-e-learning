@@ -33,6 +33,40 @@ const getMulti = async (queries: questionQueryInputTypes) => {
             },
           ],
         }),
+        ...(queries.is_archived &&
+          (queries.is_archived === "1"
+            ? {
+                OR: [
+                  {
+                    quiz: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                  {
+                    quiz: {
+                      quater: {
+                        is_archived: queries.is_archived === "1",
+                      },
+                    },
+                  },
+                ],
+              }
+            : {
+                AND: [
+                  {
+                    quiz: {
+                      is_archived: false,
+                    },
+                  },
+                  {
+                    quiz: {
+                      quater: {
+                        is_archived: false,
+                      },
+                    },
+                  },
+                ],
+              })),
       },
       include: {
         quiz_option: true,
@@ -68,6 +102,40 @@ const getMulti = async (queries: questionQueryInputTypes) => {
             },
           ],
         }),
+        ...(queries.is_archived &&
+          (queries.is_archived === "1"
+            ? {
+                OR: [
+                  {
+                    quiz: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                  {
+                    quiz: {
+                      quater: {
+                        is_archived: queries.is_archived === "1",
+                      },
+                    },
+                  },
+                ],
+              }
+            : {
+                AND: [
+                  {
+                    quiz: {
+                      is_archived: false,
+                    },
+                  },
+                  {
+                    quiz: {
+                      quater: {
+                        is_archived: false,
+                      },
+                    },
+                  },
+                ],
+              })),
       },
     }),
   ]);
@@ -108,6 +176,40 @@ const getMultiByTeamId = async (
             },
           ],
         }),
+        ...(queries.is_archived &&
+          (queries.is_archived === "1"
+            ? {
+                OR: [
+                  {
+                    quiz: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                  {
+                    quiz: {
+                      quater: {
+                        is_archived: queries.is_archived === "1",
+                      },
+                    },
+                  },
+                ],
+              }
+            : {
+                AND: [
+                  {
+                    quiz: {
+                      is_archived: false,
+                    },
+                  },
+                  {
+                    quiz: {
+                      quater: {
+                        is_archived: false,
+                      },
+                    },
+                  },
+                ],
+              })),
       },
       include: {
         quiz_option: true,
@@ -146,6 +248,74 @@ const getMultiByTeamId = async (
             },
           ],
         }),
+        ...(queries.is_archived &&
+          (queries.is_archived === "1"
+            ? {
+                OR: [
+                  {
+                    quiz: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                  {
+                    quiz: {
+                      quater: {
+                        is_archived: queries.is_archived === "1",
+                      },
+                    },
+                  },
+                ],
+              }
+            : {
+                AND: [
+                  {
+                    quiz: {
+                      is_archived: false,
+                    },
+                  },
+                  {
+                    quiz: {
+                      quater: {
+                        is_archived: false,
+                      },
+                    },
+                  },
+                ],
+              })),
+        ...(queries.is_archived &&
+          (queries.is_archived === "1"
+            ? {
+                OR: [
+                  {
+                    quiz: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                  {
+                    quiz: {
+                      quater: {
+                        is_archived: queries.is_archived === "1",
+                      },
+                    },
+                  },
+                ],
+              }
+            : {
+                AND: [
+                  {
+                    quiz: {
+                      is_archived: false,
+                    },
+                  },
+                  {
+                    quiz: {
+                      quater: {
+                        is_archived: false,
+                      },
+                    },
+                  },
+                ],
+              })),
       },
     }),
   ]);
@@ -192,6 +362,40 @@ const getMultiByUserId = async (
             },
           ],
         }),
+        ...(queries.is_archived &&
+          (queries.is_archived === "1"
+            ? {
+                OR: [
+                  {
+                    quiz: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                  {
+                    quiz: {
+                      quater: {
+                        is_archived: queries.is_archived === "1",
+                      },
+                    },
+                  },
+                ],
+              }
+            : {
+                AND: [
+                  {
+                    quiz: {
+                      is_archived: false,
+                    },
+                  },
+                  {
+                    quiz: {
+                      quater: {
+                        is_archived: false,
+                      },
+                    },
+                  },
+                ],
+              })),
       },
       include: {
         quiz_option: true,
@@ -236,6 +440,40 @@ const getMultiByUserId = async (
             },
           ],
         }),
+        ...(queries.is_archived &&
+          (queries.is_archived === "1"
+            ? {
+                OR: [
+                  {
+                    quiz: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                  {
+                    quiz: {
+                      quater: {
+                        is_archived: queries.is_archived === "1",
+                      },
+                    },
+                  },
+                ],
+              }
+            : {
+                AND: [
+                  {
+                    quiz: {
+                      is_archived: false,
+                    },
+                  },
+                  {
+                    quiz: {
+                      quater: {
+                        is_archived: false,
+                      },
+                    },
+                  },
+                ],
+              })),
       },
     }),
   ]);

@@ -19,6 +19,40 @@ const getMulti = async (queries: eVdieoQueryInputTypes) => {
         e_detailing: {
           quater_id: queries.quater_id,
         },
+        ...(queries.is_archived &&
+          (queries.is_archived === "1"
+            ? {
+                OR: [
+                  {
+                    e_detailing: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                  {
+                    e_detailing: {
+                      quater: {
+                        is_archived: queries.is_archived === "1",
+                      },
+                    },
+                  },
+                ],
+              }
+            : {
+                AND: [
+                  {
+                    e_detailing: {
+                      is_archived: false,
+                    },
+                  },
+                  {
+                    e_detailing: {
+                      quater: {
+                        is_archived: false,
+                      },
+                    },
+                  },
+                ],
+              })),
       },
       take: queries.size,
       skip: queries.size * (queries.page - 1),
@@ -37,6 +71,40 @@ const getMulti = async (queries: eVdieoQueryInputTypes) => {
         e_detailing: {
           quater_id: queries.quater_id,
         },
+        ...(queries.is_archived &&
+          (queries.is_archived === "1"
+            ? {
+                OR: [
+                  {
+                    e_detailing: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                  {
+                    e_detailing: {
+                      quater: {
+                        is_archived: queries.is_archived === "1",
+                      },
+                    },
+                  },
+                ],
+              }
+            : {
+                AND: [
+                  {
+                    e_detailing: {
+                      is_archived: false,
+                    },
+                  },
+                  {
+                    e_detailing: {
+                      quater: {
+                        is_archived: false,
+                      },
+                    },
+                  },
+                ],
+              })),
       },
     }),
   ]);
@@ -57,6 +125,40 @@ const getMultiByTeamId = async (
         title: {
           startsWith: queries.search || undefined,
         },
+        ...(queries.is_archived &&
+          (queries.is_archived === "1"
+            ? {
+                OR: [
+                  {
+                    e_detailing: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                  {
+                    e_detailing: {
+                      quater: {
+                        is_archived: queries.is_archived === "1",
+                      },
+                    },
+                  },
+                ],
+              }
+            : {
+                AND: [
+                  {
+                    e_detailing: {
+                      is_archived: false,
+                    },
+                  },
+                  {
+                    e_detailing: {
+                      quater: {
+                        is_archived: false,
+                      },
+                    },
+                  },
+                ],
+              })),
       },
       take: queries.size,
       skip: queries.size * (queries.page - 1),
@@ -72,6 +174,40 @@ const getMultiByTeamId = async (
         title: {
           startsWith: queries.search || undefined,
         },
+        ...(queries.is_archived &&
+          (queries.is_archived === "1"
+            ? {
+                OR: [
+                  {
+                    e_detailing: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                  {
+                    e_detailing: {
+                      quater: {
+                        is_archived: queries.is_archived === "1",
+                      },
+                    },
+                  },
+                ],
+              }
+            : {
+                AND: [
+                  {
+                    e_detailing: {
+                      is_archived: false,
+                    },
+                  },
+                  {
+                    e_detailing: {
+                      quater: {
+                        is_archived: false,
+                      },
+                    },
+                  },
+                ],
+              })),
       },
     }),
   ]);
@@ -92,6 +228,40 @@ const getMultiByUserId = async (
         title: {
           startsWith: queries.search || undefined,
         },
+        ...(queries.is_archived &&
+          (queries.is_archived === "1"
+            ? {
+                OR: [
+                  {
+                    e_detailing: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                  {
+                    e_detailing: {
+                      quater: {
+                        is_archived: queries.is_archived === "1",
+                      },
+                    },
+                  },
+                ],
+              }
+            : {
+                AND: [
+                  {
+                    e_detailing: {
+                      is_archived: false,
+                    },
+                  },
+                  {
+                    e_detailing: {
+                      quater: {
+                        is_archived: false,
+                      },
+                    },
+                  },
+                ],
+              })),
       },
       take: queries.size,
       skip: queries.size * (queries.page - 1),
@@ -107,14 +277,46 @@ const getMultiByUserId = async (
         title: {
           startsWith: queries.search || undefined,
         },
+        ...(queries.is_archived &&
+          (queries.is_archived === "1"
+            ? {
+                OR: [
+                  {
+                    e_detailing: {
+                      is_archived: queries.is_archived === "1",
+                    },
+                  },
+                  {
+                    e_detailing: {
+                      quater: {
+                        is_archived: queries.is_archived === "1",
+                      },
+                    },
+                  },
+                ],
+              }
+            : {
+                AND: [
+                  {
+                    e_detailing: {
+                      is_archived: false,
+                    },
+                  },
+                  {
+                    e_detailing: {
+                      quater: {
+                        is_archived: false,
+                      },
+                    },
+                  },
+                ],
+              })),
       },
     }),
   ]);
 
   return { data, count };
 };
-
-
 
 const getSingle = async (idObj: requiredIdTypes) => {
   const { id } = idObj;
