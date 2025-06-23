@@ -237,6 +237,13 @@ const getSingleMioAllByUserId = async (
           created_at: getYearRange(year),
         },
       },
+      include: {
+        e_detailing_video: {
+          select: {
+            title: true,
+          },
+        },
+      },
     }),
   ]);
 
