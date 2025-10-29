@@ -6,6 +6,51 @@ import {
 } from "../schemas/folder";
 import { requiredIdTypes } from "../schemas/required-id";
 
+const handleArchived = (queries: folderQueryInputTypes) => {
+  return (
+    queries.is_archived &&
+    (queries.is_archived === "1"
+      ? {
+          OR: [
+            {
+              is_archived: queries.is_archived === "1",
+            },
+            {
+              category: {
+                is_archived: queries.is_archived === "1",
+              },
+            },
+            {
+              category: {
+                quater: {
+                  is_archived: queries.is_archived === "1",
+                },
+              },
+            },
+          ],
+        }
+      : {
+          AND: [
+            {
+              is_archived: false,
+            },
+            {
+              category: {
+                is_archived: false,
+              },
+            },
+            {
+              category: {
+                quater: {
+                  is_archived: false,
+                },
+              },
+            },
+          ],
+        })
+  );
+};
+
 const getMulti = async (queries: folderQueryInputTypes) => {
   const [data, count] = await Promise.all([
     db.folder.findMany({
@@ -14,46 +59,7 @@ const getMulti = async (queries: folderQueryInputTypes) => {
           startsWith: queries.search || undefined,
         },
         parent_folder_id: null,
-        ...(queries.is_archived &&
-          (queries.is_archived === "1"
-            ? {
-                OR: [
-                  {
-                    is_archived: queries.is_archived === "1",
-                  },
-                  {
-                    category: {
-                      is_archived: queries.is_archived === "1",
-                    },
-                  },
-                  {
-                    category: {
-                      quater: {
-                        is_archived: queries.is_archived === "1",
-                      },
-                    },
-                  },
-                ],
-              }
-            : {
-                AND: [
-                  {
-                    is_archived: false,
-                  },
-                  {
-                    category: {
-                      is_archived: false,
-                    },
-                  },
-                  {
-                    category: {
-                      quater: {
-                        is_archived: false,
-                      },
-                    },
-                  },
-                ],
-              })),
+        ...handleArchived(queries),
       },
       include: {
         category: {
@@ -74,46 +80,7 @@ const getMulti = async (queries: folderQueryInputTypes) => {
           startsWith: queries.search || undefined,
         },
         parent_folder_id: null,
-        ...(queries.is_archived &&
-          (queries.is_archived === "1"
-            ? {
-                OR: [
-                  {
-                    is_archived: queries.is_archived === "1",
-                  },
-                  {
-                    category: {
-                      is_archived: queries.is_archived === "1",
-                    },
-                  },
-                  {
-                    category: {
-                      quater: {
-                        is_archived: queries.is_archived === "1",
-                      },
-                    },
-                  },
-                ],
-              }
-            : {
-                AND: [
-                  {
-                    is_archived: false,
-                  },
-                  {
-                    category: {
-                      is_archived: false,
-                    },
-                  },
-                  {
-                    category: {
-                      quater: {
-                        is_archived: false,
-                      },
-                    },
-                  },
-                ],
-              })),
+        ...handleArchived(queries),
       },
     }),
   ]);
@@ -125,6 +92,8 @@ const getMultiByTeamId = async (
   teamId: string,
   queries: folderQueryInputTypes
 ) => {
+  console.log(queries.is_archived);
+
   const [data, count] = await Promise.all([
     db.folder.findMany({
       where: {
@@ -135,46 +104,7 @@ const getMultiByTeamId = async (
         title: {
           startsWith: queries.search || undefined,
         },
-        ...(queries.is_archived &&
-          (queries.is_archived === "1"
-            ? {
-                OR: [
-                  {
-                    is_archived: queries.is_archived === "1",
-                  },
-                  {
-                    category: {
-                      is_archived: queries.is_archived === "1",
-                    },
-                  },
-                  {
-                    category: {
-                      quater: {
-                        is_archived: queries.is_archived === "1",
-                      },
-                    },
-                  },
-                ],
-              }
-            : {
-                AND: [
-                  {
-                    is_archived: false,
-                  },
-                  {
-                    category: {
-                      is_archived: false,
-                    },
-                  },
-                  {
-                    category: {
-                      quater: {
-                        is_archived: false,
-                      },
-                    },
-                  },
-                ],
-              })),
+        ...handleArchived(queries),
       },
       take: queries.size,
       skip: queries.size * (queries.page - 1),
@@ -191,46 +121,7 @@ const getMultiByTeamId = async (
         title: {
           startsWith: queries.search || undefined,
         },
-        ...(queries.is_archived &&
-          (queries.is_archived === "1"
-            ? {
-                OR: [
-                  {
-                    is_archived: queries.is_archived === "1",
-                  },
-                  {
-                    category: {
-                      is_archived: queries.is_archived === "1",
-                    },
-                  },
-                  {
-                    category: {
-                      quater: {
-                        is_archived: queries.is_archived === "1",
-                      },
-                    },
-                  },
-                ],
-              }
-            : {
-                AND: [
-                  {
-                    is_archived: false,
-                  },
-                  {
-                    category: {
-                      is_archived: false,
-                    },
-                  },
-                  {
-                    category: {
-                      quater: {
-                        is_archived: false,
-                      },
-                    },
-                  },
-                ],
-              })),
+        ...handleArchived(queries),
       },
     }),
   ]);
@@ -254,46 +145,7 @@ const getMultiByUserId = async (
             },
           },
         },
-        ...(queries.is_archived &&
-          (queries.is_archived === "1"
-            ? {
-                OR: [
-                  {
-                    is_archived: queries.is_archived === "1",
-                  },
-                  {
-                    category: {
-                      is_archived: queries.is_archived === "1",
-                    },
-                  },
-                  {
-                    category: {
-                      quater: {
-                        is_archived: queries.is_archived === "1",
-                      },
-                    },
-                  },
-                ],
-              }
-            : {
-                AND: [
-                  {
-                    is_archived: false,
-                  },
-                  {
-                    category: {
-                      is_archived: false,
-                    },
-                  },
-                  {
-                    category: {
-                      quater: {
-                        is_archived: false,
-                      },
-                    },
-                  },
-                ],
-              })),
+        ...handleArchived(queries),
         parent_folder_id: null,
         category_id: queries.category_id,
         title: {
@@ -317,46 +169,7 @@ const getMultiByUserId = async (
             },
           },
         },
-        ...(queries.is_archived &&
-          (queries.is_archived === "1"
-            ? {
-                OR: [
-                  {
-                    is_archived: queries.is_archived === "1",
-                  },
-                  {
-                    category: {
-                      is_archived: queries.is_archived === "1",
-                    },
-                  },
-                  {
-                    category: {
-                      quater: {
-                        is_archived: queries.is_archived === "1",
-                      },
-                    },
-                  },
-                ],
-              }
-            : {
-                AND: [
-                  {
-                    is_archived: false,
-                  },
-                  {
-                    category: {
-                      is_archived: false,
-                    },
-                  },
-                  {
-                    category: {
-                      quater: {
-                        is_archived: false,
-                      },
-                    },
-                  },
-                ],
-              })),
+        ...handleArchived(queries),
         parent_folder_id: null,
         title: {
           startsWith: queries.search || undefined,
