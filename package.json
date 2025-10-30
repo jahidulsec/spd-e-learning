@@ -6,7 +6,7 @@
     "test": "jest",
     "build": "rimraf dist && tsc --build",
     "start": "node ./dist/index.js",
-    "dev": "nodemon ./src/index.ts",
+    "dev": "npx tsx --watch ./src/index.ts",
     "createadmin": "ts-node ./src/prompt.ts"
   },
   "repository": {
@@ -33,7 +33,6 @@
     "jest-config": "^29.7.0",
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
-    "nodemon": "^3.1.9",
     "passport": "^0.7.0",
     "rimraf": "^5.0.10",
     "supertest": "^7.0.0",
