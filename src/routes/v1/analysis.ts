@@ -12,7 +12,7 @@ router.get(
 );
 router.get(
   `/performance/mios`,
-  verifyRoles("director", "superadmin", "team_lead"),
+  verifyRoles("director", "superadmin", "team_lead", "mios"),
   controller.getMioPerformance
 );
 
