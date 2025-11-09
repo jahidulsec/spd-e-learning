@@ -22,4 +22,7 @@ router.get(
   controller.getSingleMioAllResult
 );
 
+// leaderboard
+router.get('/leaderboard', controller.getLeaderboard)
+
 export { router as analysisRoutes };
