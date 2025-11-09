@@ -1,13 +1,9 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
 import path from "path";
-import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
 import { errorHandler } from "./middlewares/error-handler";
 import router from "./routes";
 
-// config();
-dotenv.config();
 
 export const app = express();
 
@@ -23,6 +19,14 @@ app.use("/uploads/files", express.static(publicFolderUploads));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 // app.use(cookieParser());
+
+app.get("/health", (req: Request, res: Response) => {
+  return res.status(200).json({
+    status: "ok",
+    uptime: process.uptime(),
+    timestamp: Date.now(),
+  });
+});
 
 // api endpoints
 app.get("/", (req, res) => {
