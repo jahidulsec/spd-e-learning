@@ -18,7 +18,13 @@ const getMulti = async (queries: LeaderboardQueryInputTypes) => {
           SELECT SUM(r.score)
           FROM result r
           INNER JOIN team_members t ON t.id = r.team_member_id
+          ${queries.quater_id ? `
+            INNER JOIN question q ON q.id = r.question_id
+            INNER JOIN quiz qu ON qu.id = q.quiz_id
+            INNER JOIN quater qr ON qr.id = qu.quater_id
+          ` : ""}
           WHERE t.user_id = d.sap_id
+          ${queries.quater_id ? "AND qr.id = ?" : ""}
         ), 0) AS total_quiz_mark,
         IFNULL((
           SELECT SUM(
@@ -27,7 +33,12 @@ const getMulti = async (queries: LeaderboardQueryInputTypes) => {
           FROM e_detailing_score es
           INNER JOIN e_detailing_video e ON e.id = es.video_id
           INNER JOIN team_members t ON t.id = e.team_member_id
+          ${queries.quater_id ? `
+            INNER JOIN e_detailing ed ON ed.id = e.e_detailing_id
+            INNER JOIN quater qr ON qr.id = ed.quater_id
+          ` : ""}
           WHERE t.user_id = d.sap_id
+          ${queries.quater_id ? "AND qr.id = ?" : ""}
         ), 0) AS total_e_learning_mark
       FROM users d
       ${queries.team_id ? "INNER JOIN team_members tm ON tm.user_id = d.sap_id WHERE tm.team_id = ?" : ""}
@@ -36,34 +47,40 @@ const getMulti = async (queries: LeaderboardQueryInputTypes) => {
       SELECT 
         *,
         RANK() OVER (
-          ORDER BY total_quiz_mark DESC, total_e_learning_mark DESC
+          ORDER BY (total_quiz_mark + total_e_learning_mark) DESC
         ) AS rank
       FROM scored_users
     )
     SELECT *, COUNT(*) OVER() AS total_count
     FROM ranked_users
-`;
+    `;
 
   const params: any[] = [];
 
-  // ✅ Push team_id once only (outer filter)
+  // Push quarter_id twice (for both subqueries)
+  if (queries.quater_id) {
+    params.push(queries.quater_id, queries.quater_id);
+  }
+
+  // Push team_id
   if (queries.team_id) {
     params.push(queries.team_id);
   }
 
-  // ✅ Search condition
+  // Search condition (note leading space)
   if (queries.search && queries.search.trim() !== "") {
     baseQuery += ` WHERE mobile LIKE ? OR full_name LIKE ? OR sap_id LIKE ?`;
     const searchTerm = `%${queries.search}%`;
     params.push(searchTerm, searchTerm, searchTerm);
   }
 
-  // ✅ Pagination
-  baseQuery += ` LIMIT ?, ?`;
+  // Pagination (with proper spacing)
+  baseQuery += ` ORDER BY rank ASC LIMIT ?, ?`;
   params.push(offset, size);
 
-  // ✅ Execute safely
+  // Execute
   const res = await db.$queryRawUnsafe(baseQuery, ...params);
+
 
 
   return {
