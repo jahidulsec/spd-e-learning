@@ -28,7 +28,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
         ...paginate(
           validatedData.page,
           validatedData.size,
-          Number(data.data?.[0].total ?? 0)
+          Number(data.data?.[0].total_count ?? 0)
         ),
       },
     };
