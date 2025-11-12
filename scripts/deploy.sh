@@ -2,7 +2,7 @@
 set -e
 
 # Default process type
-app_name="spd-elearning--frontend"
+app_name="spd-elearning--backend"
 
 echo "Start deployment..."
 
