@@ -8,16 +8,17 @@ datasource db {
 }
 
 model users {
-  sap_id       String         @id @unique @db.VarChar(10)
-  password     String?        @db.VarChar(255)
-  full_name    String         @db.VarChar(100)
-  mobile       String         @unique @db.VarChar(20)
-  role         role           @default(mios)
-  status       status?        @default(active)
-  created_at   DateTime       @default(now())
-  updated_at   DateTime       @updatedAt
-  otp          otp[]
-  team_members team_members[]
+  sap_id            String              @id @unique @db.VarChar(10)
+  password          String?             @db.VarChar(255)
+  full_name         String              @db.VarChar(100)
+  mobile            String              @unique @db.VarChar(20)
+  role              role                @default(mios)
+  status            status?             @default(active)
+  created_at        DateTime            @default(now())
+  updated_at        DateTime            @updatedAt
+  notification_user notification_user[]
+  otp               otp[]
+  team_members      team_members[]
 }
 
 model otp {
@@ -39,6 +40,7 @@ model teams {
   updated_at   DateTime       @updatedAt
   category     category[]
   e_detailing  e_detailing[]
+  notification notification[]
   quiz         quiz[]
   team_members team_members[]
 }
@@ -249,6 +251,32 @@ model e_detailing_score {
   e_detailing_video  e_detailing_video @relation(fields: [video_id], references: [id], onDelete: Cascade)
 
   @@index([scored_by], map: "e_detailing_score_scored_by_fkey")
+}
+
+model notification {
+  id                String              @id @default(nanoid()) @db.VarChar(21)
+  title             String              @db.VarChar(100)
+  type              String              @db.VarChar(25)
+  team_id           String              @db.VarChar(26)
+  created_at        DateTime?           @default(now()) @db.Timestamp(0)
+  updated_at        DateTime?           @updatedAt
+  teams             teams               @relation(fields: [team_id], references: [id], onDelete: Cascade, map: "notification_ibfk_1")
+  notification_user notification_user[]
+
+  @@index([team_id], map: "team_id")
+}
+
+model notification_user {
+  id              String       @id @default(nanoid()) @db.VarChar(21)
+  user_id         String       @db.VarChar(10)
+  notification_id String       @db.VarChar(21)
+  created_at      DateTime?    @default(now()) @db.Timestamp(0)
+  updated_at      DateTime?    @updatedAt
+  users           users        @relation(fields: [user_id], references: [sap_id], onDelete: Cascade, onUpdate: Restrict, map: "notification_user_ibfk_1")
+  notification    notification @relation(fields: [notification_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "notification_user_ibfk_2")
+
+  @@index([notification_id], map: "notification_id")
+  @@index([user_id], map: "user_id")
 }
 
 enum role {

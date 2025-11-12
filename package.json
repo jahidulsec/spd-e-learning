@@ -8,7 +8,9 @@
     "start": "node --env-file=.env ./dist/index.js",
     "dev": "npx tsx --watch --env-file=.env ./src/index.ts",
     "createadmin": "ts-node ./src/prompt.ts",
-    "deploy": "sh scripts/deploy.sh"
+    "deploy": "sh scripts/deploy.sh",
+    "db:pull": "npx prisma db pull",
+    "db:generate": "npx prisma generate"
   },
   "repository": {
     "type": "git",
