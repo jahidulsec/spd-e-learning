@@ -1,9 +1,8 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
 import userService from "../../../../../lib/user";
-import cmsService from "../../../../../lib/category";
+import cmsService from "../../../../../lib/notification";
 import { forbiddenError, notFoundError } from "../../../../../utils/errors";
-import { hasPermission, User } from "../../../../../policy/policy";
 
 const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -22,13 +21,11 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     const data = await cmsService.getSingle(validatedData);
 
     if (!data) {
-      notFoundError("Category not found!");
+      notFoundError("Notificaiton not found!");
     }
 
     // check permission
-    const isPermitted = hasPermission(user as User, 'categories', 'view', data as any);
-
-    if (!isPermitted) {
+    if (user?.team_members.filter(item => item.team_id === data?.team_id).length === 0) {
       forbiddenError(
         `You are unauthorized for this action`
       );
@@ -36,7 +33,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
 
     const responseData = {
       success: true,
-      message: "Get category details successfully!",
+      message: "Get Notificaiton details successfully!",
       data: data,
     };
 
@@ -50,4 +47,4 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { get as getCategory };
+export { get as getNotificaiton };

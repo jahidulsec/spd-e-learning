@@ -24,7 +24,13 @@ const getMulti = async (queries: NotificationQueryInputTypes) => {
   const [data, count] = await Promise.all([
     db.notification.findMany({
       where: filter,
-
+      include: {
+        notification_user: {
+          where: {
+            user_id: user_id
+          }
+        }
+      },
       take: queries.size,
       skip: queries.size * (queries.page - 1),
       orderBy: {
@@ -45,7 +51,7 @@ const getSingle = async (idObj: requiredIdTypes) => {
   const { id } = idObj;
 
   //extract id from validated id by zod
-  const data = await db.category.findUnique({
+  const data = await db.notification.findUnique({
     where: { id },
   });
 

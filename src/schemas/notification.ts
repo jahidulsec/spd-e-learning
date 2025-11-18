@@ -2,7 +2,7 @@ import z from "zod";
 
 export const createNotificationDTOSchema = z.object({
   title: z.string().min(3),
-  team_id: z.string().optional(),
+  team_id: z.string().min(1),
   type: z.enum(['file', 'quiz', 'e-learning']),
 });
 

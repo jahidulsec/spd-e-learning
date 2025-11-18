@@ -257,9 +257,9 @@ model notification {
   id                String              @id @default(nanoid()) @db.VarChar(21)
   title             String              @db.VarChar(100)
   type              String              @db.VarChar(25)
-  team_id           String              @db.VarChar(26)
+  team_id           String              @db.VarChar(50)
   created_at        DateTime?           @default(now()) @db.Timestamp(0)
-  updated_at        DateTime?           @updatedAt
+  updated_at        DateTime?           @default(dbgenerated("(curtime())")) @updatedAt @db.Timestamp(0)
   teams             teams               @relation(fields: [team_id], references: [id], onDelete: Cascade, map: "notification_ibfk_1")
   notification_user notification_user[]
 
@@ -271,12 +271,12 @@ model notification_user {
   user_id         String       @db.VarChar(10)
   notification_id String       @db.VarChar(21)
   created_at      DateTime?    @default(now()) @db.Timestamp(0)
-  updated_at      DateTime?    @updatedAt
+  updated_at      DateTime?    @default(dbgenerated("(curtime())")) @updatedAt @db.Timestamp(0)
   users           users        @relation(fields: [user_id], references: [sap_id], onDelete: Cascade, onUpdate: Restrict, map: "notification_user_ibfk_1")
   notification    notification @relation(fields: [notification_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "notification_user_ibfk_2")
 
+  @@unique([user_id, notification_id], map: "user_id")
   @@index([notification_id], map: "notification_id")
-  @@index([user_id], map: "user_id")
 }
 
 enum role {

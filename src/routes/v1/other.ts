@@ -23,4 +23,16 @@ router.get(
   controller.getQuatersTeams
 );
 
+
+// notifications
+router
+  .route("/notification")
+  .get(controller.getNotifications)
+  .post(verifyRoles('team_lead'), controller.createNotification);
+
+router
+  .route("/notification/:id")
+  .get(controller.getNotificaiton)
+  .delete(controller.delNotification);
+
 export { router as otherRouter };

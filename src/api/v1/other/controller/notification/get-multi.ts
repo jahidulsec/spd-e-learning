@@ -1,49 +1,33 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
-import { categoryQuerySchema } from "../../../../../schemas/category";
-import cmsService from "../../../../../lib/category";
+import { NotificationQuerySchema } from "../../../../../schemas/notification";
+import cmsService from "../../../../../lib/notification";
 import { paginate } from "../../../../../utils/pagination";
-import { $Enums } from "@prisma/client";
 
 const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // get auth user
     const authUser = req.user;
+
+    console.log(authUser)
+
     // validate incoming body data with defined schema
-    const validatedData = categoryQuerySchema.parse(req.query);
+    const validatedData = NotificationQuerySchema.parse(req.query);
 
-    let responseData: any;
+    validatedData.user_id = authUser?.id ?? ''
 
-    if (
-      (["superadmin", "director"] as $Enums.role[]).includes(
-        authUser?.role as $Enums.role
-      )
-    ) {
-      //get all items with validated queries
-      const { data, count } = await cmsService.getMulti(validatedData);
 
-      responseData = {
-        success: true,
-        message: "All categories get successfully!",
-        data: data,
-        pagination: {
-          ...paginate(validatedData.page, validatedData.size, count),
-        },
-      };
-    } else {
-      const { data, count } = await cmsService.getMultiByUserId(
-        authUser?.id as string,
-        validatedData
-      );
-      
-      responseData = {
-        success: true,
-        message: "All categories get successfully!",
-        data: data,
-        pagination: {
-          ...paginate(validatedData.page, validatedData.size, count),
-        },
-      };
-    }
+    //get all items with validated queries
+    const { data, count } = await cmsService.getMulti(validatedData);
+
+    const responseData = {
+      success: true,
+      message: "All notifications get successfully!",
+      data: data,
+      pagination: {
+        ...paginate(validatedData.page, validatedData.size, count),
+      },
+    };
+
 
     //send success response
     res.status(200).json(responseData);
@@ -55,4 +39,4 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { get as getCategories };
+export { get as getNotifications };

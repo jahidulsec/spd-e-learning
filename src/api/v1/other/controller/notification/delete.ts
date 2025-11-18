@@ -1,13 +1,12 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import { requiredIdSchema } from "../../../../../schemas/required-id";
-import cmsService from "../../../../../lib/category";
+import cmsService from "../../../../../lib/notification";
 import userService from "../../../../../lib/user";
 import {
   forbiddenError,
   notFoundError,
   serverError,
 } from "../../../../../utils/errors";
-import { hasPermission, User } from "../../../../../policy/policy";
 
 const del = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -29,27 +28,21 @@ const del = async (req: Request, res: Response, next: NextFunction) => {
       notFoundError("Category not found!");
     }
 
-    // check permission
-    const isPermitted = hasPermission(
-      user as User,
-      "categories",
-      "delete",
-      data as any
-    );
 
-    if (!isPermitted) {
-      forbiddenError(`You are unauthorized for this action`);
+    // team lead can delete
+    if (user?.team_members.filter(item => item.team_id === data?.team_id).length === 0) {
+      forbiddenError("You are not permitted for this team action")
     }
 
     const deleted: any = await cmsService.deleteOne(validatedData);
 
     if (deleted == 0) {
-      serverError("Category is not deleted");
+      serverError("Notification is not deleted");
     }
 
     const responseData = {
       success: true,
-      message: "Category is deleted successfully!",
+      message: "Notification is deleted successfully!",
       data: data,
     };
 
@@ -63,4 +56,4 @@ const del = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { del as delCategory };
+export { del as delNotification };
