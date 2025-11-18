@@ -30,7 +30,7 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
     const responseData = {
       success: true,
-      message: "New notification created successfully!",
+      message: "New notification user created successfully!",
       data: created,
     };
 
@@ -44,4 +44,4 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { create as createNotification };
+export { create as createNotificationUser };
