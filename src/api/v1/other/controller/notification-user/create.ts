@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
-import { createNotificationDTOSchema } from "../../../../../schemas/notification";
-import userService from "../../../../../lib/user";
-import cmsService from "../../../../../lib/notification";
+import { createNotificationUserDTOSchema } from "../../../../../schemas/notification-user";
+import notificationUserService from "../../../../../lib/notification-user";
 import { forbiddenError } from "../../../../../utils/errors";
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
@@ -9,24 +8,17 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     // get auth user
     const authUser = req.user;
 
-    // get user info
-    const user = await userService.getSingleWithTeamInfo(
-      authUser?.id as string
-    );
-
     const formData = req.body;
 
     //Validate incoming body data with defined schema
-    const validatedData = createNotificationDTOSchema.parse(formData);
+    const validatedData = createNotificationUserDTOSchema.parse(formData);
 
-    // only team lead can create notification
-    if (user?.team_members.filter(item => item.team_id === validatedData.team_id).length === 0) {
-      forbiddenError("You are not permitted for this team action")
+    if (validatedData.user_id !== authUser?.id) {
+      forbiddenError("You are not permitted")
     }
 
-
     //create new with validated data
-    const created = await cmsService.createNew(validatedData);
+    const created = await notificationUserService.createNew(validatedData);
 
     const responseData = {
       success: true,

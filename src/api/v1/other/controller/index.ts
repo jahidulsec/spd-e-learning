@@ -8,6 +8,8 @@ import { getNotificaiton } from "./notification/get-single";
 import { getNotifications } from "./notification/get-multi";
 import { createNotification } from "./notification/create";
 import { delNotification } from "./notification/delete";
+import { createNotificationUser } from "./notification-user/create";
+import { delNotificationUser } from "./notification-user/delete";
 
 export = {
   createQuater,
@@ -16,5 +18,10 @@ export = {
   delQuater,
   updateQuater,
   getQuatersTeams,
-  getNotificaiton, getNotifications, createNotification, delNotification
+  getNotificaiton,
+  getNotifications,
+  createNotification,
+  delNotification,
+  createNotificationUser,
+  delNotificationUser
 };

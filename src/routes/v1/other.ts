@@ -35,4 +35,8 @@ router
   .get(controller.getNotificaiton)
   .delete(controller.delNotification);
 
+// notification user
+router.post('/notification-user', verifyRoles('mios', 'team_lead'), controller.createNotificationUser)
+router.delete('/notification-user/:id', verifyRoles('mios', 'team_lead'), controller.delNotificationUser)
+
 export { router as otherRouter };
