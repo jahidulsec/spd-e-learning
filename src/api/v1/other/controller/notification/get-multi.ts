@@ -22,7 +22,13 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     const responseData = {
       success: true,
       message: "All notifications get successfully!",
-      data: data,
+      data: data.map(item => {
+        const { notification_user, ...rest } = item
+
+        return {
+          ...rest, marked: notification_user.length > 0
+        }
+      }),
       pagination: {
         ...paginate(validatedData.page, validatedData.size, count),
       },
