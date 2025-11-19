@@ -4,6 +4,7 @@ export const createNotificationDTOSchema = z.object({
   title: z.string().min(3),
   team_id: z.string().min(1),
   type: z.enum(['file', 'quiz', 'e-learning']),
+  reference_id: z.string().optional()
 });
 
 export const NotificationQuerySchema = z.object({

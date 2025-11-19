@@ -260,6 +260,7 @@ model notification {
   team_id           String              @db.VarChar(50)
   created_at        DateTime?           @default(now()) @db.Timestamp(0)
   updated_at        DateTime?           @default(dbgenerated("(curtime())")) @updatedAt @db.Timestamp(0)
+  reference_id      String?             @db.VarChar(50)
   teams             teams               @relation(fields: [team_id], references: [id], onDelete: Cascade, map: "notification_ibfk_1")
   notification_user notification_user[]
 

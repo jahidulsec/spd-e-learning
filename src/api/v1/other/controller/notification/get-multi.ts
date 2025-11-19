@@ -26,7 +26,9 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
         const { notification_user, ...rest } = item
 
         return {
-          ...rest, marked: notification_user.length > 0
+          ...rest, 
+          marked: notification_user.length > 0, 
+          notification_user: notification_user
         }
       }),
       pagination: {
