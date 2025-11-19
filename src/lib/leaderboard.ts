@@ -60,14 +60,27 @@ const getMulti = async (queries: LeaderboardQueryInputTypes) => {
         ` : ""}
         WHERE t.user_id = d.sap_id
         ${quaterCondition}
-      ), 0) AS total_e_learning_mark
+      ), 0) AS total_e_learning_mark,
+      (
+        SELECT SUM(qm.duration_s)
+        FROM quiz_member qm
+            INNER JOIN team_members tms ON tms.id = qm.team_member_id
+        WHERE tms.user_id = d.sap_id
+      ) AS duration_s
     FROM users d
     ${queries.team_id ? "INNER JOIN team_members tm ON tm.user_id = d.sap_id WHERE tm.team_id = ?" : ""}
   ),
   ranked_users AS (
     SELECT 
       *,
-      RANK() OVER (ORDER BY (total_quiz_mark + total_e_learning_mark) DESC) AS rank
+        RANK() OVER (
+            ORDER BY CASE
+                    WHEN duration_s IS NULL THEN 1
+                    ELSE 0
+                END ASC,
+                (total_quiz_mark + total_e_learning_mark) DESC,
+                duration_s ASC
+        ) AS rank
     FROM scored_users
   )
   SELECT *, COUNT(*) OVER() AS total_count

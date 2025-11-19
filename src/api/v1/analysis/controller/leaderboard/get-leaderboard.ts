@@ -23,7 +23,11 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
       message: "Leaderboard get successfully!",
 
 
-      data: serialized,
+      data: serialized.map(item => {
+        const { total_count, ...rest } = item
+        return rest
+      }
+      ),
       pagination: {
         ...paginate(
           validatedData.page,
