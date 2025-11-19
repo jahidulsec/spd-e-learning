@@ -206,6 +206,7 @@ const getSingleMioAllByUserId = async (
         tm.team_id team_id,
         q.id quiz_id,
         q.title quiz_title,
+        q.quater_id,
         q.description quiz_description,
         sum(r.score) quiz_score,
         count(qu.id) total_question
@@ -250,6 +251,8 @@ const getSingleMioAllByUserId = async (
             e_detailing: {
               select: {
                 description: true,
+                quater_id: true,
+                title: true
               },
             },
           },
