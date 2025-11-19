@@ -74,11 +74,12 @@ const getMulti = async (queries: LeaderboardQueryInputTypes) => {
     SELECT 
       *,
         RANK() OVER (
-            ORDER BY CASE
+            ORDER BY 
+                (total_quiz_mark + total_e_learning_mark) DESC,
+                CASE
                     WHEN duration_s IS NULL THEN 1
                     ELSE 0
                 END ASC,
-                (total_quiz_mark + total_e_learning_mark) DESC,
                 duration_s ASC
         ) AS rank
     FROM scored_users
