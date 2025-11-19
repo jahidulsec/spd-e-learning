@@ -2,7 +2,8 @@ import z from "zod";
 
 export const createQuizMemberDTOSchema = z.object({
   quiz_id: z.string().min(1),
-  team_member_id: z.string().min(1),
+  team_member_id: z.string().optional(),
+  team_id: z.string().min(1),
   end_at: z.coerce.date().optional(),
   duration_s: z.coerce.number().optional()
 });
