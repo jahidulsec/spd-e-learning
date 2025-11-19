@@ -149,6 +149,8 @@ model quiz_member {
   team_member_id String       @db.VarChar(100)
   created_at     DateTime     @default(now())
   updated_at     DateTime     @updatedAt
+  end_at         DateTime?    @db.Timestamp(0)
+  duration_s     Float?       @db.Float
   quiz           quiz         @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
   team_member    team_members @relation(fields: [team_member_id], references: [id], onDelete: Cascade)
 

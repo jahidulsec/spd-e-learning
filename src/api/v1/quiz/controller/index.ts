@@ -33,6 +33,7 @@ import { getQuizMembers } from "./quiz-member/get-multi";
 import { getQuestionAnswer } from "./answer/get-single";
 import { getQuestionAnswers } from "./answer/get-multi";
 import { getQuizLeaderboard } from "./quiz/get-leaderboard";
+import { updateQuizMember } from "./quiz-member/update";
 
 export = {
   createQuiz,
@@ -60,4 +61,5 @@ export = {
   getQuestionAnswers,
   getQuizMembers,
   getQuizLeaderboard,
+  updateQuizMember,
 };

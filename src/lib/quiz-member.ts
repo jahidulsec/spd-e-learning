@@ -54,12 +54,12 @@ const getMulti = async (queries: quizMemberQueryInputTypes) => {
       orderBy: {
         ...(queries.sort_type === "title"
           ? {
-              team_member: {
-                user: {
-                  full_name: queries.sort,
-                },
+            team_member: {
+              user: {
+                full_name: queries.sort,
               },
-            }
+            },
+          }
           : { created_at: queries.sort }),
       },
     }),
@@ -147,10 +147,24 @@ const deleteOne = async (idObj: requiredIdTypes) => {
   return deleted;
 };
 
+const getSingleByQuizUserId = async (quizId: string, userId: string) => {
+
+  const data = await db.quiz_member.findFirst({
+    where: {
+      quiz_id: quizId, team_member: {
+        user_id: userId
+      }
+    },
+  })
+
+  return data;
+};
+
 export = {
   getMulti,
   getSingle,
   createNew,
   updateOne,
   deleteOne,
+  getSingleByQuizUserId
 };

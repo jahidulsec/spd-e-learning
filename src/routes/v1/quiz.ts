@@ -28,6 +28,7 @@ router
   .route("/quiz-member")
   .post(authorize("quiz_member", "create"), controller.createQuizMember)
   .get(authorize("quiz_member", "view"), controller.getQuizMembers);
+router.patch('/quiz-member/:quizId', controller.updateQuizMember)
 
 // question
 router
