@@ -23,6 +23,6 @@ router.get(
 );
 
 // leaderboard
-router.get('/leaderboard', verifyRoles("director", "superadmin", "team_lead"), controller.getLeaderboard)
+router.get('/leaderboard', controller.getLeaderboard)
 
 export { router as analysisRoutes };
