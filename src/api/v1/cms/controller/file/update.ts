@@ -54,13 +54,6 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
       forbiddenError(`You are unauthorized for this action`);
     }
 
-    // only superadmin can archived
-    if (
-      authUser?.role !== "superadmin" &&
-      validatedData.is_archived !== undefined
-    ) {
-      validatedData.is_archived = false;
-    }
 
     // if upload new file
     if (uploadedFile) {
@@ -84,9 +77,8 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
       message: "File updated successfully!",
       data: {
         ...updated,
-        file_path: `${req.protocol}://${req.get("host")}/uploads/files/${
-          updated.filename
-        }`,
+        file_path: `${req.protocol}://${req.get("host")}/uploads/files/${updated.filename
+          }`,
       },
     };
 
