@@ -3,10 +3,7 @@ import userService from "../../../../../lib/user";
 import { createResultDTOSchema } from "../../../../../schemas/result";
 import cmsService from "../../../../../lib/result";
 import optionService from "../../../../../lib/option";
-import {
-  conflictError,
-  notFoundError,
-} from "../../../../../utils/errors";
+import { conflictError, notFoundError } from "../../../../../utils/errors";
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -44,10 +41,6 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
     // set question id
     validatedData.question_id = option?.question_id;
-
-    if (option?.result) {
-      conflictError("You already submitted an answer");
-    }
 
     // get score
     if (option?.is_correct) {
