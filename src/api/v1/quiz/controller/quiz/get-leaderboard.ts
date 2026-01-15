@@ -37,7 +37,10 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     //get all items with validated queries
-    const { data, count } = await quizService.getQuizUserResult(quizId, validatedData);
+    const { data, count } = await quizService.getQuizUserResult(
+      quizId,
+      validatedData
+    );
 
     const responseData = {
       success: true,
@@ -48,7 +51,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
           full_name: item.team_member.user.full_name,
           total_marks: item.quiz._count.question,
           score: item.quiz.question.reduce(
-            (sum, value) => sum + Number(value?.result?.score),
+            (sum, value) => sum + Number(value?.result?.[0]?.score),
             0
           ),
         };
