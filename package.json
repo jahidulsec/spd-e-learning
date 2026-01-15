@@ -6,11 +6,11 @@
     "test": "jest",
     "build": "rimraf dist && tsc --build",
     "start": "node --env-file=.env ./dist/index.js",
-    "dev": "npx tsx --watch --env-file=.env ./src/index.ts",
+    "dev": "tsx --watch --env-file=.env ./src/index.ts",
     "createadmin": "ts-node ./src/prompt.ts",
     "deploy": "sh scripts/deploy.sh",
-    "db:pull": "npx prisma db pull",
-    "db:generate": "npx prisma generate"
+    "db:pull": "prisma db pull",
+    "db:generate": "prisma generate"
   },
   "repository": {
     "type": "git",
@@ -60,6 +60,7 @@
     "prisma": "^6.7.0",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
     "typescript": "^5.6.3"
   },
   "prisma": {

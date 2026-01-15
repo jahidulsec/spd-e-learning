@@ -166,7 +166,7 @@ model question {
   updated_at  DateTime      @updatedAt
   quiz        quiz          @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
   quiz_option quiz_option[]
-  result      result?
+  result      result[]
 
   @@index([quiz_id], map: "question_quiz_id_fkey")
 }
@@ -179,7 +179,7 @@ model quiz_option {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
   question    question @relation(fields: [question_id], references: [id], onDelete: Cascade)
-  result      result?
+  result      result[]
 
   @@index([question_id], map: "quiz_option_question_id_fkey")
 }
@@ -187,16 +187,19 @@ model quiz_option {
 model result {
   id             String       @id @default(uuid())
   team_member_id String       @db.VarChar(100)
-  answer_id      String       @unique @db.VarChar(100)
-  question_id    String       @unique @db.VarChar(100)
+  answer_id      String       @db.VarChar(100)
+  question_id    String       @db.VarChar(100)
   score          Int?         @default(0)
   created_at     DateTime     @default(now())
   updated_at     DateTime     @updatedAt
-  answer         quiz_option  @relation(fields: [answer_id], references: [id], onDelete: Cascade)
-  question       question     @relation(fields: [question_id], references: [id], onDelete: Cascade)
-  team_member    team_members @relation(fields: [team_member_id], references: [id], onDelete: Cascade)
+  team_member    team_members @relation(fields: [team_member_id], references: [id], onDelete: Cascade, map: "result_ibfk_1")
+  answer         quiz_option  @relation(fields: [answer_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "result_ibfk_2")
+  question       question     @relation(fields: [question_id], references: [id], onDelete: Cascade, map: "result_ibfk_3")
 
+  @@unique([team_member_id, answer_id, question_id], map: "team_member_id")
   @@index([team_member_id], map: "result_team_member_id_fkey")
+  @@index([answer_id], map: "answer_id")
+  @@index([question_id], map: "question_id")
 }
 
 model e_detailing {
