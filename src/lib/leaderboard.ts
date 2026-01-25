@@ -25,10 +25,10 @@ const getMulti = async (queries: LeaderboardQueryInputTypes) => {
                     LEFT JOIN quiz q on q.quater_id=qu.quiz_id
                     LEFT JOIN quater qua on qua.id = q.quater_id
                     ` : ""
-    }
+                    }
                   WHERE r.team_member_id = tm.id
                   ${queries.quater_id ? " AND qua.id = ?" : ""
-    }
+                  }
               ),
               0
           ) AS quiz_score,

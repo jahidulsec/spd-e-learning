@@ -85,7 +85,7 @@ const getMulti = async (queries: resultQueryInputTypes) => {
 
 const getMultiByUserId = async (
   userId: string,
-  queries: resultQueryInputTypes
+  queries: resultQueryInputTypes,
 ) => {
   const [data, count] = await Promise.all([
     db.result.findMany({
@@ -190,7 +190,8 @@ const getSingle = async (idObj: requiredIdTypes) => {
 };
 
 const getSingleMioAllByUserId = async (
-  userId: string
+  userId: string,
+  teamId: string,
 ): Promise<{
   quizData: ResultMioQuizAll[];
   eDetailingData: e_detailing_score[];
@@ -199,42 +200,50 @@ const getSingleMioAllByUserId = async (
 
   //extract id from validated id by zod
   const [quizData, eDetailingData]: any = await Promise.all([
-    db.$queryRaw`
-      select
-        u.full_name,
-        u.sap_id,
-        tm.team_id team_id,
-        q.id quiz_id,
-        q.title quiz_title,
-        q.quater_id,
-        q.description quiz_description,
-        sum(r.score) quiz_score,
-        count(qu.id) total_question
-      from
-        users u
-        LEFT JOIN team_members tm on tm.user_id = u.sap_id
-        LEFT JOIN quiz q on q.team_id = tm.team_id
-        LEFT JOIN question qu on qu.quiz_id = q.id
-        LEFT JOIN result r on r.question_id = qu.id
+    db.$queryRawUnsafe(
+      `
+        WITH
+          res as (
+              select
+                  u.full_name,
+                  u.sap_id,
+                  tm.team_id team_id,
+                  q.id quiz_id,
+                  q.title quiz_title,
+                  q.quater_id,
+                  q.description quiz_description,
+                  r.score result_score,
+                  r.created_at,
+                  qu.id question_id
+              from
+                  quiz q
+                  LEFT JOIN question qu on qu.quiz_id = q.id
+                  LEFT JOIN result r on r.question_id = qu.id
+                  LEFT JOIN team_members tm on r.team_member_id = tm.id
+                  inner JOIN users u on tm.user_id = u.sap_id
+          )
+      select *, COUNT(question_id) total_question, sum(result_score) quiz_score
+      from res
       WHERE
-        u.role = 'mios'
-        and tm.id is not null
-        and u.sap_id = ${userId}
-        AND (
-            EXTRACT(
-                YEAR
-                FROM r.created_at
-            ) = ${year}
-        )
+          sap_id = "${userId}"
+          and team_id = "${teamId}"
+          AND (
+              EXTRACT(
+                  YEAR
+                  FROM created_at
+              ) = ${year}
+          )
       GROUP BY
-        q.id
-      ORDER BY q.title ASC
-    `,
+          quiz_id
+      ORDER BY quiz_title ASC
+      `,
+    ),
     db.e_detailing_score.findMany({
       where: {
         e_detailing_video: {
           team_member: {
             user_id: userId,
+            team_id: teamId
           },
           created_at: getYearRange(year),
         },
@@ -252,7 +261,7 @@ const getSingleMioAllByUserId = async (
               select: {
                 description: true,
                 quater_id: true,
-                title: true
+                title: true,
               },
             },
           },
@@ -266,7 +275,7 @@ const getSingleMioAllByUserId = async (
 
 const getSingleByTeamMemberQuestion = async (
   teamMemberId: string,
-  questionId: string
+  questionId: string,
 ) => {
   const data = await db.result.findMany({
     where: {
@@ -311,7 +320,7 @@ const createNew = async (info: createResultInputTypes) => {
 
 const updateOne = async (
   idObj: requiredIdTypes,
-  info: updateResultInputTypes
+  info: updateResultInputTypes,
 ) => {
   //extract id from validated id by zod
   const { id } = idObj;
