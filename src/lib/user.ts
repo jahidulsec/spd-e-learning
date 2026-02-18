@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import db from "../db/db";
 import { requiredIdTypes } from "../schemas/required-id";
 import {
@@ -11,16 +12,27 @@ const getMulti = async (queries: usersQueryInputTypes) => {
   const page = queries?.page ?? 1;
   const sort = queries?.sort ?? "desc";
 
+  // user filter
+  const filter: Prisma.usersWhereInput = {
+    ...(queries.search && {
+      OR: [
+        {
+          full_name: {
+            startsWith: queries.search || undefined,
+          },
+        },
+        {
+          mobile: {
+            startsWith: queries.search || undefined,
+          },
+        },
+      ],
+    }),
+  };
+
   const [data, count] = await Promise.all([
     db.users.findMany({
-      where: {
-        full_name: {
-          startsWith: queries.search || undefined,
-        },
-        mobile: {
-          startsWith: queries.search || undefined,
-        },
-      },
+      where: filter,
       take: size,
       skip: size * (page - 1),
       orderBy: {
@@ -28,14 +40,7 @@ const getMulti = async (queries: usersQueryInputTypes) => {
       },
     }),
     db.users.count({
-      where: {
-        full_name: {
-          startsWith: queries.search || undefined,
-        },
-        mobile: {
-          startsWith: queries.search || undefined,
-        },
-      },
+      where: filter,
     }),
   ]);
 
@@ -111,7 +116,7 @@ const createNew = async (info: createUserInputsTypes) => {
 
 const updateOne = async (
   idObj: requiredIdTypes,
-  info: updateUserInputTypes
+  info: updateUserInputTypes,
 ) => {
   //extract id from validated id by zod
   const { id } = idObj;
