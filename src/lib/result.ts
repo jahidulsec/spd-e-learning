@@ -214,7 +214,13 @@ const getSingleMioAllByUserId = async (
                   q.description quiz_description,
                   r.score result_score,
                   r.created_at,
-                  qu.id question_id
+                  qu.id question_id,
+                  (
+                    SELECT COUNT(*)
+                    FROM question tq
+                    WHERE
+                        tq.quiz_id = q.id
+                  ) AS total_question
               from
                   quiz q
                   LEFT JOIN question qu on qu.quiz_id = q.id
@@ -222,7 +228,7 @@ const getSingleMioAllByUserId = async (
                   LEFT JOIN team_members tm on r.team_member_id = tm.id
                   inner JOIN users u on tm.user_id = u.sap_id
           )
-      select *, COUNT(question_id) total_question, sum(result_score) quiz_score
+      select *, sum(result_score) quiz_score
       from res
       WHERE
           sap_id = "${userId}"
@@ -243,7 +249,7 @@ const getSingleMioAllByUserId = async (
         e_detailing_video: {
           team_member: {
             user_id: userId,
-            team_id: teamId
+            team_id: teamId,
           },
           created_at: getYearRange(year),
         },
