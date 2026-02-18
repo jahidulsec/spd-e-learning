@@ -67,7 +67,7 @@ const getMulti = async (queries: LeaderboardQueryInputTypes) => {
   ranked AS (
     SELECT *,
           RANK() OVER (
-              ORDER BY (quiz_score + e_score) DESC, is_completed desc, duration_s asc
+              ORDER BY (quiz_score + e_score) DESC, is_completed desc, duration_s asc, full_name asc
           ) AS rank
         FROM groupd
     )
