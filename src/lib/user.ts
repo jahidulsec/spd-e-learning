@@ -11,6 +11,7 @@ const getMulti = async (queries: usersQueryInputTypes) => {
   const size = queries?.size ?? 20;
   const page = queries?.page ?? 1;
   const sort = queries?.sort ?? "desc";
+  const sortBy = queries?.sortBy ?? "created_at";
 
   // user filter
   const filter: Prisma.usersWhereInput = {
@@ -36,7 +37,7 @@ const getMulti = async (queries: usersQueryInputTypes) => {
       take: size,
       skip: size * (page - 1),
       orderBy: {
-        created_at: sort,
+        [sortBy]: sort,
       },
     }),
     db.users.count({

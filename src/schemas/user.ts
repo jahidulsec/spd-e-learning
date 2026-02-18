@@ -14,7 +14,7 @@ export const updateUserDTOSchema = createUserDTOSchema.omit({}).partial();
 
 export const usersQuerySchema = z.object({
   sort: z.enum(["asc", "desc"]).default("desc"),
-  sortBy: z.string().default("updatedAt"),
+  sortBy: z.enum(['created_at', "full_name", "sap_id", "mobile"]).default("created_at").optional(),
   page: z.coerce.number().int().default(1),
   size: z.coerce.number().default(20),
   search: z.string().optional(),
