@@ -202,6 +202,8 @@ const updateOne = async (
   //extract id from validated id by zod
   const { id } = idObj;
 
+  console.log(info)
+
   const updatedData = await db.e_detailing_score.update({
     where: { id: id },
     data: { ...info },
