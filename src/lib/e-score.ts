@@ -54,7 +54,7 @@ const getMulti = async (queries: eScoreQueryInputTypes) => {
 
 const getMultiByTeamId = async (
   teamId: string,
-  queries: eScoreQueryInputTypes
+  queries: eScoreQueryInputTypes,
 ) => {
   const [data, count] = await Promise.all([
     db.e_detailing_score.findMany({
@@ -108,7 +108,7 @@ const getMultiByTeamId = async (
 
 const getMultiByUserId = async (
   userId: string,
-  queries: eScoreQueryInputTypes
+  queries: eScoreQueryInputTypes,
 ) => {
   const [data, count] = await Promise.all([
     db.e_detailing_score.findMany({
@@ -197,12 +197,10 @@ const createNew = async (info: createEScoreInputTypes) => {
 
 const updateOne = async (
   idObj: requiredIdTypes,
-  info: updateEScoreInputTypes
+  info: updateEScoreInputTypes,
 ) => {
   //extract id from validated id by zod
   const { id } = idObj;
-
-  console.log(info)
 
   const updatedData = await db.e_detailing_score.update({
     where: { id: id },
