@@ -27,6 +27,11 @@ const getMulti = async (queries: usersQueryInputTypes) => {
             startsWith: queries.search || undefined,
           },
         },
+        {
+          sap_id: {
+            startsWith: queries.search || undefined,
+          },
+        },
       ],
     }),
   };
