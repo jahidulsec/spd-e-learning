@@ -44,6 +44,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
 
           return {
             ...modifiedData,
+            e_detailing_video,
             ...(authUser?.role === "mios" && {
               participated: e_detailing_video.length > 0,
             }),
