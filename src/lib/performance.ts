@@ -2,7 +2,7 @@ import db from "../db/db";
 import { performanceMioQueryInputTypes } from "../schemas/performance";
 
 const getMultiMioPerformance = async (
-  queries: performanceMioQueryInputTypes
+  queries: performanceMioQueryInputTypes,
 ) => {
   const size = queries?.size ?? 20;
   const page = queries?.page ?? 1;
@@ -10,11 +10,12 @@ const getMultiMioPerformance = async (
   const year = new Date().getFullYear();
 
   const [data]: any = await Promise.all([
-    db.$queryRaw`
-      SELECT
+    db.$queryRawUnsafe(`
+        SELECT
           u.sap_id,
           u.full_name,
           t.title AS team_title,
+          tm.team_id AS team_id,
           COALESCE(
               SUM(DISTINCT vs.score_closing),
               0
@@ -47,7 +48,7 @@ const getMultiMioPerformance = async (
           AND EXTRACT(
               YEAR
               FROM r.created_at
-          ) = 2025
+          ) = ${year}
           LEFT JOIN e_detailing_video v ON v.team_member_id = tm.id
           LEFT JOIN e_detailing_score vs ON vs.video_id = v.id
           AND EXTRACT(
@@ -66,14 +67,13 @@ const getMultiMioPerformance = async (
                   FROM r.created_at
               ) = ${year}
           )
+          ${queries.team_id ? ` AND tm.team_id='${queries.team_id}' ` : ""}
       GROUP BY
           u.sap_id,
           u.full_name,
           t.title
-      ORDER BY total_score asc
-      limit ${(page - 1) * size},${size}
-      ;
-    `,
+      ORDER BY total_score desc
+      limit ${(page - 1) * size},${size}`),
   ]);
 
   return { data, page, size };
