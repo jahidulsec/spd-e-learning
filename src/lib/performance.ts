@@ -12,62 +12,46 @@ const getMultiMioPerformance = async (
   const [data]: any = await Promise.all([
     db.$queryRawUnsafe(`
         SELECT
-          u.sap_id,
-          u.full_name,
-          t.title AS team_title,
-          tm.team_id AS team_id,
-          COALESCE(r.score + e.score) total_score,
-          count(u.sap_id) over () total_count
-      FROM
-          users u
-          LEFT JOIN team_members tm ON tm.user_id = u.sap_id
-          LEFT JOIN teams t ON t.id = tm.team_id
-          LEFT JOIN (
-              select
-                  sum(score) score,
-                  team_member_id,
-                  created_at
-              from result
-              GROUP BY
-                  team_member_id
-          ) r ON r.team_member_id = tm.id
-          AND EXTRACT(
-              YEAR
-              FROM r.created_at
-          ) = ${year}
-          LEFT JOIN (
-                select sum(
-                        es.score_closing + es.score_content + es.score_presentation + es.score_starting
-                    ) score, ev.team_member_id, ev.created_at
-                from
-                    e_detailing_score es
-                    LEFT JOIN e_detailing_video ev on ev.id = es.video_id
-                GROUP BY
-                    ev.team_member_id
-            ) e ON e.team_member_id = tm.id
-            AND EXTRACT(
-                YEAR
-                FROM e.created_at
-            ) = ${year}
-      WHERE
-          u.role = 'mios'
-          AND (
-              EXTRACT(
-                  YEAR
-                  FROM e.created_at
-              ) = ${year}
-              OR EXTRACT(
-                  YEAR
-                  FROM r.created_at
-              ) = ${year}
-          )
-          ${queries.team_id ? ` AND tm.team_id='${queries.team_id}' ` : ""}
-      GROUP BY
-          u.sap_id,
-          u.full_name,
-          t.title
-      ORDER BY total_score desc
-      limit ${(page - 1) * size},${size}`),
+            u.sap_id,
+            u.full_name,
+            t.title AS team_title,
+            tm.team_id,
+            COALESCE(r.score,0) + COALESCE(e.score,0) AS total_score,
+            count(u.sap_id) over () total_count
+        FROM users u
+        LEFT JOIN team_members tm ON tm.user_id = u.sap_id
+        LEFT JOIN teams t ON t.id = tm.team_id
+
+        LEFT JOIN (
+            SELECT
+                team_member_id,
+                SUM(score) score
+            FROM result
+            WHERE EXTRACT(YEAR FROM created_at) = ${year}
+            GROUP BY team_member_id
+        ) r ON r.team_member_id = tm.id
+
+        LEFT JOIN (
+            SELECT
+                ev.team_member_id,
+                SUM(es.score_closing + es.score_content + es.score_presentation + es.score_starting) score
+            FROM e_detailing_score es
+            LEFT JOIN e_detailing_video ev ON ev.id = es.video_id
+            WHERE EXTRACT(YEAR FROM ev.created_at) = ${year}
+            GROUP BY ev.team_member_id
+        ) e ON e.team_member_id = tm.id
+
+        WHERE u.role = 'mios'
+        ${queries.team_id ? ` AND tm.team_id='${queries.team_id}' ` : ""}
+
+        GROUP BY
+            u.sap_id,
+            u.full_name,
+            t.title,
+            tm.team_id
+
+        ORDER BY total_score DESC
+        LIMIT ${size} OFFSET ${(page - 1) * size}`),
   ]);
 
   return { data, page, size };
