@@ -8,7 +8,7 @@ export const LeaderboardQuerySchema = z.object({
   team_id: z.string().optional(),
   quater_id: z.string().optional(),
   sort_type: z.enum(["created_at", "title"]).default("created_at"),
+  view: z.enum(["quiz", "e_detailing"]).optional(),
 });
 
 export type LeaderboardQueryInputTypes = z.infer<typeof LeaderboardQuerySchema>;
-
