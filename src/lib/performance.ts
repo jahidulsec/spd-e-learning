@@ -16,21 +16,7 @@ const getMultiMioPerformance = async (
           u.full_name,
           t.title AS team_title,
           tm.team_id AS team_id,
-          COALESCE(
-              SUM(DISTINCT vs.score_closing),
-              0
-          ) + COALESCE(
-              SUM(DISTINCT vs.score_content),
-              0
-          ) + COALESCE(
-              SUM(DISTINCT vs.score_starting),
-              0
-          ) + COALESCE(
-              SUM(
-                  DISTINCT vs.score_presentation
-              ),
-              0
-          ) + COALESCE(r.score, 0) total_score,
+          COALESCE(r.score + e.score) total_score,
           count(u.sap_id) over () total_count
       FROM
           users u
@@ -49,18 +35,26 @@ const getMultiMioPerformance = async (
               YEAR
               FROM r.created_at
           ) = ${year}
-          LEFT JOIN e_detailing_video v ON v.team_member_id = tm.id
-          LEFT JOIN e_detailing_score vs ON vs.video_id = v.id
-          AND EXTRACT(
-              YEAR
-              FROM vs.created_at
-          ) = ${year}
+          LEFT JOIN (
+                select sum(
+                        es.score_closing + es.score_content + es.score_presentation + es.score_starting
+                    ) score, ev.team_member_id, ev.created_at
+                from
+                    e_detailing_score es
+                    LEFT JOIN e_detailing_video ev on ev.id = es.video_id
+                GROUP BY
+                    ev.team_member_id
+            ) e ON e.team_member_id = tm.id
+            AND EXTRACT(
+                YEAR
+                FROM e.created_at
+            ) = ${year}
       WHERE
           u.role = 'mios'
           AND (
               EXTRACT(
                   YEAR
-                  FROM v.created_at
+                  FROM e.created_at
               ) = ${year}
               OR EXTRACT(
                   YEAR
