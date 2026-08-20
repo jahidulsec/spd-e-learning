@@ -16,6 +16,8 @@ router.use("/user/v1", verifyToken, userRoutes);
 router.use("/other/v1", verifyToken, otherRouter);
 router.use("/quiz/v1", verifyToken, quizRouter);
 router.use("/e-detailing/v1", verifyToken, eDetailingRoutes);
-router.use("/analysis/v1", verifyToken, analysisRoutes);
+router.use("/analysis/v1", 
+    // verifyToken,
+     analysisRoutes);
 
 export default router;
