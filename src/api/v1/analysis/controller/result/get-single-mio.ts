@@ -8,7 +8,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
     const { userId } = req.params;
 
     // get team id
-    const { team_id } = req.query;
+    const { team_id, quater_id } = req.query;
 
     if (!team_id) {
       return badRequestError("Please enter team id");
@@ -19,6 +19,7 @@ const get = async (req: Request, res: Response, next: NextFunction) => {
       await resultService.getSingleMioAllByUserId(
         userId as string,
         team_id as string,
+        quater_id as string,
       );
 
     const responseData = {

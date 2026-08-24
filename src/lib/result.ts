@@ -192,6 +192,7 @@ const getSingle = async (idObj: requiredIdTypes) => {
 const getSingleMioAllByUserId = async (
   userId: string,
   teamId: string,
+  quater_id?: string,
 ): Promise<{
   quizData: ResultMioQuizAll[];
   eDetailingData: e_detailing_score[];
@@ -239,6 +240,7 @@ const getSingleMioAllByUserId = async (
                   FROM created_at
               ) = ${year}
           )
+        ${quater_id ? ` AND quater_id='${quater_id}' ` : ""}
       GROUP BY
           quiz_id
       ORDER BY quiz_title ASC
@@ -252,6 +254,11 @@ const getSingleMioAllByUserId = async (
             team_id: teamId,
           },
           created_at: getYearRange(year),
+          ...(quater_id && {
+            e_detailing: {
+              quater_id: quater_id,
+            },
+          }),
         },
       },
       include: {
